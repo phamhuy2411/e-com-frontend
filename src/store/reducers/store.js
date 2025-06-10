@@ -5,21 +5,32 @@ import { cartReducer } from "./cartReducer";
 import { authReducer } from "./authReducer";
 import { paymentMethodReducer } from "./paymentMethodReducer";
 
-const user = localStorage.getItem("auth")
-    ? JSON.parse(localStorage.getItem("auth"))
-    : null;
+const getLocalStorageItem = (key, defaultValue) => {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+        console.error(`Error parsing ${key} from localStorage:`, error);
+        return defaultValue;
+    }
+};
 
-const cartItems = localStorage.getItem("cartItems")
-    ? JSON.parse(localStorage.getItem("cartItems"))
-    : [];
-
-const selectUserCheckoutAddress = localStorage.getItem("CHECKOUT_ADDRESS")
-    ? JSON.parse(localStorage.getItem("CHECKOUT_ADDRESS"))
-    : [];
+const user = getLocalStorageItem("auth", null);
+const cartItems = getLocalStorageItem("cartItems", []);
+const selectedUserCheckoutAddress = getLocalStorageItem("CHECKOUT_ADDRESS", null);
 
 const initialState = {
-    auth: { user: user, selectUserCheckoutAddress },
-    carts: { cart: cartItems },
+    auth: { 
+        user, 
+        selectedUserCheckoutAddress,
+        address: [],
+        clientSecret: null
+    },
+    carts: { 
+        cart: cartItems,
+        totalPrice: 0,
+        cartId: null
+    },
 };
 
 export const store = configureStore({

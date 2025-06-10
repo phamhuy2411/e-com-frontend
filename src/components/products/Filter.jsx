@@ -2,8 +2,10 @@ import { Button, FormControl, InputLabel, MenuItem, Select, Tooltip } from "@mui
 import { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp, FiRefreshCw, FiSearch } from "react-icons/fi";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { memo } from 'react';
 
-const Filter = ({ categories }) => {
+const Filter = memo(({ categories }) => {
     const [searchParams] = useSearchParams();
     const params = new URLSearchParams(searchParams);
     const pathname = useLocation().pathname;
@@ -72,8 +74,10 @@ const Filter = ({ categories }) => {
                     placeholder="Search Products"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border border-gray-400 text-slate-800 rounded-md py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-[#1976d2]"/>
-                <FiSearch className="absolute left-3 text-slate-800 size={20}"/>
+                    className="border border-gray-400 text-slate-800 rounded-md py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-[#1976d2]"
+                    aria-label="Search products"
+                />
+                <FiSearch className="absolute left-3 text-slate-800" size={20} aria-hidden="true" />
             </div>
 
             {/* CATEGORY SELECTION */}
@@ -89,9 +93,10 @@ const Filter = ({ categories }) => {
                             onChange={handleCategoryChange}
                             label="Category"
                             className="min-w-[120px] text-slate-800 border-slate-700"
+                            aria-label="Select category"
                          >
                             <MenuItem value="all">All</MenuItem>
-                            {categories.map((item) => (
+                            {categories?.map((item) => (
                                 <MenuItem key={item.categoryId} value={item.categoryName}>
                                     {item.categoryName}
                                 </MenuItem>
@@ -100,30 +105,48 @@ const Filter = ({ categories }) => {
                 </FormControl>
 
                 {/* SORT BUTTON & CLEAR FILTER */}
-                <Tooltip title="Sorted by price: asc">
+                <Tooltip title={`Sort by price: ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}>
                     <Button variant="contained" 
                         onClick={toggleSortOrder}
                         color="primary" 
-                        className="flex items-center gap-2 h-10">
+                        className="flex items-center gap-2 h-10"
+                        aria-label={`Sort by price ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
+                    >
                         Sort By
                         {sortOrder === "asc" ? (
-                            <FiArrowUp size={20} />
+                            <FiArrowUp size={20} aria-hidden="true" />
                         ) : (
-                            <FiArrowDown size={20} />
+                            <FiArrowDown size={20} aria-hidden="true" />
                         )}
                         
                     </Button>
                 </Tooltip>
                 <button 
-                className="flex items-center gap-2 bg-rose-900 text-white px-3 py-2 rounded-md transition duration-300 ease-in shadow-md focus:outline-none"
+                className="flex items-center gap-2 bg-rose-900 text-white px-3 py-2 rounded-md transition duration-300 ease-in shadow-md focus:outline-none hover:bg-rose-800"
                 onClick={handleClearFilters}
+                aria-label="Clear all filters"
                 >
-                    <FiRefreshCw className="font-semibold" size={16}/>
+                    <FiRefreshCw className="font-semibold" size={16} aria-hidden="true" />
                     <span className="font-semibold">Clear Filter</span>
                 </button>
             </div>
         </div>
     );
-}
+});
+
+Filter.propTypes = {
+    categories: PropTypes.arrayOf(
+        PropTypes.shape({
+            categoryId: PropTypes.string.isRequired,
+            categoryName: PropTypes.string.isRequired,
+        })
+    ),
+};
+
+Filter.defaultProps = {
+    categories: [],
+};
+
+Filter.displayName = 'Filter';
 
 export default Filter;

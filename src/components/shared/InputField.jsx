@@ -1,38 +1,46 @@
-const InputField = ({
+import PropTypes from 'prop-types';
+import { memo } from 'react';
+
+const InputField = memo(({
     label,
     id,
-    type,
+    type = 'text',
     errors,
     register,
-    required,
+    required = false,
     message,
     className,
     min,
-    value,
     placeholder,
 }) => {
+    const errorMessage = errors?.[id]?.message;
+    const hasError = Boolean(errorMessage);
+
     return (
         <div className="flex flex-col gap-1 w-full">
             <label
-                htmlFor="id"
+                htmlFor={id}
                 className={`${
-                    className ? className : ""
-                } font-semibold text-sm text-slate-800`}>
+                    className || ""
+                } font-semibold text-sm text-slate-800`}
+            >
                 {label}
             </label>
             <input
                 type={type}
                 id={id}
                 placeholder={placeholder}
+                aria-invalid={hasError}
+                aria-describedby={hasError ? `${id}-error` : undefined}
                 className={`${
-                    className ? className : ""
+                    className || ""
                 } px-2 py-2 border outline-none bg-transparent text-slate-800 rounded-md ${
-                    errors[id]?.message ? "border-red-500" : "border-slate-700" 
+                    hasError ? "border-red-500" : "border-slate-700" 
                 }`}
                 {...register(id, {
-                    required: {value: required, message},
+                    required: { value: required, message },
                     minLength: min
-                        ? { value: min, message: `Minimum ${min} character is required`}
+                        ? { value: min, message: `Minimum ${min} character is required` }
                         : null,
                     pattern:
                         type === "email"
@@ -46,17 +54,41 @@ const InputField = ({
                                 message: "Please enter a valid url"
                             }
                             : null,
-
                 })}
-                />
+            />
 
-                {errors[id]?.message && (
-                    <p className="text-sm font-semibold text-red-600 mt-0">
-                        {errors[id]?.message}
-                    </p>
-                )}
+            {hasError && (
+                <p 
+                    id={`${id}-error`}
+                    className="text-sm font-semibold text-red-600 mt-0"
+                    role="alert"
+                >
+                    {errorMessage}
+                </p>
+            )}
         </div>
     );
+});
+
+InputField.propTypes = {
+    label: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    errors: PropTypes.object,
+    register: PropTypes.func.isRequired,
+    required: PropTypes.bool,
+    message: PropTypes.string,
+    className: PropTypes.string,
+    min: PropTypes.number,
+    placeholder: PropTypes.string,
 };
+
+InputField.defaultProps = {
+    type: 'text',
+    required: false,
+    errors: {},
+};
+
+InputField.displayName = 'InputField';
 
 export default InputField;

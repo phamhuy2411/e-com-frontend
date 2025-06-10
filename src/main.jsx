@@ -5,8 +5,15 @@ import App from './App.jsx'
 import { Provider } from 'react-redux'
 import store from './store/reducers/store.js'
 
-createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
+try {
+  const root = createRoot(document.getElementById('root'));
+  root.render(
+    <StrictMode>
+      <Provider store={store}>
         <App />
-  </Provider>,
-)
+      </Provider>
+    </StrictMode>
+  );
+} catch (error) {
+  console.error('Error rendering app:', error);
+}

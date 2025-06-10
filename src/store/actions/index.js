@@ -4,18 +4,19 @@ export const fetchProducts = (queryString) => async (dispatch) => {
     try {
         dispatch({ type: "IS_FETCHING" });
         const { data } = await api.get(`/public/products?${queryString}`);
-        dispatch({
-            type: "FETCH_PRODUCTS",
-            payload: data.content,
-            pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
-            totalElements: data.totalElements,
-            totalPages: data.totalPages,
-            lastPage: data.lastPage,
-        });
+        if (data) {
+            dispatch({
+                type: "FETCH_PRODUCTS",
+                payload: data.content,
+                pageNumber: data.pageNumber,
+                pageSize: data.pageSize,
+                totalElements: data.totalElements,
+                totalPages: data.totalPages,
+                lastPage: data.lastPage,
+            });
+        }
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.error(error);
         dispatch({
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Failed to fetch products",
@@ -27,18 +28,19 @@ export const fetchCategories = () => async (dispatch) => {
     try {
         dispatch({ type: "CATEGORY_LOADER" });
         const { data } = await api.get(`/public/categories`);
-        dispatch({
-            type: "FETCH_CATEGORIES",
-            payload: data.content,
-            pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
-            totalElements: data.totalElements,
-            totalPages: data.totalPages,
-            lastPage: data.lastPage,
-        });
+        if (data) {
+            dispatch({
+                type: "FETCH_CATEGORIES",
+                payload: data.content,
+                pageNumber: data.pageNumber,
+                pageSize: data.pageSize,
+                totalElements: data.totalElements,
+                totalPages: data.totalPages,
+                lastPage: data.lastPage,
+            });
+        }
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.error(error);
         dispatch({
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Failed to fetch categories",
@@ -54,10 +56,14 @@ export const addToCart = (data, qty = 1, toast) => (dispatch, getState) => {
 
     if (isQuantityExist) {
         dispatch({ type: "ADD_CART", payload: { ...data, quantity: qty } });
-        toast.success(`${data?.productName} added to the cart`);
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+        if (toast) toast.success(`${data?.productName} added to the cart`);
+        try {
+            localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+        } catch {
+            // ignore localStorage errors
+        }
     } else {
-        toast.error("Out of stock");
+        if (toast) toast.error("Out of stock");
     }
 };
 
@@ -69,61 +75,79 @@ export const increaseCartQuantity = (data, toast, currentQuantity, setCurrentQua
 
     if (isQuantityExist) {
         const newQuantity = currentQuantity + 1;
-        setCurrentQuantity(newQuantity);
+        if (setCurrentQuantity) setCurrentQuantity(newQuantity);
         dispatch({ type: "ADD_CART", payload: { ...data, quantity: newQuantity } });
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+        try {
+            localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+        } catch {
+            // ignore localStorage errors
+        }
     } else {
-        toast.error("Quantity Reached to Limit");
+        if (toast) toast.error("Quantity Reached to Limit");
     }
 };
 
 export const decreaseCartQuantity = (data, newQuantity) => (dispatch, getState) => {
     dispatch({ type: "ADD_CART", payload: { ...data, quantity: newQuantity } });
-    localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+    try {
+        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+    } catch {
+        // ignore localStorage errors
+    }
 };
 
 export const removeFromCart = (data, toast) => (dispatch, getState) => {
     dispatch({ type: "REMOVE_CART", payload: data });
-    toast.success(`${data.productName} removed from cart`);
-    localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+    if (toast) toast.success(`${data.productName} removed from cart`);
+    try {
+        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+    } catch {
+        // ignore localStorage errors
+    }
 };
 
 export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
     try {
-        setLoader(true);
+        if (setLoader) setLoader(true);
         const { data } = await api.post("/auth/signin", sendData);
         dispatch({ type: "LOGIN_USER", payload: data });
-        localStorage.setItem("auth", JSON.stringify(data));
-        reset();
-        toast.success("Login Success");
-        navigate("/");
+        try {
+            localStorage.setItem("auth", JSON.stringify(data));
+        } catch {
+            // ignore localStorage errors
+        }
+        if (reset) reset();
+        if (toast) toast.success("Login Success");
+        if (navigate) navigate("/");
     } catch (error) {
-        console.error(error);
-        toast.error(error?.response?.data?.message || "Internal Server Error");
+        if (toast) toast.error(error?.response?.data?.message || "Internal Server Error");
     } finally {
-        setLoader(false);
+        if (setLoader) setLoader(false);
     }
 };
 
 export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => async () => {
     try {
-        setLoader(true);
+        if (setLoader) setLoader(true);
         const { data } = await api.post("/auth/signup", sendData);
-        reset();
-        toast.success(data?.message || "User Registered Successfully");
-        navigate("/login");
+        if (reset) reset();
+        if (toast) toast.success(data?.message || "User Registered Successfully");
+        if (navigate) navigate("/login");
     } catch (error) {
-        console.error(error);
-        toast.error(error?.response?.data?.message || error?.response?.data?.password || "Internal Server Error");
+        if (toast) toast.error(error?.response?.data?.message || error?.response?.data?.password || "Internal Server Error");
     } finally {
-        setLoader(false);
+        if (setLoader) setLoader(false);
     }
 };
 
 export const logOutUser = (navigate) => (dispatch) => {
     dispatch({ type: "LOG_OUT" });
-    localStorage.removeItem("auth");
-    navigate("/login");
+    try {
+        localStorage.removeItem("auth");
+    } catch {
+        // ignore localStorage errors
+    }
+    if (navigate) navigate("/login");
 };
 
 export const addUpdateUserAddress = (sendData, toast, addressId, setOpenAddressModal) => async (dispatch) => {
@@ -135,14 +159,13 @@ export const addUpdateUserAddress = (sendData, toast, addressId, setOpenAddressM
             await api.put(`/addresses/${addressId}`, sendData);
         }
         dispatch(getUserAddresses());
-        toast.success("Address saved successfully");
+        if (toast) toast.success("Address saved successfully");
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.error(error);
-        toast.error(error?.response?.data?.message || "Internal Server Error");
+        if (toast) toast.error(error?.response?.data?.message || "Internal Server Error");
         dispatch({ type: "IS_ERROR", payload: null });
     } finally {
-        setOpenAddressModal(false);
+        if (setOpenAddressModal) setOpenAddressModal(false);
     }
 };
 
@@ -153,15 +176,14 @@ export const deleteUserAddress = (toast, addressId, setOpenDeleteModal) => async
         dispatch({ type: "IS_SUCCESS" });
         dispatch(getUserAddresses());
         dispatch(clearCheckoutAddress());
-        toast.success("Address deleted successfully");
+        if (toast) toast.success("Address deleted successfully");
     } catch (error) {
-        console.error(error);
         dispatch({
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Some Error Occurred",
         });
     } finally {
-        setOpenDeleteModal(false);
+        if (setOpenDeleteModal) setOpenDeleteModal(false);
     }
 };
 
@@ -173,10 +195,11 @@ export const getUserAddresses = () => async (dispatch) => {
     try {
         dispatch({ type: "IS_FETCHING" });
         const { data } = await api.get(`/addresses`);
-        dispatch({ type: "USER_ADDRESS", payload: data });
+        if (data) {
+            dispatch({ type: "USER_ADDRESS", payload: data });
+        }
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.error(error);
         dispatch({
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Failed to fetch user addresses",
@@ -185,7 +208,11 @@ export const getUserAddresses = () => async (dispatch) => {
 };
 
 export const selectUserCheckoutAddress = (address) => {
-    localStorage.setItem("CHECKOUT_ADDRESS", JSON.stringify(address));
+    try {
+        localStorage.setItem("CHECKOUT_ADDRESS", JSON.stringify(address));
+    } catch {
+        // ignore localStorage errors
+    }
     return {
         type: "SELECT_CHECKOUT_ADDRESS",
         payload: address,
@@ -203,7 +230,6 @@ export const createUserCart = (sendCartItems) => async (dispatch) => {
         await api.post("/cart/create", sendCartItems);
         await dispatch(getUserCart());
     } catch (error) {
-        console.error(error);
         dispatch({
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Failed to create cart items",
@@ -215,16 +241,21 @@ export const getUserCart = () => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_FETCHING" });
         const { data } = await api.get("/carts/users/cart");
-        dispatch({
-            type: "GET_USER_CART_PRODUCTS",
-            payload: data.products,
-            totalPrice: data.totalPrice,
-            cartId: data.cartId,
-        });
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+        if (data) {
+            dispatch({
+                type: "GET_USER_CART_PRODUCTS",
+                payload: data.products,
+                totalPrice: data.totalPrice,
+                cartId: data.cartId,
+            });
+            try {
+                localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+            } catch {
+                // ignore localStorage errors
+            }
+        }
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.error(error);
         dispatch({
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Failed to fetch cart items",
@@ -239,30 +270,40 @@ export const createStripePaymentSecret = (totalPrice, toast) => async (dispatch)
             amount: Number(totalPrice) * 100,
             currency: "usd",
         });
-        dispatch({ type: "CLIENT_SECRET", payload: data });
-        localStorage.setItem("client-secret", JSON.stringify(data));
+        if (data) {
+            dispatch({ type: "CLIENT_SECRET", payload: data });
+            try {
+                localStorage.setItem("client-secret", JSON.stringify(data));
+            } catch {
+                // ignore localStorage errors
+            }
+        }
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.error(error);
-        toast.error(error?.response?.data?.message || "Failed to create client secret");
+        if (toast) toast.error(error?.response?.data?.message || "Failed to create client secret");
     }
 };
 
-export const stripePaymentConfirmation = (sendData, setErrorMesssage, setLoadng, toast) => async (dispatch) => {
+export const stripePaymentConfirmation = (sendData, setErrorMesssage, setLoading, toast) => async (dispatch) => {
     try {
         const response = await api.post("/order/users/payments/online", sendData);
         if (response.data) {
-            localStorage.removeItem("CHECKOUT_ADDRESS");
-            localStorage.removeItem("cartItems");
-            localStorage.removeItem("client-secret");
+            try {
+                localStorage.removeItem("CHECKOUT_ADDRESS");
+                localStorage.removeItem("cartItems");
+                localStorage.removeItem("client-secret");
+            } catch {
+                // ignore localStorage errors
+            }
             dispatch({ type: "REMOVE_CLIENT_SECRET_ADDRESS" });
             dispatch({ type: "CLEAR_CART" });
-            toast.success("Order Accepted");
+            if (toast) toast.success("Order Accepted");
         } else {
-            setErrorMesssage("Payment Failed. Please try again.");
+            if (setErrorMesssage) setErrorMesssage("Payment Failed. Please try again.");
         }
-    } catch (error) {
-        console.error(error);
-        setErrorMesssage("Payment Failed. Please try again.");
+    } catch {
+        if (setErrorMesssage) setErrorMesssage("Payment Failed. Please try again.");
+    } finally {
+        if (setLoading) setLoading(false);
     }
 };

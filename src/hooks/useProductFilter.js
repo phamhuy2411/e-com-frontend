@@ -3,6 +3,10 @@ import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { fetchProducts } from "../store/actions";
 
+/**
+ * Custom hook to fetch products based on URL search params.
+ * Only triggers side effects, does not return any value.
+ */
 const useProductFilter = () => {
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
@@ -10,10 +14,8 @@ const useProductFilter = () => {
     useEffect(() => {
         const params = new URLSearchParams();
 
-        const currentPage = searchParams.get("page")
-            ? Number(searchParams.get("page"))
-            : 1;
-
+        let currentPage = searchParams.get("page");
+        currentPage = currentPage && !isNaN(Number(currentPage)) ? Number(currentPage) : 1;
         params.set("pageNumber", currentPage - 1);
 
         const sortOrder = searchParams.get("sortby") || "asc";
@@ -31,8 +33,10 @@ const useProductFilter = () => {
         }
 
         const queryString = params.toString();
-        console.log("QUERY STRING", queryString);
-        
+        // Uncomment for debugging:
+        // if (process.env.NODE_ENV === 'development') {
+        //   console.log("QUERY STRING", queryString);
+        // }
         dispatch(fetchProducts(queryString));
 
     }, [dispatch, searchParams]);
