@@ -95,7 +95,7 @@ const ItemContent = ({
                 <SetQuantity 
                     quantity={currentQuantity}
                     cardCounter={true}
-                    handeQtyIncrease={handleQtyIncrease}
+                    handleQtyIncrease={handleQtyIncrease}
                     handleQtyDecrease={handleQtyDecrease}/>
             </div>
 

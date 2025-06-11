@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { FaEnvelope, FaMapMarkedAlt, FaPhone } from "react-icons/fa";
+import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 
 const Contact = memo(() => {
     return(
@@ -61,17 +61,17 @@ const Contact = memo(() => {
                     <h2 className="text-lg font-semibold">Contact Information</h2>
                     <div className="flex flex-col items-center space-y-2 mt-4">
                         <div className="flex items-center">
-                            <FaPhone className="text-blue-500 mr-2" aria-label="Phone" />
+                            <FiPhone className="text-blue-500 mr-2" aria-label="Phone" />
                             <span className="text-gray-600">+4 8961 944 149</span>
                         </div>
 
                         <div className="flex items-center">
-                            <FaEnvelope className="text-blue-500 mr-2" aria-label="Email" />
+                            <FiMail className="text-blue-500 mr-2" aria-label="Email" />
                             <span className="text-gray-600">embarkxofficial@gmail.com</span>
                         </div>
 
                         <div className="flex items-center">
-                            <FaMapMarkedAlt className="text-blue-500 mr-2" aria-label="Address" />
+                            <FiMapPin className="text-blue-500 mr-2" aria-label="Address" />
                             <span className="text-gray-600">123 Main, Town, USA</span>
                         </div>
                     </div>

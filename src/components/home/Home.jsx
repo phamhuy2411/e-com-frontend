@@ -32,7 +32,7 @@ const Home = memo(() => {
 
         return (
             <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
-                {products.slice(0, 4).map((item) => (
+                {products.slice(0, 6).map((item) => (
                     <ProductCard key={item.id} {...item} />
                 ))}
             </div>

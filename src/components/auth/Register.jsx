@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { FaUserPlus } from 'react-icons/fa';
+import { FiUserPlus } from 'react-icons/fi'
 import { Link, useNavigate } from 'react-router-dom';
 import InputField from '../shared/InputField';
 import { useDispatch } from 'react-redux';
@@ -34,7 +34,7 @@ const Register = () => {
                 onSubmit={handleSubmit(registerHandler)}
                 className="sm:w-[450px] w-[360px] shadow-custom py-8 sm:px-8 px-4 rounded-md">
                     <div className="flex flex-col items-center justify-center space-y-4">
-                        <FaUserPlus className="text-slate-800 text-5xl"/>
+                        <FiUserPlus className="text-slate-800 text-5xl"/>
                         <h1 className="text-slate-800 text-center font-montserrat lg:text-3xl text-2xl font-bold">
                             Register Here
                         </h1>

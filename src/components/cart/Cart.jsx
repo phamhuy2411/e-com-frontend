@@ -1,4 +1,5 @@
-import { MdArrowBack, MdShoppingCart } from "react-icons/md";
+import {TfiShoppingCartFull} from "react-icons/tfi";
+import { FiArrowLeftCircle } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ItemContent from "./ItemContent";
@@ -26,7 +27,7 @@ const Cart = () => {
         <div className="lg:px-14 sm:px-8 px-4 py-10">
             <div className="flex flex-col items-center mb-12">
                 <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-                  <MdShoppingCart size={36} className="text-gray-700" />
+                  <TfiShoppingCartFull  size={36} className="text-gray-700" />
                     Your Cart
                 </h1>
                 <p className="text-lg text-gray-600 mt-2">All your selected items</p>
@@ -70,13 +71,13 @@ const Cart = () => {
                     <Link className="w-full flex justify-end" to="/checkout">
                     <button
                         className="font-semibold w-[300px] py-2 px-4 rounded-sm bg-customBlue text-white flex items-center justify-center gap-2 hover:text-gray-300 transition duration-500">
-                        <MdShoppingCart size={20} />
+                        <TfiShoppingCartFull  size={20} />
                         Checkout
                     </button>
                     </Link>
 
                     <Link className="flex gap-2 items-center mt-2 text-slate-500" to="/products">
-                        <MdArrowBack />
+                        <FiArrowLeftCircle />
                         <span>Continue Shopping</span>
                     </Link>
                 </div>

@@ -1,12 +1,13 @@
 import { Badge } from "@mui/material";
 import { useState, useCallback, memo } from "react";
-import { FaShoppingCart, FaSignInAlt, FaStore } from "react-icons/fa";
+import { FiShoppingCart, FiLogIn } from 'react-icons/fi'
 import { IoIosMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 import UserMenu from "../UserMenu";
+import logo from "../../assets/gearvana-logo.png";
 
 const NavLink = memo(({ to, path, children, className = "" }) => (
     <li className="font-[500] transition-all duration-150">
@@ -52,8 +53,13 @@ const Navbar = memo(() => {
                     className="flex items-center text-2xl font-bold"
                     aria-label="Home"
                 >
-                    <FaStore className="mr-2 text-3xl" aria-hidden="true" />
-                    <span className="font-[Poppins]">E-Shop</span>
+                    <img
+                        src={logo}
+                        alt="Gearvana Logo"
+                        className="mr-2 h-10 w-auto"
+                        style={{ maxHeight: 48 }}
+                    />
+                    <span className="font-[Poppins]">Gearvana</span>
                 </Link>
 
                 <ul 
@@ -80,7 +86,7 @@ const Navbar = memo(() => {
                                 overlap="circular"
                                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                             >
-                                <FaShoppingCart size={25} aria-hidden="true" />
+                                <FiShoppingCart size={25} aria-hidden="true" />
                             </Badge>
                         </Link>
                     </li>
@@ -100,7 +106,7 @@ const Navbar = memo(() => {
                                 to="/login"
                                 aria-label="Login"
                             >
-                                <FaSignInAlt aria-hidden="true" />
+                                <FiLogIn aria-hidden="true" />
                                 <span>Login</span>
                             </Link>
                         </li>

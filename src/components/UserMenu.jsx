@@ -1,8 +1,6 @@
 import { Avatar, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
-import { BiUser } from 'react-icons/bi';
-import { FaShoppingCart } from 'react-icons/fa';
-import { IoExitOutline } from 'react-icons/io5';
+import { FiUser, FiShoppingCart, FiLogOut } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import BackDrop from './BackDrop';
@@ -50,7 +48,7 @@ const UserMenu = memo(() => {
           <Link to="/profile">
             <MenuItem className="flex gap-2" 
                 onClick={handleClose}>
-                    <BiUser className='text-xl' aria-label="Profile" />
+                    <FiUser className='text-xl' aria-label="Profile" />
                     <span className='font-bold text-[16px] mt-1'>
                         {user?.username}
                     </span>
@@ -60,7 +58,7 @@ const UserMenu = memo(() => {
           <Link to="/profile/orders">
             <MenuItem className="flex gap-2" 
                 onClick={handleClose}>
-                    <FaShoppingCart className='text-xl' aria-label="Orders" />
+                    <FiShoppingCart className='text-xl' aria-label="Orders" />
                     <span className='font-semibold'>
                         Order
                     </span>
@@ -70,7 +68,7 @@ const UserMenu = memo(() => {
             <MenuItem className="flex gap-2" 
                 onClick={logOutHandler}>
                     <div className='font-semibold w-full flex gap-2 items-center bg-button-gradient px-4 py-1 text-white rounded-sm'>
-                    <IoExitOutline className='text-xl' aria-label="Logout" />
+                    <FiLogOut className='text-xl' aria-label="Logout" />
                     <span className='font-bold text-[16px] mt-1'>
                         LogOut
                     </span>

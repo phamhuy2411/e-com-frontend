@@ -1,6 +1,6 @@
 import { useState, memo } from 'react'
 import Skeleton from '../shared/Skeleton';
-import { FaAddressBook } from 'react-icons/fa';
+import { FaRegAddressCard  } from 'react-icons/fa';
 import AddressInfoModal from './AddressInfoModal';
 import AddAddressForm from './AddAddressForm';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,7 +37,7 @@ const AddressInfo = ({ address = [] }) => {
         <div className='pt-4'>
             {noAddressExist ? (
                 <div className='p-6 rounded-lg max-w-md mx-auto flex flex-col items-center justify-center'>
-                    <FaAddressBook size={50} className='text-gray-500 mb-4' aria-hidden="true" />
+                    <FaRegAddressCard  size={50} className='text-gray-500 mb-4' aria-hidden="true" />
                     <h1 className='mb-2 text-slate-900 text-center font-semibold text-2xl'>
                         No Address Added Yet
                     </h1>

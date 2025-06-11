@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Register from './components/auth/Register'
 import Checkout from './components/checkout/Checkout'
 import PaymentConfirmation from './components/checkout/PaymentConfirmation'
+import Footer from './components/shared/Footer'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="/register" element={<Register />} />
           </Route>
         </Routes>
+        <Footer />
       </Router>
       <Toaster position="bottom-center" />
     </React.Fragment>
