@@ -14,6 +14,7 @@ import Register from './components/auth/Register'
 import Checkout from './components/checkout/Checkout'
 import PaymentConfirmation from './components/checkout/PaymentConfirmation'
 import Footer from './components/shared/Footer'
+import ProductDetail from './components/products/ProductDetail'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />

@@ -1,0 +1,402 @@
+[
+  {
+    "productName": "Apple MacBook Air 13-inch (M4, 2025)",
+    "image": "macbook_air_m4_13.jpg",
+    "description": "MacBook Air mới nhất với chip M4, màn hình Liquid Retina 13.6 inch, bộ nhớ thống nhất lên đến 24GB và SSD 2TB. Hoàn hảo cho sinh viên và chuyên gia.",
+    "quantity": 5,
+    "price": 999.0,
+    "discount": 0.1,
+    "specialPrice": 899.1,
+    "category": "laptop"
+  },
+  {
+    "productName": "Apple MacBook Air 15-inch (M4, 2025)",
+    "image": "macbook_air_m4_15.jpg",
+    "description": "Phiên bản màn hình lớn của MacBook Air với chip M4, màn hình Liquid Retina 15.3 inch, bộ nhớ thống nhất 24GB và SSD 2TB.",
+    "quantity": 3,
+    "price": 1199.0,
+    "discount": 0.1,
+    "specialPrice": 1079.1,
+    "category": "laptop"
+  },
+  {
+    "productName": "Apple MacBook Pro 14-inch (M4, 2025)",
+    "image": "macbook_pro_m4_14.jpg",
+    "description": "MacBook Pro hiệu năng cao với chip M4, màn hình Liquid Retina XDR 14.2 inch, bộ nhớ thống nhất 36GB và SSD 8TB. Lý tưởng cho chuyên gia sáng tạo.",
+    "quantity": 2,
+    "price": 1999.0,
+    "discount": 0.05,
+    "specialPrice": 1899.05,
+    "category": "laptop"
+  },
+  {
+    "productName": "Microsoft Surface Laptop 7",
+    "image": "surface_laptop_7.jpg",
+    "description": "Surface Laptop mới nhất với bộ xử lý Snapdragon X Elite, màn hình PixelSense 13.8 inch, RAM 64GB và SSD 1TB.",
+    "quantity": 4,
+    "price": 1000.0,
+    "discount": 0.15,
+    "specialPrice": 850.0,
+    "category": "laptop"
+  },
+  {
+    "productName": "Asus Zenbook A14",
+    "image": "asus_zenbook_a14.jpg",
+    "description": "Laptop nhỏ gọn với bộ xử lý Snapdragon X, màn hình OLED 14 inch, RAM 16GB và SSD 1TB.",
+    "quantity": 6,
+    "price": 1100.0,
+    "discount": 0.1,
+    "specialPrice": 990.0,
+    "category": "laptop"
+  },
+  {
+    "productName": "Lenovo Yoga Slim 9i 14 Gen 10 (2025)",
+    "image": "lenovo_yoga_slim_9i.jpg",
+    "description": "Laptop siêu mỏng với bộ xử lý Intel Core Ultra, màn hình OLED 3K 14 inch, RAM 32GB và SSD 1TB.",
+    "quantity": 3,
+    "price": 1499.0,
+    "discount": 0.08,
+    "specialPrice": 1379.12,
+    "category": "laptop"
+  },
+  {
+    "productName": "HP Pavilion Plus 14 (2025)",
+    "image": "hp_pavilion_plus_14.jpg",
+    "description": "Laptop thời trang với bộ xử lý AMD Ryzen, màn hình WUXGA 14 inch, RAM 16GB và SSD 512GB.",
+    "quantity": 5,
+    "price": 899.99,
+    "discount": 0.12,
+    "specialPrice": 789.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Dell XPS 13 (9350, Intel Core Ultra 2nd Gen)",
+    "image": "dell_xps_13.jpg",
+    "description": "Ultrabook cao cấp với bộ xử lý Intel Core Ultra, màn hình InfinityEdge 13.4 inch, RAM 16GB và SSD 512GB.",
+    "quantity": 4,
+    "price": 1299.0,
+    "discount": 0.1,
+    "specialPrice": 1169.1,
+    "category": "laptop"
+  },
+  {
+    "productName": "Dell Inspiron 14 Plus (7441)",
+    "image": "dell_inspiron_14_plus.jpg",
+    "description": "Laptop giá trị với bộ xử lý Snapdragon X Plus, màn hình 2.2K 14 inch, RAM 16GB và SSD 256GB.",
+    "quantity": 7,
+    "price": 799.99,
+    "discount": 0.15,
+    "specialPrice": 679.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Razer Blade 16 (2025)",
+    "image": "razer_blade_16.jpg",
+    "description": "Laptop chơi game cao cấp với bộ xử lý AMD Ryzen AI 9, màn hình QHD+ 16 inch, RAM 32GB và SSD 1TB.",
+    "quantity": 2,
+    "price": 2799.99,
+    "discount": 0.05,
+    "specialPrice": 2659.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Asus ROG Zephyrus G16",
+    "image": "asus_rog_zephyrus_g16.jpg",
+    "description": "Laptop chơi game mạnh mẽ với bộ xử lý Intel Core Ultra 9, màn hình QHD OLED 16 inch, RAM 16GB và Nvidia GeForce RTX 4080.",
+    "quantity": 3,
+    "price": 2699.99,
+    "discount": 0.1,
+    "specialPrice": 2429.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Acer Predator Helios Neo 16",
+    "image": "acer_predator_helios_neo_16.jpg",
+    "description": "Laptop chơi game giá phải chăng với bộ xử lý Intel Core i5, màn hình WUXGA 16 inch, RAM 16GB và Nvidia GeForce RTX 4050.",
+    "quantity": 4,
+    "price": 1049.99,
+    "discount": 0.1,
+    "specialPrice": 944.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "HP EliteBook Ultra G1i",
+    "image": "hp_elitebook_ultra_g1i.jpg",
+    "description": "Laptop doanh nghiệp với bộ xử lý Intel Core Ultra 7, màn hình OLED 14 inch, RAM 16GB và SSD 512GB.",
+    "quantity": 5,
+    "price": 1999.0,
+    "discount": 0.08,
+    "specialPrice": 1839.12,
+    "category": "laptop"
+  },
+  {
+    "productName": "Lenovo ThinkPad X9 15 Aura Edition (2025)",
+    "image": "lenovo_thinkpad_x9_15.jpg",
+    "description": "Laptop doanh nghiệp bền bỉ với bộ xử lý Intel Core Ultra, màn hình WQUXGA 15.6 inch, RAM 32GB và SSD 1TB.",
+    "quantity": 3,
+    "price": 1699.99,
+    "discount": 0.1,
+    "specialPrice": 1529.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Lenovo Yoga 9i 2-in-1 Aura Edition 14 (2025)",
+    "image": "lenovo_yoga_9i.jpg",
+    "description": "Laptop 2 trong 1 linh hoạt với bộ xử lý Intel Core Ultra, màn hình cảm ứng OLED 14 inch, RAM 16GB và SSD 1TB.",
+    "quantity": 4,
+    "price": 1399.99,
+    "discount": 0.12,
+    "specialPrice": 1227.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Microsoft Surface Pro 11",
+    "image": "surface_pro_11.jpg",
+    "description": "Máy tính bảng-laptop linh hoạt với bộ xử lý Snapdragon X Elite, màn hình OLED 13 inch, RAM 64GB và SSD 1TB.",
+    "quantity": 5,
+    "price": 999.99,
+    "discount": 0.1,
+    "specialPrice": 899.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Asus Vivobook S 15 Copilot+",
+    "image": "asus_vivobook_s_15.jpg",
+    "description": "Laptop hỗ trợ AI với bộ xử lý Snapdragon X Elite, màn hình OLED 15.6 inch, RAM 16GB và SSD 1TB.",
+    "quantity": 3,
+    "price": 1299.99,
+    "discount": 0.1,
+    "specialPrice": 1169.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Dell XPS 17 (9730)",
+    "image": "dell_xps_17.jpg",
+    "description": "Laptop màn hình lớn với bộ xử lý Intel Core i7, màn hình UHD+ 17 inch, RAM 16GB và SSD 512GB.",
+    "quantity": 2,
+    "price": 2499.99,
+    "discount": 0.05,
+    "specialPrice": 2374.99,
+    "category": "laptop"
+  },
+  {
+    "productName": "Apple MacBook Pro 16-inch (M4 Pro)",
+    "image": "macbook_pro_m4_pro_16.jpg",
+    "description": "MacBook Pro cao cấp với chip M4 Pro, màn hình Liquid Retina XDR 16 inch, bộ nhớ thống nhất 36GB và SSD 8TB.",
+    "quantity": 1,
+    "price": 2499.0,
+    "discount": 0.0,
+    "specialPrice": 2499.0,
+    "category": "laptop"
+  },
+  {
+    "productName": "Lenovo IdeaPad Duet 5 Chromebook",
+    "image": "lenovo_ideapad_duet_5.jpg",
+    "description": "Chromebook giá rẻ với bộ xử lý Qualcomm Snapdragon, màn hình Full HD 13.3 inch, RAM 8GB và eMMC 128GB.",
+    "quantity": 10,
+    "price": 349.99,
+    "discount": 0.15,
+    "specialPrice": 297.49,
+    "category": "laptop"
+  },
+  {
+    "productName": "Nikon Z6 III",
+    "image": "nikon_z6_iii.jpg",
+    "description": "Camera mirrorless full-frame tiên tiến với cảm biến 24MP, chụp 20fps, video 6K và lấy nét tự động xuất sắc.",
+    "quantity": 3,
+    "price": 2499.95,
+    "discount": 0.1,
+    "specialPrice": 2249.96,
+    "category": "camera"
+  },
+  {
+    "productName": "Canon EOS R10",
+    "image": "canon_eos_r10.jpg",
+    "description": "Camera mirrorless cấp nhập môn với cảm biến APS-C 24.2MP, chụp 23fps, video 4K và thiết kế nhỏ gọn.",
+    "quantity": 5,
+    "price": 799.99,
+    "discount": 0.15,
+    "specialPrice": 679.99,
+    "category": "camera"
+  },
+  {
+    "productName": "Sony A7R V",
+    "image": "sony_a7r_v.jpg",
+    "description": "Camera full-frame độ phân giải cao với cảm biến 61MP, chụp 10fps, video 8K và lấy nét tự động tiên tiến.",
+    "quantity": 2,
+    "price": 3998.0,
+    "discount": 0.05,
+    "specialPrice": 3798.1,
+    "category": "camera"
+  },
+  {
+    "productName": "Fujifilm X-T5",
+    "image": "fujifilm_x_t5.jpg",
+    "description": "Camera APS-C dành cho người đam mê với cảm biến 40.2MP, chụp 15fps, video 6.2K và thiết kế cổ điển.",
+    "quantity": 4,
+    "price": 1699.99,
+    "discount": 0.1,
+    "specialPrice": 1529.99,
+    "category": "camera"
+  },
+  {
+    "productName": "OM System OM-1 II",
+    "image": "om_system_om_1_ii.jpg",
+    "description": "Camera Micro Four Thirds với cảm biến 20.4MP, chụp 120fps, video 4K và khả năng chống chịu thời tiết.",
+    "quantity": 3,
+    "price": 1999.99,
+    "discount": 0.12,
+    "specialPrice": 1759.99,
+    "category": "camera"
+  },
+  {
+    "productName": "Fujifilm X100VI",
+    "image": "fujifilm_x100vi.jpg",
+    "description": "Camera compact cao cấp với cảm biến X-Trans 40.2MP, chụp 11fps, video 6.2K và ống kính cố định 23mm.",
+    "quantity": 2,
+    "price": 1599.99,
+    "discount": 0.08,
+    "specialPrice": 1463.99,
+    "category": "camera"
+  },
+  {
+    "productName": "Olympus OM-D E-M10 Mark IV",
+    "image": "olympus_om_d_e_m10_mark_iv.jpg",
+    "description": "Camera Micro Four Thirds giá rẻ với cảm biến 20.3MP, chụp 15fps, video 4K và ổn định hình ảnh 5 trục.",
+    "quantity": 6,
+    "price": 899.99,
+    "discount": 0.15,
+    "specialPrice": 764.99,
+    "category": "camera"
+  },
+  {
+    "productName": "Nikon D7500",
+    "image": "nikon_d7500.jpg",
+    "description": "Camera DSLR với cảm biến APS-C 20.9MP, chụp 8fps, video 1080p và màn hình cảm ứng xoay.",
+    "quantity": 4,
+    "price": 1099.95,
+    "discount": 0.1,
+    "specialPrice": 989.96,
+    "category": "camera"
+  },
+  {
+    "productName": "Fujifilm Instax Mini 12",
+    "image": "fujifilm_instax_mini_12.jpg",
+    "description": "Camera chụp ảnh lấy ngay cho người mới với ống kính 60mm, đèn flash tích hợp và dễ sử dụng.",
+    "quantity": 10,
+    "price": 99.99,
+    "discount": 0.2,
+    "specialPrice": 79.99,
+    "category": "camera"
+  },
+  {
+    "productName": "Nikon Z9",
+    "image": "nikon_z9.jpg",
+    "description": "Camera mirrorless full-frame chuyên nghiệp với cảm biến 45.7MP, chụp 20fps raw, video 8K và tính năng tiên tiến.",
+    "quantity": 1,
+    "price": 5499.95,
+    "discount": 0.0,
+    "specialPrice": 5499.95,
+    "category": "camera"
+  },
+  {
+    "productName": "Hasselblad X2D 100C",
+    "image": "hasselblad_x2d_100c.jpg",
+    "description": "Camera medium format với cảm biến 100MP, ổn định hình ảnh 7 cấp và chất lượng hình ảnh cao.",
+    "quantity": 1,
+    "price": 7999.0,
+    "discount": 0.0,
+    "specialPrice": 7999.0,
+    "category": "camera"
+  },
+  {
+    "productName": "Canon EOS 5D Mark IV",
+    "image": "canon_eos_5d_mark_iv.jpg",
+    "description": "DSLR chuyên nghiệp với cảm biến full-frame 30.4MP, chụp 7fps, video 4K và thiết kế chắc chắn.",
+    "quantity": 2,
+    "price": 2999.99,
+    "discount": 0.1,
+    "specialPrice": 2699.99,
+    "category": "camera"
+  },
+  {
+    "productName": "Sony A7 IV",
+    "image": "sony_a7_iv.jpg",
+    "description": "Camera mirrorless full-frame với cảm biến 33MP, chụp 10fps, video 4K và lấy nét tự động xuất sắc.",
+    "quantity": 3,
+    "price": 2498.0,
+    "discount": 0.1,
+    "specialPrice": 2248.2,
+    "category": "camera"
+  },
+  {
+    "productName": "Canon EOS R6 Mark II",
+    "image": "canon_eos_r6_mark_ii.jpg",
+    "description": "Camera mirrorless full-frame với cảm biến 24.2MP, chụp 40fps, video 4K và tính năng tiên tiến.",
+    "quantity": 4,
+    "price": 2499.99,
+    "discount": 0.1,
+    "specialPrice": 2249.99,
+    "category": "camera"
+  },
+  {
+    "productName": "Fujifilm GFX 100S II",
+    "image": "fujifilm_gfx_100s_ii.jpg",
+    "description": "Camera medium format với cảm biến 102MP, ổn định hình ảnh 5 trục và khả năng chụp ảnh độ phân giải cao.",
+    "quantity": 1,
+    "price": 4999.99,
+    "discount": 0.05,
+    "specialPrice": 4749.99,
+    "category": "camera"
+  },
+  {
+    "productName": "OnePlus 13",
+    "image": "oneplus_13.jpg",
+    "description": "Điện thoại thông minh hàng đầu từ OnePlus với tính năng tiên tiến, bộ xử lý mạnh mẽ và thiết kế cao cấp.",
+    "quantity": 10,
+    "price": 999.99,
+    "discount": 0.1,
+    "specialPrice": 899.99,
+    "category": "other devices"
+  },
+  {
+    "productName": "Amazfit Active 2",
+    "image": "amazfit_active_2.jpg",
+    "description": "Đồng hồ thông minh với màn hình AMOLED, bản đồ ngoại tuyến, theo dõi giấc ngủ và tập luyện, thiết kế thép không gỉ.",
+    "quantity": 15,
+    "price": 199.99,
+    "discount": 0.15,
+    "specialPrice": 169.99,
+    "category": "other devices"
+  },
+  {
+    "productName": "HP All-in-One Desktop",
+    "image": "hp_all_in_one.jpg",
+    "description": "Máy tính tất cả trong một với màn hình cảm ứng 27 hoặc 32 inch, bộ xử lý Intel Core Ultra và webcam tích hợp.",
+    "quantity": 5,
+    "price": 1299.99,
+    "discount": 0.1,
+    "specialPrice": 1169.99,
+    "category": "other devices"
+  },
+  {
+    "productName": "Halliday Smart Glasses",
+    "image": "halliday_smart_glasses.jpg",
+    "description": "Kính thông minh hiển thị màn hình kỹ thuật số, tích hợp AI và điều khiển bằng nhẫn thông minh.",
+    "quantity": 3,
+    "price": 499.99,
+    "discount": 0.05,
+    "specialPrice": 474.99,
+    "category": "other devices"
+  },
+  {
+    "productName": "Dreame X50",
+    "image": "dreame_x50.jpg",
+    "description": "Robot hút bụi tiên tiến với chân thu gọn, lực hút mạnh và tính năng điều hướng thông minh.",
+    "quantity": 7,
+    "price": 699.99,
+    "discount": 0.12,
+    "specialPrice": 611.99,
+    "category": "other devices"
+  }
+]

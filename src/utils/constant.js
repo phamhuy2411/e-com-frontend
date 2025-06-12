@@ -1,6 +1,6 @@
-import bannerImageOne from "../assets/sliders/s_1.webp";
-import bannerImageTwo from "../assets/sliders/s_2.webp";
-import bannerImageThree from "../assets/sliders/s_3.webp";
+import bannerImageOne from "../assets/sliders/s_1.png";
+import bannerImageTwo from "../assets/sliders/s_2.png";
+import bannerImageThree from "../assets/sliders/s_3.png";
 
 export {
     bannerImageOne,

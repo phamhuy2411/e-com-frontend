@@ -43,29 +43,29 @@ const Navbar = memo(() => {
     
     return (
         <nav 
-            className="h-[70px] bg-custom-gradient text-white z-50 flex items-center sticky top-0"
+            className="h-[70px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white z-50 flex items-center sticky top-0 shadow-lg"
             role="navigation"
             aria-label="Main navigation"
         >
             <div className="lg:px-14 sm:px-8 px-4 w-full flex justify-between">
                 <Link 
                     to="/" 
-                    className="flex items-center text-2xl font-bold"
+                    className="flex items-center text-2xl font-bold group"
                     aria-label="Home"
                 >
                     <img
                         src={logo}
                         alt="Gearvana Logo"
-                        className="mr-2 h-10 w-auto"
+                        className="mr-2 h-10 w-auto transition-transform duration-300 group-hover:scale-105"
                         style={{ maxHeight: 48 }}
                     />
-                    <span className="font-[Poppins]">Gearvana</span>
+                    <span className="font-[Poppins] bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">Gearvana</span>
                 </Link>
 
                 <ul 
-                    className={`flex sm:gap-10 gap-4 sm:items-center text-slate-800 sm:static absolute left-0 top-[70px] sm:shadow-none shadow-md ${
+                    className={`flex sm:gap-10 gap-4 sm:items-center text-slate-800 sm:static absolute left-0 top-[70px] sm:shadow-none shadow-lg ${
                         navbarOpen ? "h-fit sm:pb-0 pb-5" : "h-0 overflow-hidden"
-                    } transition-all duration-100 sm:h-fit sm:bg-none bg-custom-gradient text-white sm:w-fit w-full sm:flex-row flex-col px-4 sm:px-0`}
+                    } transition-all duration-100 sm:h-fit sm:bg-none bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white sm:w-fit w-full sm:flex-row flex-col px-4 sm:px-0`}
                     role="menubar"
                 >
                     <NavLink to="/" path={path}>Home</NavLink>
@@ -76,13 +76,18 @@ const Navbar = memo(() => {
                     <li className="font-[500] transition-all duration-150">
                         <Link 
                             to="/cart"
-                            className={`${path === "/cart" ? "text-white font-semibold" : "text-gray-200"}`}
+                            className={`${path === "/cart" ? "text-blue-400 font-semibold" : "text-gray-200 hover:text-blue-400"}`}
                             aria-label={`Cart (${cartItemsCount} items)`}
                         >
                             <Badge
                                 showZero
                                 badgeContent={cartItemsCount}
-                                color="primary"
+                                sx={{
+                                    '& .MuiBadge-badge': {
+                                        backgroundColor: '#3b82f6',
+                                        color: 'white'
+                                    }
+                                }}
                                 overlap="circular"
                                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                             >
@@ -99,10 +104,10 @@ const Navbar = memo(() => {
                         <li className="font-[500] transition-all duration-150">
                             <Link 
                                 className="flex items-center space-x-2 px-4 py-[6px] 
-                                    bg-gradient-to-r from-purple-600 to-red-500 
+                                    bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400
                                     text-white font-semibold rounded-md shadow-lg 
-                                    hover:from-purple-500 hover:to-red-400 transition 
-                                    duration-300 ease-in-out transform"
+                                    hover:from-blue-500 hover:via-blue-400 hover:to-cyan-300 
+                                    transition duration-300 ease-in-out transform hover:scale-105"
                                 to="/login"
                                 aria-label="Login"
                             >

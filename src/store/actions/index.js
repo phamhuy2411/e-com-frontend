@@ -307,3 +307,22 @@ export const stripePaymentConfirmation = (sendData, setErrorMesssage, setLoading
         if (setLoading) setLoading(false);
     }
 };
+
+export const fetchProductById = (productId) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.get(`/public/products/${productId}`);
+        if (data) {
+            dispatch({
+                type: "FETCH_PRODUCT_DETAIL",
+                payload: data
+            });
+        }
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        dispatch({
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch product details",
+        });
+    }
+};

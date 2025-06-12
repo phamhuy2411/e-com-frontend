@@ -2,6 +2,7 @@ const initialState = {
     products: null,
     categories: null,
     pagination: {},
+    productDetail: null,
 };
 
 const updatePagination = (state, action) => ({
@@ -33,6 +34,14 @@ export const productReducer = (state = initialState, action) => {
                 categories: action.payload,
                 pagination: updatePagination(state, action),
             };
+        case "FETCH_PRODUCT_DETAIL":
+            if (!action.payload) {
+                return state;
+            }
+            return {
+                ...state,
+                productDetail: action.payload,
+            };
         case "RESET_PRODUCTS":
             return {
                 ...state,
@@ -44,6 +53,11 @@ export const productReducer = (state = initialState, action) => {
                 ...state,
                 categories: null,
                 pagination: {},
+            };
+        case "RESET_PRODUCT_DETAIL":
+            return {
+                ...state,
+                productDetail: null,
             };
         default:
             return state;
