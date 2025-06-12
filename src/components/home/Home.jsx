@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import HeroBanner from "./HeroBanner";
+import AdvertisementBanner from "./AdvertisementBanner";
 import { useEffect } from "react";
 import { fetchProducts } from "../../store/actions";
 import ProductCard from "../shared/ProductCard";
@@ -45,6 +46,14 @@ const Home = memo(() => {
                 <HeroBanner />
             </div>
             
+            <AdvertisementBanner
+                title="Khuyến mãi đặc biệt mùa hè!"
+                description="Giảm giá lên đến 50% cho tất cả sản phẩm. Chương trình chỉ áp dụng trong thời gian có hạn. Đừng bỏ lỡ cơ hội mua sắm tuyệt vời này!"
+                imageUrl="/images/summer-sale.jpg"
+                buttonText="Mua ngay"
+                buttonLink="/products"
+            />
+
             <div className="py-5">
                 <div className="flex flex-col justify-center items-center space-y-2">
                     <h1 className="text-slate-800 text-4xl font-bold"> Products</h1>

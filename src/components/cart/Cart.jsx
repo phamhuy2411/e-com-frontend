@@ -1,14 +1,21 @@
 import {TfiShoppingCartFull} from "react-icons/tfi";
 import { FiArrowLeftCircle } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import ItemContent from "./ItemContent";
 import CartEmpty from "./CartEmpty";
 import { formatPrice } from "../../utils/formatPrice";
 import { useMemo } from "react";
+import { clearCartWithToast } from "../../store/actions";
+import toast from "react-hot-toast";
+import { HiOutlineTrash } from "react-icons/hi";
+import { Tooltip } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import { useState } from "react";
 
 const Cart = () => {
     const { cart } = useSelector((state) => state.carts);
+    const dispatch = useDispatch();
     
     const newCart = useMemo(() => {
         if (!cart) return { totalPrice: 0 };
@@ -20,6 +27,14 @@ const Cart = () => {
             )
         };
     }, [cart]);
+
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const handleRemoveAll = () => setOpenConfirm(true);
+    const handleConfirmRemoveAll = () => {
+        dispatch(clearCartWithToast(toast));
+        setOpenConfirm(false);
+    };
+    const handleCancelRemoveAll = () => setOpenConfirm(false);
 
     if (!cart || cart.length === 0) return <CartEmpty />;
 
@@ -33,20 +48,47 @@ const Cart = () => {
                 <p className="text-lg text-gray-600 mt-2">All your selected items</p>
             </div>
 
-            <div className="grid md:grid-cols-5 grid-cols-4 gap-4 pb-2 font-semibold items-center">
-                <div className="md:col-span-2 justify-self-start text-lg text-slate-800 lg:ps-4">
+            {cart && cart.length > 0 && (
+                <div className="flex justify-end mb-4">
+                    <Tooltip title="Remove all items from cart" arrow>
+                        <button
+                            className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-md text-sm font-semibold shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-400"
+                            onClick={handleRemoveAll}
+                        >
+                            <HiOutlineTrash size={18} />
+                            Remove All
+                        </button>
+                    </Tooltip>
+                    <Dialog open={openConfirm} onClose={handleCancelRemoveAll}>
+                        <DialogTitle>Remove All Items?</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Are you sure you want to remove all items from your cart? This action cannot be undone.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCancelRemoveAll} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleConfirmRemoveAll} color="error" variant="contained">
+                                Remove All
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
+            )}
+
+            <div className="grid md:grid-cols-12 gap-4 pb-2 font-semibold items-center">
+                <div className="md:col-span-7 text-lg text-slate-800 lg:ps-4">
                     Product
                 </div>
-
-                <div className="justify-self-center text-lg text-slate-800">
+                <div className="md:col-span-2 text-lg text-slate-800 text-center">
                     Price
                 </div>
-
-                <div className="justify-self-center text-lg text-slate-800">
+                <div className="md:col-span-2 text-lg text-slate-800 text-center">
                     Quantity
                 </div>
-
-                <div className="justify-self-center text-lg text-slate-800">
+                <div className="md:col-span-1 text-lg text-slate-800 text-center">
                     Total
                 </div>
             </div>

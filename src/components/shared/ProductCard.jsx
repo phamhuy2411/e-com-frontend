@@ -118,13 +118,13 @@ const ProductCard = memo(({
 
     return (
         <div 
-            className="border rounded-lg shadow-xl overflow-hidden transition-shadow duration-300 hover:shadow-2xl"
+            className="border rounded-lg shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-2xl bg-white h-full flex flex-col"
             role="article"
             aria-label={`Product: ${productName}`}
         >
             <Link 
                 to={`/products/${productId}`}
-                className="block w-full overflow-hidden aspect-[3/2]"
+                className="block w-full overflow-hidden aspect-[3/2] bg-gray-50"
                 onClick={(e) => {
                     if (!about) {
                         e.preventDefault();
@@ -133,13 +133,13 @@ const ProductCard = memo(({
                 }}
             >
                 <img 
-                    className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
+                    className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105 object-contain"
                     src={image}
                     alt={productName}
                     loading="lazy"
                 />
             </Link>
-            <div className="p-4">
+            <div className="p-5 flex flex-col flex-1">
                 <Link 
                     to={`/products/${productId}`}
                     onClick={(e) => {
@@ -154,15 +154,13 @@ const ProductCard = memo(({
                         {truncateText(productName, 50)}
                     </h2>
                 </Link>
-                
-                <div className="min-h-20 max-h-20">
+                <div className="min-h-[56px] max-h-20 mb-3">
                     <p className="text-gray-600 text-sm">
                         {truncateText(description, 80)}
                     </p>
                 </div>
-
                 {!about && (
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mt-auto">
                         {renderPrice()}
                         {renderActionButton()}
                     </div>

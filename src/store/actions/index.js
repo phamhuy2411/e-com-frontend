@@ -326,3 +326,13 @@ export const fetchProductById = (productId) => async (dispatch) => {
         });
     }
 };
+
+export const clearCartWithToast = (toast) => (dispatch, getState) => {
+    dispatch({ type: "CLEAR_CART" });
+    if (toast) toast.success("All items removed from cart");
+    try {
+        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+    } catch {
+        // ignore localStorage errors
+    }
+};

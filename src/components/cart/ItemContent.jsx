@@ -94,9 +94,9 @@ const ItemContent = ({
                 </div>
             )}
 
-            <div className="grid md:grid-cols-12 gap-4 p-4">
+            <div className="grid md:grid-cols-12 gap-4 p-4 items-center">
                 {/* Product Image and Info Section */}
-                <div className="md:col-span-7 flex gap-4">
+                <div className="md:col-span-7 flex gap-4 items-center">
                     {/* Image Container */}
                     <div className="relative w-24 h-24 flex-shrink-0 group">
                         <div className="w-full h-full overflow-hidden rounded-lg transition-transform duration-300 group-hover:scale-105">
@@ -170,41 +170,40 @@ const ItemContent = ({
                     </div>
                 </div>
 
-                {/* Price and Quantity Section */}
-                <div className="md:col-span-5 flex items-center justify-between md:justify-end gap-6">
-                    {/* Price Display */}
+                {/* Price */}
+                <div className="md:col-span-2 flex flex-col items-center">
                     <div className="flex flex-col items-end">
-                        <div className="flex flex-col items-end">
-                            {specialPrice < price && (
-                                <span className="text-gray-400 line-through text-sm">
-                                    {formatPrice(Number(price))}
-                                </span>
-                            )}
-                            <span className="text-lg font-semibold text-blue-600">
-                                {formatPrice(Number(specialPrice))}
-                            </span>
-                        </div>
-                        {currentQuantity > 1 && (
-                            <span className="text-xs text-slate-500 mt-1">
-                                {currentQuantity} × {formatPrice(Number(specialPrice))}
+                        {specialPrice < price && (
+                            <span className="text-gray-400 line-through text-sm">
+                                {formatPrice(Number(price))}
                             </span>
                         )}
+                        <span className="text-lg font-semibold text-blue-600">
+                            {formatPrice(Number(specialPrice))}
+                        </span>
                     </div>
+                    {currentQuantity > 1 && (
+                        <span className="text-xs text-slate-500 mt-1">
+                            {currentQuantity} × {formatPrice(Number(specialPrice))}
+                        </span>
+                    )}
+                </div>
 
-                    {/* Quantity Controls */}
-                    <div className="flex items-center gap-4">
-                        <SetQuantity 
-                            quantity={currentQuantity}
-                            cardCounter={true}
-                            handleQtyIncrease={handleQtyIncrease}
-                            handleQtyDecrease={handleQtyDecrease}
-                        />
-                        <div className="text-right min-w-[100px]">
-                            <span className="text-sm text-slate-500">Total</span>
-                            <div className="text-lg font-bold text-slate-800">
-                                {formatPrice(totalPrice)}
-                            </div>
-                        </div>
+                {/* Quantity */}
+                <div className="md:col-span-2 flex items-center justify-center">
+                    <SetQuantity 
+                        quantity={currentQuantity}
+                        cardCounter={true}
+                        handleQtyIncrease={handleQtyIncrease}
+                        handleQtyDecrease={handleQtyDecrease}
+                    />
+                </div>
+
+                {/* Total */}
+                <div className="md:col-span-1 flex flex-col items-center">
+                    <span className="text-sm text-slate-500">Total</span>
+                    <div className="text-lg font-bold text-slate-800">
+                        {formatPrice(totalPrice)}
                     </div>
                 </div>
             </div>

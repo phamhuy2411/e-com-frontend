@@ -94,55 +94,54 @@ const Filter = memo(({ categories }) => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-6 w-full">
+        <div className="flex flex-col gap-6 w-full">
             {/* SEARCH BAR */}
-            <div className="relative flex items-center 2xl:w-[450px] sm:w-[420px] w-full mb-4 lg:mb-0">
+            <div className="relative flex items-center w-full mb-2 bg-white rounded-lg shadow p-3">
                 <input 
                     type="text"
                     placeholder="Search Products"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border border-gray-300 text-slate-800 rounded-lg py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-sm"
+                    className="border border-gray-300 text-slate-800 rounded-lg py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-sm bg-white"
                     aria-label="Search products"
                 />
                 <FiSearch className="absolute left-3 text-slate-400" size={22} aria-hidden="true" />
             </div>
 
-            {/* FILTERS CONTAINER */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center w-full lg:w-auto">
-                {/* PRICE RANGE SLIDER */}
-                <div className="flex flex-col min-w-[260px] w-full sm:w-auto">
-                    <label className="text-sm font-semibold text-slate-700 mb-1 ml-1">Price Range</label>
-                    <div className="flex items-center gap-2">
-                        <FiDollarSign className="text-slate-500" size={18} aria-hidden="true" />
-                        <Slider
-                            value={priceRange}
-                            onChange={handlePriceChange}
-                            onChangeCommitted={handlePriceChangeCommitted}
-                            valueLabelDisplay="off"
-                            min={0}
-                            max={10000}
-                            step={100}
-                            className="text-blue-500 flex-1"
-                            aria-label="Price range"
-                            marks={[
-                                { value: 0, label: '$0' },
-                                { value: 2500, label: '$2.5k' },
-                                { value: 5000, label: '$5k' },
-                                { value: 7500, label: '$7.5k' },
-                                { value: 10000, label: '$10k' }
-                            ]}
-                        />
-                    </div>
-                    <div className="flex justify-between text-xs text-slate-600 mt-1 px-1">
-                        <span className="font-medium">{formatPrice(priceRange[0])}</span>
-                        <span className="font-medium">{formatPrice(priceRange[1])}</span>
-                    </div>
+            {/* PRICE RANGE SLIDER */}
+            <div className="flex flex-col w-full bg-white rounded-lg shadow p-3">
+                <label className="text-sm font-semibold text-slate-700 mb-1 ml-1">Price Range</label>
+                <div className="flex items-center gap-2">
+                    <FiDollarSign className="text-slate-500" size={18} aria-hidden="true" />
+                    <Slider
+                        value={priceRange}
+                        onChange={handlePriceChange}
+                        onChangeCommitted={handlePriceChangeCommitted}
+                        valueLabelDisplay="off"
+                        min={0}
+                        max={10000}
+                        step={100}
+                        className="text-blue-500 flex-1"
+                        aria-label="Price range"
+                        marks={[
+                            { value: 0, label: '$0' },
+                            { value: 2500, label: '$2.5k' },
+                            { value: 5000, label: '$5k' },
+                            { value: 7500, label: '$7.5k' },
+                            { value: 10000, label: '$10k' }
+                        ]}
+                    />
                 </div>
+                <div className="flex justify-between text-xs text-slate-600 mt-1 px-1">
+                    <span className="font-medium">{formatPrice(priceRange[0])}</span>
+                    <span className="font-medium">{formatPrice(priceRange[1])}</span>
+                </div>
+            </div>
 
-                {/* CATEGORY SELECTION */}
+            {/* CATEGORY SELECTION */}
+            <div className="w-full bg-white rounded-lg shadow p-3">
                 <FormControl
-                    className="text-slate-800 border-slate-700 min-w-[120px]"
+                    className="text-slate-800 border-slate-700 w-full mt-2"
                     variant="outlined"
                     size="small">
                         <InputLabel id="category-select-label">Category</InputLabel>
@@ -151,7 +150,7 @@ const Filter = memo(({ categories }) => {
                             value={category}
                             onChange={handleCategoryChange}
                             label="Category"
-                            className="min-w-[120px] text-slate-800 border-slate-700 bg-white rounded-lg"
+                            className="w-full text-slate-800 border-slate-700 bg-white rounded-lg"
                             aria-label="Select category"
                          >
                             <MenuItem value="all">All</MenuItem>
@@ -162,15 +161,16 @@ const Filter = memo(({ categories }) => {
                             ))}
                          </Select>
                 </FormControl>
+            </div>
 
-                {/* SORT BUTTON & CLEAR FILTER */}
-                <Tooltip title={`Sort by price: ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}>
+            {/* SORT BUTTON & CLEAR FILTER */}
+            <div className="flex flex-col gap-3 mt-2 bg-white rounded-lg shadow p-3">
+                <Tooltip title={`Sort by price: ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}> 
                     <Button variant="contained" 
                         onClick={toggleSortOrder}
                         color="primary" 
-                        className="flex items-center gap-2 h-11 rounded-lg shadow-md px-6 text-base font-semibold"
+                        className="flex items-center gap-2 h-11 rounded-lg shadow-md px-6 text-base font-semibold w-full"
                         aria-label={`Sort by price ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
-                        style={{ minWidth: 120 }}
                     >
                         SORT BY
                         {sortOrder === "asc" ? (
@@ -181,10 +181,9 @@ const Filter = memo(({ categories }) => {
                     </Button>
                 </Tooltip>
                 <button 
-                    className="flex items-center gap-2 bg-rose-700 hover:bg-rose-800 text-white px-6 py-2 rounded-lg transition duration-200 shadow-md focus:outline-none text-base font-semibold h-11"
+                    className="flex items-center gap-2 bg-rose-700 hover:bg-rose-800 text-white px-6 py-2 rounded-lg transition duration-200 shadow-md focus:outline-none text-base font-semibold h-11 w-full justify-center"
                     onClick={handleClearFilters}
                     aria-label="Clear all filters"
-                    style={{ minWidth: 140 }}
                 >
                     <FiRefreshCw className="font-semibold" size={18} aria-hidden="true" />
                     <span>Clear Filter</span>
