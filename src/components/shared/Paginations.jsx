@@ -28,7 +28,21 @@ const Paginations = memo(({ numberOfPage }) => {
             shape="rounded" 
             onChange={onChangeHandler}
             aria-label="Pagination navigation"
-            color="primary"
+            sx={{
+                '& .MuiPaginationItem-root': {
+                    color: '#f97316',
+                    '&.Mui-selected': {
+                        backgroundColor: '#f97316',
+                        color: 'white',
+                        '&:hover': {
+                            backgroundColor: '#ea580c',
+                        },
+                    },
+                    '&:hover': {
+                        backgroundColor: '#fff7ed',
+                    },
+                },
+            }}
             size="large"
         />
     );

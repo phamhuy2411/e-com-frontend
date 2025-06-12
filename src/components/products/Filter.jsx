@@ -102,17 +102,17 @@ const Filter = memo(({ categories }) => {
                     placeholder="Search Products"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border border-gray-300 text-slate-800 rounded-lg py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 shadow-sm bg-white"
+                    className="border border-orange-200 text-slate-800 rounded-lg py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-200 shadow-sm bg-white"
                     aria-label="Search products"
                 />
-                <FiSearch className="absolute left-3 text-slate-400" size={22} aria-hidden="true" />
+                <FiSearch className="absolute left-3 text-orange-400" size={22} aria-hidden="true" />
             </div>
 
             {/* PRICE RANGE SLIDER */}
             <div className="flex flex-col w-full bg-white rounded-lg shadow p-3">
                 <label className="text-sm font-semibold text-slate-700 mb-1 ml-1">Price Range</label>
                 <div className="flex items-center gap-2">
-                    <FiDollarSign className="text-slate-500" size={18} aria-hidden="true" />
+                    <FiDollarSign className="text-orange-500" size={18} aria-hidden="true" />
                     <Slider
                         value={priceRange}
                         onChange={handlePriceChange}
@@ -121,7 +121,23 @@ const Filter = memo(({ categories }) => {
                         min={0}
                         max={10000}
                         step={100}
-                        className="text-blue-500 flex-1"
+                        sx={{
+                            color: '#f97316',
+                            '& .MuiSlider-track': {
+                                background: 'linear-gradient(to right, #f97316, #fb923c)',
+                            },
+                            '& .MuiSlider-thumb': {
+                                backgroundColor: '#fff',
+                                border: '2px solid #f97316',
+                                '&:hover, &.Mui-focusVisible': {
+                                    boxShadow: '0 0 0 8px rgba(249, 115, 22, 0.16)',
+                                },
+                            },
+                            '& .MuiSlider-rail': {
+                                backgroundColor: '#fef3c7',
+                            },
+                        }}
+                        className="flex-1"
                         aria-label="Price range"
                         marks={[
                             { value: 0, label: '$0' },
@@ -141,7 +157,7 @@ const Filter = memo(({ categories }) => {
             {/* CATEGORY SELECTION */}
             <div className="w-full bg-white rounded-lg shadow p-3">
                 <FormControl
-                    className="text-slate-800 border-slate-700 w-full mt-2"
+                    className="text-slate-800 border-orange-200 w-full mt-2"
                     variant="outlined"
                     size="small">
                         <InputLabel id="category-select-label">Category</InputLabel>
@@ -150,7 +166,7 @@ const Filter = memo(({ categories }) => {
                             value={category}
                             onChange={handleCategoryChange}
                             label="Category"
-                            className="w-full text-slate-800 border-slate-700 bg-white rounded-lg"
+                            className="w-full text-slate-800 border-orange-200 bg-white rounded-lg"
                             aria-label="Select category"
                          >
                             <MenuItem value="all">All</MenuItem>
@@ -168,7 +184,12 @@ const Filter = memo(({ categories }) => {
                 <Tooltip title={`Sort by price: ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}> 
                     <Button variant="contained" 
                         onClick={toggleSortOrder}
-                        color="primary" 
+                        sx={{
+                            backgroundColor: '#f97316',
+                            '&:hover': {
+                                backgroundColor: '#ea580c',
+                            },
+                        }}
                         className="flex items-center gap-2 h-11 rounded-lg shadow-md px-6 text-base font-semibold w-full"
                         aria-label={`Sort by price ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
                     >
@@ -181,7 +202,7 @@ const Filter = memo(({ categories }) => {
                     </Button>
                 </Tooltip>
                 <button 
-                    className="flex items-center gap-2 bg-rose-700 hover:bg-rose-800 text-white px-6 py-2 rounded-lg transition duration-200 shadow-md focus:outline-none text-base font-semibold h-11 w-full justify-center"
+                    className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg transition duration-200 shadow-md focus:outline-none text-base font-semibold h-11 w-full justify-center"
                     onClick={handleClearFilters}
                     aria-label="Clear all filters"
                 >

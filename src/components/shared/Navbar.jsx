@@ -12,7 +12,7 @@ import logo from "../../assets/gearvana-logo.png";
 const NavLink = memo(({ to, path, children, className = "" }) => (
     <li className="font-[500] transition-all duration-150">
         <Link 
-            className={`${path === to ? "text-white font-semibold" : "text-gray-200"} ${className}`}
+            className={`${path === to ? "text-orange-400 font-semibold" : "text-gray-100 hover:text-orange-400"} ${className}`}
             to={to}
         >
             {children}
@@ -43,7 +43,7 @@ const Navbar = memo(() => {
     
     return (
         <nav 
-            className="h-[70px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white z-50 flex items-center sticky top-0 shadow-lg"
+            className="h-[70px] bg-gradient-to-r from-red-700 to-red-600 text-white z-50 flex items-center sticky top-0 shadow-lg"
             role="navigation"
             aria-label="Main navigation"
         >
@@ -59,13 +59,13 @@ const Navbar = memo(() => {
                         className="mr-2 h-10 w-auto transition-transform duration-300 group-hover:scale-105"
                         style={{ maxHeight: 48 }}
                     />
-                    <span className="font-[Poppins] bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">Gearvana</span>
+                    <span className="font-[Poppins] bg-gradient-to-r from-orange-300 via-orange-400 to-orange-300 bg-clip-text text-transparent">Gearvana</span>
                 </Link>
 
                 <ul 
-                    className={`flex sm:gap-10 gap-4 sm:items-center text-slate-800 sm:static absolute left-0 top-[70px] sm:shadow-none shadow-lg ${
+                    className={`flex sm:gap-10 gap-4 sm:items-center text-gray-100 sm:static absolute left-0 top-[70px] sm:shadow-none shadow-lg ${
                         navbarOpen ? "h-fit sm:pb-0 pb-5" : "h-0 overflow-hidden"
-                    } transition-all duration-100 sm:h-fit sm:bg-none bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white sm:w-fit w-full sm:flex-row flex-col px-4 sm:px-0`}
+                    } transition-all duration-100 sm:h-fit sm:bg-none bg-gradient-to-r from-red-700 to-red-600 text-white sm:w-fit w-full sm:flex-row flex-col px-4 sm:px-0`}
                     role="menubar"
                 >
                     <NavLink to="/" path={path}>Home</NavLink>
@@ -76,7 +76,7 @@ const Navbar = memo(() => {
                     <li className="font-[500] transition-all duration-150">
                         <Link 
                             to="/cart"
-                            className={`${path === "/cart" ? "text-blue-400 font-semibold" : "text-gray-200 hover:text-blue-400"}`}
+                            className={`${path === "/cart" ? "text-orange-400 font-semibold" : "text-gray-100 hover:text-orange-400"}`}
                             aria-label={`Cart (${cartItemsCount} items)`}
                         >
                             <Badge
@@ -84,7 +84,7 @@ const Navbar = memo(() => {
                                 badgeContent={cartItemsCount}
                                 sx={{
                                     '& .MuiBadge-badge': {
-                                        backgroundColor: '#3b82f6',
+                                        backgroundColor: '#f97316',
                                         color: 'white'
                                     }
                                 }}
@@ -104,9 +104,9 @@ const Navbar = memo(() => {
                         <li className="font-[500] transition-all duration-150">
                             <Link 
                                 className="flex items-center space-x-2 px-4 py-[6px] 
-                                    bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400
+                                    bg-gradient-to-r from-orange-500 to-orange-400
                                     text-white font-semibold rounded-md shadow-lg 
-                                    hover:from-blue-500 hover:via-blue-400 hover:to-cyan-300 
+                                    hover:from-orange-400 hover:to-orange-300 
                                     transition duration-300 ease-in-out transform hover:scale-105"
                                 to="/login"
                                 aria-label="Login"
@@ -126,9 +126,9 @@ const Navbar = memo(() => {
                     aria-label={navbarOpen ? "Close menu" : "Open menu"}
                 >
                     {navbarOpen ? (
-                        <RxCross2 className="text-white text-3xl" aria-hidden="true" />
+                        <RxCross2 className="text-gray-100 text-3xl" aria-hidden="true" />
                     ) : (
-                        <IoIosMenu className="text-white text-3xl" aria-hidden="true" />
+                        <IoIosMenu className="text-gray-100 text-3xl" aria-hidden="true" />
                     )}
                 </button>
             </div>

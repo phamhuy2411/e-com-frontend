@@ -51,7 +51,7 @@ const ProductCard = memo(({
         if (!price || Number(price) === 0) {
             return (
                 <button
-                    className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1"
+                    className="text-orange-600 hover:text-orange-700 font-medium text-sm flex items-center gap-1 mb-2"
                     onClick={() => window.location.href = '/contact'}
                 >
                     <MdInfo className="text-lg" />
@@ -84,10 +84,9 @@ const ProductCard = memo(({
             return (
                 <button
                     onClick={() => window.location.href = '/contact'}
-                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-3 rounded-lg items-center transition-colors duration-300 w-36 flex justify-center"
+                    className="bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-white py-1.5 px-3 rounded-lg items-center transition-colors duration-300 w-28 flex justify-center h-[42px]"
                     aria-label="Contact for price"
                 >
-                    <MdInfo className="mr-2" aria-hidden="true" />
                     Contact Us
                 </button>
             );
@@ -105,12 +104,12 @@ const ProductCard = memo(({
                     productId,
                     quantity,
                 })}
-                className={`bg-blue-500 ${
-                    isAvailable ? "opacity-100 hover:bg-blue-600" : "opacity-70"
-                } text-white py-2 px-3 rounded-lg items-center transition-colors duration-300 w-36 flex justify-center`}
+                className={`bg-gradient-to-r from-orange-500 to-orange-400 ${
+                    isAvailable ? "opacity-100 hover:from-orange-400 hover:to-orange-300" : "opacity-70"
+                } text-white py-1.5 px-2 rounded-lg items-center transition-colors duration-300 w-28 flex justify-center h-[42px] text-sm`}
                 aria-label={isAvailable ? "Add to cart" : "Out of stock"}
             >
-                <FaShoppingCart className="mr-2" aria-hidden="true" />
+                <FaShoppingCart className="mr-1 text-sm" aria-hidden="true" />
                 {isAvailable ? "Add to Cart" : "Stock Out"}
             </button>
         );
@@ -150,7 +149,7 @@ const ProductCard = memo(({
                     }}
                     className="block"
                 >
-                    <h2 className="text-lg font-semibold mb-2 cursor-pointer hover:text-blue-600 transition-colors">
+                    <h2 className="text-lg font-semibold mb-2 cursor-pointer hover:text-orange-600 transition-colors">
                         {truncateText(productName, 50)}
                     </h2>
                 </Link>

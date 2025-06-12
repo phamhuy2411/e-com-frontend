@@ -77,7 +77,6 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
   const discountPercentage = calculateDiscount();
 
   const handleAddToCart = () => {
-    // Thêm vào giỏ hàng logic ở đây
     toast.custom(
       (t) => (
         <div
@@ -88,7 +87,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
           <div className="flex-1 w-0 p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0 pt-0.5">
-                <MdCheckCircle className="h-10 w-10 text-green-500" />
+                <MdCheckCircle className="h-10 w-10 text-orange-500" />
               </div>
               <div className="ml-3 flex-1">
                 <p className="text-sm font-medium text-gray-900">
@@ -109,7 +108,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
           <div className="flex border-l border-gray-200">
             <button
               onClick={() => toast.dismiss(t.id)}
-              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-orange-600 hover:text-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               Close
             </button>
@@ -132,8 +131,8 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
     if (!price || Number(price) === 0) {
       return (
         <div className="flex items-center gap-2">
-          <MdInfo className="text-blue-500" size={24} />
-          <span className="text-lg font-medium text-blue-600">Contact for price</span>
+          <MdInfo className="text-orange-500" size={24} />
+          <span className="text-lg font-medium text-orange-600">Contact for price</span>
         </div>
       );
     }
@@ -166,7 +165,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
             setOpen(false);
             window.location.href = '/contact';
           }}
-          className="flex-1 px-6 py-3 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2"
+          className="flex-1 px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 flex items-center justify-center gap-2"
         >
           <MdInfo size={20} />
           Contact Us
@@ -180,9 +179,9 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
         disabled={!isAvailable || isLoading}
         className={`flex-1 px-6 py-3 text-sm font-medium text-white ${
           isAvailable
-            ? "bg-blue-500 hover:bg-blue-600"
+            ? "bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300"
             : "bg-gray-300 cursor-not-allowed"
-        } rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2`}
+        } rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 flex items-center justify-center gap-2`}
       >
         <MdShoppingCart size={20} />
         {isAvailable ? "Add to cart" : "Sold out"}
@@ -228,7 +227,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
                 {/* Discount badge */}
                 {discountPercentage > 0 && !isLoading && (
                   <div className="absolute top-4 left-4 z-10">
-                    <div className="bg-blue-500 text-white px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1.5 shadow-lg animate-bounce">
+                    <div className="bg-gradient-to-r from-orange-500 to-orange-400 text-white px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1.5 shadow-lg animate-bounce">
                       <MdLocalOffer size={16} />
                       {discountPercentage}% OFF
                     </div>
@@ -265,7 +264,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
                         />
                         {!imageLoaded && !isLoading && (
                           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse">
-                            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
                           </div>
                         )}
                       </div>
@@ -300,8 +299,8 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
                         <Status
                           text={isAvailable ? "In Stock" : "Out of Stock"}
                           icon={isAvailable ? MdDone : MdClose}
-                          bg={isAvailable ? "bg-blue-100" : "bg-rose-100"}
-                          color={isAvailable ? "text-blue-800" : "text-rose-800"}
+                          bg={isAvailable ? "bg-orange-100" : "bg-rose-100"}
+                          color={isAvailable ? "text-orange-800" : "text-rose-800"}
                         />
                       )}
                     </div>
@@ -323,7 +322,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
                       {/* Discount Information */}
                       {discountPercentage > 0 && price && Number(price) > 0 && (
                         <div className="flex items-center gap-2 text-sm">
-                          <MdLocalOffer className="text-red-500" size={20} />
+                          <MdLocalOffer className="text-orange-500" size={20} />
                           <span className="text-slate-600">
                             Save {formatPrice(price - specialPrice)} ({discountPercentage}% off)
                           </span>
@@ -375,7 +374,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
                     <button
                       onClick={() => setOpen(false)}
                       type="button"
-                      className="px-6 py-3 text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                      className="px-6 py-3 text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                     >
                       Close
                     </button>
