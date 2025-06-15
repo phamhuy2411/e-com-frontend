@@ -140,14 +140,18 @@ export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => 
     }
 };
 
-export const logOutUser = (navigate) => (dispatch) => {
-    dispatch({ type: "LOG_OUT" });
+export const logOutUser = (navigate) => async (dispatch) => {
     try {
+        // Gọi API signout, nhớ withCredentials để gửi cookie
+        await api.post("/auth/signout", {}, { withCredentials: true });
+
+        dispatch({ type: "LOG_OUT" });
         localStorage.removeItem("auth");
-    } catch {
-        // ignore localStorage errors
+
+        if (navigate) navigate("/login");
+    } catch (error) {
+        console.error("Logout failed", error);
     }
-    if (navigate) navigate("/login");
 };
 
 export const addUpdateUserAddress = (sendData, toast, addressId, setOpenAddressModal) => async (dispatch) => {
