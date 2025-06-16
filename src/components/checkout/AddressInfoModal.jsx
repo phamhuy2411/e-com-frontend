@@ -13,12 +13,12 @@ const AddressInfoModal = ({ open, setOpen, children }) => {
       role="dialog"
       aria-modal="true">
         <DialogBackdrop 
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
           aria-hidden="true" />
 
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel 
-            className="relative w-full max-w-md mx-auto transform overflow-hidden bg-white rounded-lg shadow-xl transition-all"
+            className="relative w-full max-w-md mx-auto transform overflow-hidden bg-white rounded-2xl shadow-2xl border border-gray-100 transition-all"
             role="document">
             <div className='px-6 py-6'>
                 {children}
@@ -27,7 +27,7 @@ const AddressInfoModal = ({ open, setOpen, children }) => {
                 <button 
                   onClick={() => setOpen(false)} 
                   type='button'
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                  className="p-2 hover:bg-orange-100 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   aria-label="Close modal">
                     <FaTimes className='text-slate-700' size={25} aria-hidden="true" />
                 </button>

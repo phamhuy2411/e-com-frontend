@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 
-const Filter = memo(({ categories }) => {
+const Filter = memo(({ categories = [] }) => {
     const [searchParams] = useSearchParams();
     const params = new URLSearchParams(searchParams);
     const pathname = useLocation().pathname;
@@ -121,6 +121,7 @@ const Filter = memo(({ categories }) => {
                         min={0}
                         max={10000}
                         step={100}
+                        getAriaLabel={() => 'Price range'}
                         sx={{
                             color: '#f97316',
                             '& .MuiSlider-track': {
@@ -138,7 +139,6 @@ const Filter = memo(({ categories }) => {
                             },
                         }}
                         className="flex-1"
-                        aria-label="Price range"
                         marks={[
                             { value: 0, label: '$0' },
                             { value: 2500, label: '$2.5k' },
@@ -221,10 +221,6 @@ Filter.propTypes = {
             categoryName: PropTypes.string.isRequired,
         })
     ),
-};
-
-Filter.defaultProps = {
-    categories: [],
 };
 
 Filter.displayName = 'Filter';

@@ -8,7 +8,6 @@ import ProductCard from "../shared/ProductCard";
 import Loader from "../shared/Loader";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { memo } from "react";
-import PropTypes from "prop-types";
 
 const Home = memo(() => {
     const dispatch = useDispatch();
@@ -23,9 +22,9 @@ const Home = memo(() => {
     const renderProducts = () => {
         if (!products?.length) {
             return (
-                <div className="flex justify-center items-center h-[200px]">
-                    <FaExclamationTriangle className="text-slate-800 text-3xl mr-2" aria-hidden="true" />
-                    <span className="text-slate-800 text-lg font-medium">
+                <div className="flex justify-center items-center h-[200px] bg-white rounded-2xl shadow-lg border border-slate-200">
+                    <FaExclamationTriangle className="text-orange-500 text-3xl mr-2" aria-hidden="true" />
+                    <span className="text-slate-700 text-lg font-medium">
                         No products available
                     </span>
                 </div>
@@ -42,62 +41,52 @@ const Home = memo(() => {
     };
 
     return (
-        <div className="lg:px-14 sm:px-8 px-4">
-            <div className="py-2 mt-4">
-                <Advertisement 
-                    leftAds={adData.leftAds}
-                    rightAds={adData.rightAds}
-                    bottomAd={adData.bottomAd}
-                >
-                    <HeroBanner />
-                </Advertisement>
-            </div>
-            
-            <div className="py-5">
-                <div className="flex flex-col justify-center items-center space-y-2">
-                    <h1 className="text-slate-800 text-4xl font-bold"> Products</h1>
-                        <span className="text-slate-700">
-                            Discover our handpicked selection of top-rated items just for you!
-                        </span>
-                    
-                </div>
-
-                {isLoading ? (
-                    <Loader />
-                ) : errorMessage ? (
-                    <div 
-                        className="flex justify-center items-center h-[200px]"
-                        role="alert"
-                        aria-live="polite"
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+            <div className="lg:px-14 sm:px-8 px-4">
+                <div className="py-2 mt-4">
+                    <Advertisement 
+                        leftAds={adData.leftAds}
+                        rightAds={adData.rightAds}
+                        bottomAd={adData.bottomAd}
                     >
-                        <FaExclamationTriangle 
-                            className="text-slate-800 text-3xl mr-2" 
-                            aria-hidden="true"
-                        />
-                        <span className="text-slate-800 text-lg font-medium">
-                            {errorMessage}
+                        <HeroBanner />
+                    </Advertisement>
+                </div>
+                
+                <div className="py-5">
+                    <div className="flex flex-col justify-center items-center space-y-2 mb-8">
+                        <h1 className="text-slate-800 text-4xl font-bold">Featured Products</h1>
+                        <span className="text-slate-600 text-lg">
+                            Discover our latest and most popular products
                         </span>
                     </div>
-                ) : (
-                    renderProducts()
-                )}
+
+                    {isLoading ? (
+                        <div className="flex justify-center items-center min-h-[400px]">
+                            <Loader />
+                        </div>
+                    ) : errorMessage ? (
+                        <div 
+                            className="flex justify-center items-center h-[200px] bg-white rounded-2xl shadow-lg border border-slate-200"
+                            role="alert"
+                            aria-live="polite"
+                        >
+                            <FaExclamationTriangle 
+                                className="text-orange-500 text-3xl mr-2" 
+                                aria-hidden="true"
+                            />
+                            <span className="text-slate-700 text-lg font-medium">
+                                {errorMessage}
+                            </span>
+                        </div>
+                    ) : (
+                        renderProducts()
+                    )}
+                </div>
             </div>
         </div>
     )
 });
-
-Home.propTypes = {
-    products: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            // Add other product properties as needed
-        })
-    ),
-};
-
-Home.defaultProps = {
-    products: [],
-};
 
 Home.displayName = 'Home';
 

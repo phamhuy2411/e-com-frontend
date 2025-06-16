@@ -1,0 +1,414 @@
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scale {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shine {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
+}
+
+@keyframes borderGlow {
+  0% { box-shadow: 0 0 5px rgba(249, 115, 22, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(249, 115, 22, 0.5); }
+}
+
+@keyframes neonGlow {
+  0% { 
+    text-shadow: 0 0 5px rgba(249, 115, 22, 0.5),
+                 0 0 10px rgba(249, 115, 22, 0.3),
+                 0 0 15px rgba(249, 115, 22, 0.2);
+  }
+  50% { 
+    text-shadow: 0 0 10px rgba(249, 115, 22, 0.8),
+                 0 0 20px rgba(249, 115, 22, 0.5),
+                 0 0 30px rgba(249, 115, 22, 0.3);
+  }
+  100% { 
+    text-shadow: 0 0 5px rgba(249, 115, 22, 0.5),
+                 0 0 10px rgba(249, 115, 22, 0.3),
+                 0 0 15px rgba(249, 115, 22, 0.2);
+  }
+}
+
+@keyframes cyberBorder {
+  0% { 
+    border-image: linear-gradient(45deg, #f97316, #3b82f6, #f97316) 1;
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+  }
+  50% { 
+    border-image: linear-gradient(45deg, #3b82f6, #f97316, #3b82f6) 1;
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+  }
+  100% { 
+    border-image: linear-gradient(45deg, #f97316, #3b82f6, #f97316) 1;
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+  }
+}
+
+@keyframes matrixRain {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 100%; }
+}
+
+@keyframes hologram {
+  0% { 
+    filter: hue-rotate(0deg) brightness(1);
+    transform: perspective(1000px) rotateX(0deg);
+  }
+  50% { 
+    filter: hue-rotate(180deg) brightness(1.2);
+    transform: perspective(1000px) rotateX(5deg);
+  }
+  100% { 
+    filter: hue-rotate(360deg) brightness(1);
+    transform: perspective(1000px) rotateX(0deg);
+  }
+}
+
+@keyframes techPulse {
+  0% { 
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+  70% { 
+    transform: scale(1.05);
+    box-shadow: 0 0 0 20px rgba(249, 115, 22, 0);
+  }
+  100% { 
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+@keyframes cyberFloat {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+.animate-scale {
+  animation: scale 20s ease-in-out infinite alternate;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.hover-float {
+  transition: transform 0.3s ease;
+}
+
+.hover-float:hover {
+  animation: cyberFloat 3s ease-in-out infinite;
+}
+
+.hover-pulse {
+  transition: transform 0.3s ease;
+}
+
+.hover-pulse:hover {
+  animation: techPulse 2s ease-in-out infinite;
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  animation: neonGlow 2s ease-in-out infinite;
+}
+
+.hover-shine {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  transition: all 0.3s ease;
+}
+
+.hover-shine:hover {
+  animation: shine 3s linear infinite;
+}
+
+.hover-scale {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.hover-bright {
+  transition: filter 0.3s ease;
+}
+
+.hover-bright:hover {
+  filter: brightness(1.1);
+}
+
+.hover-rotate {
+  transition: transform 0.3s ease;
+}
+
+.hover-rotate:hover {
+  transform: rotate(5deg);
+}
+
+.hover-gradient {
+  background-size: 200% 200%;
+  transition: background-position 0.3s ease;
+}
+
+.hover-gradient:hover {
+  background-position: right center;
+}
+
+.icon-hover {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.icon-hover:hover {
+  transform: scale(1.2) rotate(5deg);
+  color: #f97316;
+}
+
+.btn-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-hover::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-hover:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+.tech-gradient {
+  background: linear-gradient(
+    45deg,
+    #f97316,
+    #3b82f6,
+    #f97316,
+    #3b82f6
+  );
+  background-size: 300% 300%;
+  animation: gradientFlow 8s ease infinite;
+}
+
+.tech-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.tech-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(249, 115, 22, 0.2);
+  border-color: rgba(249, 115, 22, 0.5);
+}
+
+.tech-title {
+  background: linear-gradient(45deg, #f97316, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: neonGlow 3s ease-in-out infinite;
+}
+
+.tech-border {
+  border: 2px solid transparent;
+  animation: cyberBorder 3s linear infinite;
+}
+
+.tech-hover {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-hover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: 0.5s;
+}
+
+.tech-hover:hover::before {
+  left: 100%;
+}
+
+.tech-button {
+  background: linear-gradient(45deg, #f97316, #3b82f6);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.tech-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(249, 115, 22, 0.4);
+}
+
+.tech-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: 0.5s;
+}
+
+.tech-button:hover::after {
+  left: 100%;
+}
+
+.tech-icon {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(249, 115, 22, 0.3));
+}
+
+.tech-icon:hover {
+  transform: scale(1.2) rotate(10deg);
+  filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.5));
+}
+
+.tech-image {
+  transition: all 0.5s ease;
+  filter: brightness(1) contrast(1.1);
+}
+
+.tech-image:hover {
+  filter: brightness(1.2) contrast(1.2);
+  transform: scale(1.05);
+}
+
+.tech-bg {
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 0.1),
+    rgba(59, 130, 246, 0.1)
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(45deg, transparent 48%, #f97316 49%, #f97316 51%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, #3b82f6 49%, #3b82f6 51%, transparent 52%);
+  background-size: 30px 30px;
+  opacity: 0.1;
+  animation: matrixRain 20s linear infinite;
+} 

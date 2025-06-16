@@ -41,12 +41,12 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
         }, [address, setValue]);
 
   return (
-    <div className="">
+    <div className="bg-white rounded-2xl shadow-2xl p-6 border border-gray-100">
             <form
                 onSubmit={handleSubmit(onSaveAddressHandler)}
-                className="">
-                    <div className="flex justify-center items-center mb-4 font-semibold text-2xl text-slate-800 py-2 px-4">
-                        <FaAddressCard className="mr-2 text-2xl" aria-hidden="true"/>
+                className="space-y-4">
+                    <div className="flex justify-center items-center mb-4 font-bold text-2xl text-slate-800 py-2 px-4">
+                        <FaAddressCard className="mr-2 text-2xl text-orange-400" aria-hidden="true"/>
                         <h1>
                             {!address?.addressId ? 
                             "Add Address" :
@@ -64,6 +64,7 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
                     placeholder="Enter Building Name"
                     register={register}
                     errors={errors}
+                    className="focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                     />
 
                 <InputField
@@ -75,6 +76,7 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
                     placeholder="Enter City"
                     register={register}
                     errors={errors}
+                    className="focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                     />
 
                 <InputField
@@ -86,6 +88,7 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
                     placeholder="Enter State"
                     register={register}
                     errors={errors}
+                    className="focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                     />
 
                 <InputField
@@ -98,6 +101,7 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
                     placeholder="Enter Pincode"
                     register={register}
                     errors={errors}
+                    className="focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                     />    
                 <InputField
                     label="Street"
@@ -108,6 +112,7 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
                     placeholder="Enter Street"
                     register={register}
                     errors={errors}
+                    className="focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                     />   
 
                 <InputField
@@ -119,12 +124,13 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
                     placeholder="Enter Country"
                     register={register}
                     errors={errors}
+                    className="focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                     />        
             </div>
 
             <button
                 disabled={btnLoader}
-                className="text-white bg-customBlue px-4 py-2 rounded-md mt-4 hover:bg-blue-600 transition-colors duration-200"
+                className="w-full text-white bg-gradient-to-r from-orange-500 to-orange-400 px-4 py-3 rounded-xl mt-4 hover:from-orange-400 hover:to-orange-300 transition-colors duration-200 font-semibold shadow focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-base"
                 type="submit"
                 aria-label={btnLoader ? "Saving address..." : "Save address"}>
                 {btnLoader ? (

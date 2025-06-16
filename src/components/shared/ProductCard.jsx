@@ -14,10 +14,10 @@ const ProductCard = memo(({
     productName,
     image,
     description,
-    quantity,
+    quantity = 0,
     price,
-    discount,
-    specialPrice,
+    discount = 0,
+    specialPrice = 0,
     about = false,
 }) => {
     const [openProductViewModal, setOpenProductViewModal] = useState(false);
@@ -185,13 +185,6 @@ ProductCard.propTypes = {
     discount: PropTypes.number,
     specialPrice: PropTypes.number,
     about: PropTypes.bool,
-};
-
-ProductCard.defaultProps = {
-    quantity: 0,
-    discount: 0,
-    specialPrice: 0,
-    about: false,
 };
 
 ProductCard.displayName = 'ProductCard';

@@ -100,12 +100,13 @@ const Checkout = () => {
             )}
 
             <div
-                className='flex justify-between items-center px-4 fixed z-50 h-24 bottom-0 bg-white left-0 w-full py-4 border-slate-200'
+                className='flex justify-between items-center px-4 fixed z-50 h-24 bottom-0 bg-white left-0 w-full py-4 border-t border-slate-200'
                 style={{ boxShadow: "0 -2px 4px rgba(100, 100, 100, 0.15)" }}>
                 <Button
                     variant='outlined'
                     disabled={activeStep === 0}
                     onClick={handleBack}
+                    className="px-6 py-2 text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                     aria-label="Go to previous step">
                     Back
                 </Button>
@@ -113,8 +114,10 @@ const Checkout = () => {
                 {activeStep !== steps.length - 1 && (
                     <button
                         disabled={isNextButtonDisabled()}
-                        className={`bg-customBlue font-semibold px-6 h-10 rounded-md text-white
-                            ${isNextButtonDisabled() ? "opacity-60" : ""}`}
+                        className={`font-semibold px-6 py-2 rounded-xl text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2
+                            ${isNextButtonDisabled() 
+                                ? "bg-gray-300 cursor-not-allowed" 
+                                : "bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 shadow"}`}
                         onClick={handleNext}
                         aria-label="Proceed to next step">
                         Proceed

@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { memo, useCallback } from 'react';
 
-const Paginations = memo(({ numberOfPage }) => {
+const Paginations = memo(({ numberOfPage = 1 }) => {
     const [searchParams] = useSearchParams();
     const pathname = useLocation().pathname;
     const navigate = useNavigate();
@@ -50,10 +50,6 @@ const Paginations = memo(({ numberOfPage }) => {
 
 Paginations.propTypes = {
     numberOfPage: PropTypes.number.isRequired,
-};
-
-Paginations.defaultProps = {
-    numberOfPage: 1,
 };
 
 Paginations.displayName = 'Paginations';

@@ -112,7 +112,7 @@ const Cart = () => {
 
                     <Link className="w-full flex justify-end" to="/checkout">
                     <button
-                        className="font-semibold w-[300px] py-2 px-4 rounded-sm bg-customBlue text-white flex items-center justify-center gap-2 hover:text-gray-300 transition duration-500">
+                        className="font-semibold w-[300px] py-3 px-4 rounded-xl bg-gradient-to-r from-orange-500 to-orange-400 text-white flex items-center justify-center gap-2 hover:from-orange-400 hover:to-orange-300 shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                         <TfiShoppingCartFull  size={20} />
                         Checkout
                     </button>

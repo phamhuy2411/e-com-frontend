@@ -158,9 +158,9 @@ export const addUpdateUserAddress = (sendData, toast, addressId, setOpenAddressM
     dispatch({ type: "BUTTON_LOADER" });
     try {
         if (!addressId) {
-            await api.post("/addresses", sendData);
+            await api.post("users/addresses", sendData);
         } else {
-            await api.put(`/addresses/${addressId}`, sendData);
+            await api.put(`users/addresses/${addressId}`, sendData);
         }
         dispatch(getUserAddresses());
         if (toast) toast.success("Address saved successfully");
@@ -176,7 +176,7 @@ export const addUpdateUserAddress = (sendData, toast, addressId, setOpenAddressM
 export const deleteUserAddress = (toast, addressId, setOpenDeleteModal) => async (dispatch) => {
     try {
         dispatch({ type: "BUTTON_LOADER" });
-        await api.delete(`/addresses/${addressId}`);
+        await api.delete(`users/addresses/${addressId}`);
         dispatch({ type: "IS_SUCCESS" });
         dispatch(getUserAddresses());
         dispatch(clearCheckoutAddress());
@@ -198,7 +198,7 @@ export const clearCheckoutAddress = () => ({
 export const getUserAddresses = () => async (dispatch) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get(`/addresses`);
+        const { data } = await api.get(`users/addresses`);
         if (data) {
             dispatch({ type: "USER_ADDRESS", payload: data });
         }
