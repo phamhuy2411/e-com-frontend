@@ -121,24 +121,24 @@ const About = memo(() => {
       {/* Hero Section with Parallax */}
       <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden tech-bg font-sans">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/60 to-white/40 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/60 to-slate-900/40 backdrop-blur-sm"></div>
           <img
             src={s_1}
             alt="Hero Background"
-            className="w-full h-full object-cover object-center animate-scale tech-image brightness-100 filter contrast-105"
+            className="w-full h-full object-cover object-center animate-scale tech-image brightness-90 filter contrast-110"
             style={{ transform: "scale(1.1)" }}
           />
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto animate-fade-in">
-          <h1 className="text-6xl md:text-7xl font-bold text-slate-100 mb-6 animate-slide-up tech-title drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)]">
-            Welcome to Tech Haven
+          <h1 className="text-6xl md:text-7xl font-bold text-orange-600 mb-6">
+            Welcome to Gearvana
           </h1>
-          <p className="text-2xl text-slate-200 mb-8 max-w-2xl mx-auto animate-slide-up animation-delay-200 hover-float font-medium">
+          <p className="text-2xl text-white mb-8 max-w-2xl mx-auto animate-slide-up animation-delay-200 hover-float font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
             Discover the Future of Technology
           </p>
           <button
             onClick={handleNavigateToProducts}
-            className="tech-button btn-hover text-lg px-8 py-4 bg-gradient-to-r from-orange-400 to-orange-300 hover:from-orange-300 hover:to-orange-200 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+            className="tech-button btn-hover text-lg px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]"
           >
             Explore Now
           </button>

@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, Tooltip, Slider } from "@mui/material";
+import { Button, FormControl, MenuItem, Select, Tooltip, Slider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp, FiRefreshCw, FiSearch, FiDollarSign } from "react-icons/fi";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -109,25 +109,27 @@ const Filter = memo(({ categories = [], brands = [] }) => {
     };
 
     return (
-        <div className="flex flex-col gap-6 w-full">
+        <div className="flex flex-col gap-4 w-full">
             {/* SEARCH BAR */}
-            <div className="relative flex items-center w-full mb-2 bg-white rounded-lg shadow p-3">
+            <div className="relative flex items-center w-full bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <FiSearch className="absolute left-4 text-gray-400" size={20} aria-hidden="true" />
                 <input 
                     type="text"
-                    placeholder="Search Products"
+                    placeholder="Search products..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border border-orange-200 text-slate-800 rounded-lg py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-200 shadow-sm bg-white"
+                    className="w-full pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 bg-transparent border-none outline-none focus:ring-0 text-sm font-medium"
                     aria-label="Search products"
                 />
-                <FiSearch className="absolute left-3 text-orange-400" size={22} aria-hidden="true" />
             </div>
 
             {/* PRICE RANGE SLIDER */}
-            <div className="flex flex-col w-full bg-white rounded-lg shadow p-3">
-                <label className="text-sm font-semibold text-slate-700 mb-1 ml-1">Price Range</label>
-                <div className="flex items-center gap-2">
+            <div className="flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <div className="flex items-center gap-2 mb-4">
                     <FiDollarSign className="text-orange-500" size={18} aria-hidden="true" />
+                    <h3 className="text-sm font-semibold text-gray-800">Price Range</h3>
+                </div>
+                <div className="px-2">
                     <Slider
                         value={priceRange}
                         onChange={handlePriceChange}
@@ -141,16 +143,30 @@ const Filter = memo(({ categories = [], brands = [] }) => {
                             color: '#f97316',
                             '& .MuiSlider-track': {
                                 background: 'linear-gradient(to right, #f97316, #fb923c)',
+                                height: 4,
                             },
                             '& .MuiSlider-thumb': {
                                 backgroundColor: '#fff',
                                 border: '2px solid #f97316',
+                                width: 20,
+                                height: 20,
                                 '&:hover, &.Mui-focusVisible': {
                                     boxShadow: '0 0 0 8px rgba(249, 115, 22, 0.16)',
                                 },
                             },
                             '& .MuiSlider-rail': {
-                                backgroundColor: '#fef3c7',
+                                backgroundColor: '#f3f4f6',
+                                height: 4,
+                            },
+                            '& .MuiSlider-mark': {
+                                backgroundColor: '#d1d5db',
+                                width: 2,
+                                height: 2,
+                            },
+                            '& .MuiSlider-markLabel': {
+                                fontSize: '0.75rem',
+                                color: '#6b7280',
+                                fontWeight: 500,
                             },
                         }}
                         className="flex-1"
@@ -163,30 +179,46 @@ const Filter = memo(({ categories = [], brands = [] }) => {
                         ]}
                     />
                 </div>
-                <div className="flex justify-between text-xs text-slate-600 mt-1 px-1">
-                    <span className="font-medium">{formatPrice(priceRange[0])}</span>
-                    <span className="font-medium">{formatPrice(priceRange[1])}</span>
+                <div className="flex justify-between text-xs text-gray-600 mt-3 px-2">
+                    <span className="font-semibold bg-gray-50 px-2 py-1 rounded-md">{formatPrice(priceRange[0])}</span>
+                    <span className="font-semibold bg-gray-50 px-2 py-1 rounded-md">{formatPrice(priceRange[1])}</span>
                 </div>
             </div>
 
             {/* CATEGORY SELECTION */}
-            <div className="w-full bg-white rounded-lg shadow p-3">
+            <div className="w-full bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Category</h3>
                 <FormControl
-                    className="text-slate-800 border-orange-200 w-full mt-2"
+                    className="w-full"
                     variant="outlined"
                     size="small">
-                        <InputLabel id="category-select-label">Category</InputLabel>
                         <Select
-                            labelId="category-select-label"
                             value={category}
                             onChange={handleCategoryChange}
-                            label="Category"
-                            className="w-full text-slate-800 border-orange-200 bg-white rounded-lg"
+                            className="w-full text-gray-700 bg-gray-50 border-gray-200 rounded-lg"
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        borderColor: '#e5e7eb',
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: '#f97316',
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#f97316',
+                                    },
+                                },
+                                '& .MuiSelect-select': {
+                                    padding: '10px 14px',
+                                    fontSize: '0.875rem',
+                                    fontWeight: 500,
+                                },
+                            }}
                             aria-label="Select category"
                          >
-                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="all" className="text-gray-600 font-medium">All Categories</MenuItem>
                             {categories?.map((item) => (
-                                <MenuItem key={item.categoryId} value={item.categoryName}>
+                                <MenuItem key={item.categoryId} value={item.categoryName} className="text-gray-700 font-medium">
                                     {item.categoryName}
                                 </MenuItem>
                             ))}
@@ -195,23 +227,39 @@ const Filter = memo(({ categories = [], brands = [] }) => {
             </div>
 
             {/* BRAND SELECTION */}
-            <div className="w-full bg-white rounded-lg shadow p-3">
+            <div className="w-full bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Brand</h3>
                 <FormControl
-                    className="text-slate-800 border-orange-200 w-full mt-2"
+                    className="w-full"
                     variant="outlined"
                     size="small">
-                        <InputLabel id="brand-select-label">Brand</InputLabel>
                         <Select
-                            labelId="brand-select-label"
                             value={brand}
                             onChange={handleBrandChange}
-                            label="Brand"
-                            className="w-full text-slate-800 border-orange-200 bg-white rounded-lg"
+                            className="w-full text-gray-700 bg-gray-50 border-gray-200 rounded-lg"
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        borderColor: '#e5e7eb',
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: '#f97316',
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#f97316',
+                                    },
+                                },
+                                '& .MuiSelect-select': {
+                                    padding: '10px 14px',
+                                    fontSize: '0.875rem',
+                                    fontWeight: 500,
+                                },
+                            }}
                             aria-label="Select brand"
                          >
-                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="all" className="text-gray-600 font-medium">All Brands</MenuItem>
                             {brands?.map((item) => (
-                                <MenuItem key={item.brandId} value={item.brandName}>
+                                <MenuItem key={item.brandId} value={item.brandName} className="text-gray-700 font-medium">
                                     {item.brandName}
                                 </MenuItem>
                             ))}
@@ -220,7 +268,7 @@ const Filter = memo(({ categories = [], brands = [] }) => {
             </div>
 
             {/* SORT BUTTON & CLEAR FILTER */}
-            <div className="flex flex-col gap-3 mt-2 bg-white rounded-lg shadow p-3">
+            <div className="flex flex-col gap-3 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <Tooltip title={`Sort by price: ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}> 
                     <Button variant="contained" 
                         onClick={toggleSortOrder}
@@ -229,25 +277,31 @@ const Filter = memo(({ categories = [], brands = [] }) => {
                             '&:hover': {
                                 backgroundColor: '#ea580c',
                             },
+                            borderRadius: '12px',
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                            padding: '12px 16px',
+                            boxShadow: '0 4px 6px -1px rgba(249, 115, 22, 0.1)',
                         }}
-                        className="flex items-center gap-2 h-11 rounded-lg shadow-md px-6 text-base font-semibold w-full"
+                        className="flex items-center gap-2 w-full"
                         aria-label={`Sort by price ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
                     >
-                        SORT BY
+                        <span>Sort by Price</span>
                         {sortOrder === "asc" ? (
-                            <FiArrowUp size={20} aria-hidden="true" />
+                            <FiArrowUp size={18} aria-hidden="true" />
                         ) : (
-                            <FiArrowDown size={20} aria-hidden="true" />
+                            <FiArrowDown size={18} aria-hidden="true" />
                         )}
                     </Button>
                 </Tooltip>
                 <button 
-                    className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg transition duration-200 shadow-md focus:outline-none text-base font-semibold h-11 w-full justify-center"
+                    className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl transition duration-200 focus:outline-none text-sm font-semibold w-full justify-center border border-gray-200"
                     onClick={handleClearFilters}
                     aria-label="Clear all filters"
                 >
-                    <FiRefreshCw className="font-semibold" size={18} aria-hidden="true" />
-                    <span>Clear Filter</span>
+                    <FiRefreshCw className="font-semibold" size={16} aria-hidden="true" />
+                    <span>Clear Filters</span>
                 </button>
             </div>
         </div>
