@@ -48,6 +48,44 @@ export const fetchCategories = () => async (dispatch) => {
     }
 };
 
+export const fetchBrands = () => async (dispatch) => {
+    try {
+        dispatch({ type: "CATEGORY_LOADER" });
+        const { data } = await api.get(`/public/brands`);
+        if (data) {
+            dispatch({
+                type: "FETCH_BRANDS",
+                payload: data,
+            });
+        }
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        dispatch({
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch brands",
+        });
+    }
+};
+
+export const fetchBrandsByCategory = (categoryName) => async (dispatch) => {
+    try {
+        dispatch({ type: "CATEGORY_LOADER" });
+        const { data } = await api.get(`/public/category/${categoryName}/brands`);
+        if (data) {
+            dispatch({
+                type: "FETCH_BRANDS",
+                payload: data,
+            });
+        }
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        dispatch({
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch brands",
+        });
+    }
+};
+
 export const addToCart = (data, qty = 1, toast) => (dispatch, getState) => {
     const { products } = getState().products;
     const getProduct = products.find(item => item.productId === data.productId);

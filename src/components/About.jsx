@@ -1,7 +1,16 @@
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "./shared/ProductCard";
-import { FaShoppingBag, FaUsers, FaHandshake, FaAward, FaShippingFast, FaHeadset, FaShieldAlt, FaCreditCard } from "react-icons/fa";
+import {
+  FaShoppingBag,
+  FaUsers,
+  FaHandshake,
+  FaAward,
+  FaShippingFast,
+  FaHeadset,
+  FaShieldAlt,
+  FaCreditCard,
+} from "react-icons/fa";
 import s_1 from "../assets/sliders/s_1.png";
 import s_4 from "../assets/sliders/s_4.png";
 import "../styles/animations.css";
@@ -46,27 +55,31 @@ const features = [
   {
     icon: FaShoppingBag,
     title: "Quality Products",
-    description: "We carefully select each product to ensure the highest quality for our customers.",
-    color: "from-orange-500 to-orange-400"
+    description:
+      "We carefully select each product to ensure the highest quality for our customers.",
+    color: "from-orange-500 to-orange-400",
   },
   {
     icon: FaUsers,
     title: "Customer First",
-    description: "Your satisfaction is our priority. We're here to provide the best shopping experience.",
-    color: "from-blue-500 to-blue-400"
+    description:
+      "Your satisfaction is our priority. We're here to provide the best shopping experience.",
+    color: "from-blue-500 to-blue-400",
   },
   {
     icon: FaHandshake,
     title: "Trusted Service",
-    description: "Building trust through reliable service and transparent business practices.",
-    color: "from-green-500 to-green-400"
+    description:
+      "Building trust through reliable service and transparent business practices.",
+    color: "from-green-500 to-green-400",
   },
   {
     icon: FaAward,
     title: "Best Value",
-    description: "Competitive prices and exclusive deals to give you the best value for your money.",
-    color: "from-purple-500 to-purple-400"
-  }
+    description:
+      "Competitive prices and exclusive deals to give you the best value for your money.",
+    color: "from-purple-500 to-purple-400",
+  },
 ];
 
 const services = [
@@ -74,58 +87,58 @@ const services = [
     icon: FaShippingFast,
     title: "Fast Delivery",
     description: "Free shipping on orders over $50",
-    color: "bg-orange-100"
+    color: "bg-orange-100",
   },
   {
     icon: FaHeadset,
     title: "24/7 Support",
     description: "Dedicated support team",
-    color: "bg-blue-100"
+    color: "bg-blue-100",
   },
   {
     icon: FaShieldAlt,
     title: "Secure Payment",
     description: "100% secure payment",
-    color: "bg-green-100"
+    color: "bg-green-100",
   },
   {
     icon: FaCreditCard,
     title: "Money Back",
     description: "30 days guarantee",
-    color: "bg-purple-100"
-  }
+    color: "bg-purple-100",
+  },
 ];
 
 const About = memo(() => {
   const navigate = useNavigate();
 
   const handleNavigateToProducts = () => {
-    navigate('/products');
+    navigate("/products");
   };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
       {/* Hero Section with Parallax */}
-      <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden tech-bg">
+      <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden tech-bg font-sans">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-white/85 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/60 to-white/40 backdrop-blur-sm"></div>
           <img
             src={s_1}
             alt="Hero Background"
             className="w-full h-full object-cover object-center animate-scale tech-image brightness-100 filter contrast-105"
-            style={{ transform: 'scale(1.1)' }}
+            style={{ transform: "scale(1.1)" }}
           />
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto animate-fade-in">
-          <h1 className="text-6xl md:text-7xl font-bold text-slate-800 mb-6 animate-slide-up tech-title drop-shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
+          <h1 className="text-6xl md:text-7xl font-bold text-slate-100 mb-6 animate-slide-up tech-title drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)]">
             Welcome to Tech Haven
           </h1>
-          <p className="text-2xl text-slate-600 mb-8 max-w-2xl mx-auto animate-slide-up animation-delay-200 hover-float font-medium">
+          <p className="text-2xl text-slate-200 mb-8 max-w-2xl mx-auto animate-slide-up animation-delay-200 hover-float font-medium">
             Discover the Future of Technology
           </p>
-          <button 
+          <button
             onClick={handleNavigateToProducts}
-            className="tech-button btn-hover text-lg px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+            className="tech-button btn-hover text-lg px-8 py-4 bg-gradient-to-r from-orange-400 to-orange-300 hover:from-orange-300 hover:to-orange-200 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
           >
             Explore Now
           </button>
@@ -145,8 +158,12 @@ const About = memo(() => {
                 <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
                   <service.icon className="w-8 h-8 text-orange-500" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-800 mb-4">{service.title}</h3>
-                <p className="text-slate-600 font-medium">{service.description}</p>
+                <h3 className="text-xl font-semibold text-slate-800 mb-4">
+                  {service.title}
+                </h3>
+                <p className="text-slate-600 font-medium">
+                  {service.description}
+                </p>
               </div>
             ))}
           </div>
@@ -161,7 +178,8 @@ const About = memo(() => {
               Why Choose Tech Haven
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto hover-float font-medium">
-              Experience the perfect blend of cutting-edge technology and exceptional service
+              Experience the perfect blend of cutting-edge technology and
+              exceptional service
             </p>
           </div>
 
@@ -178,8 +196,12 @@ const About = memo(() => {
                       <feature.icon className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-semibold text-slate-800 mb-3">{feature.title}</h3>
-                      <p className="text-slate-600 font-medium">{feature.description}</p>
+                      <h3 className="text-2xl font-semibold text-slate-800 mb-3">
+                        {feature.title}
+                      </h3>
+                      <p className="text-slate-600 font-medium">
+                        {feature.description}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -244,9 +266,10 @@ const About = memo(() => {
               Ready to Experience the Future?
             </h2>
             <p className="text-2xl text-slate-600 mb-12 hover-float font-medium">
-              Join thousands of tech enthusiasts who trust us for their digital journey
+              Join thousands of tech enthusiasts who trust us for their digital
+              journey
             </p>
-            <button 
+            <button
               onClick={handleNavigateToProducts}
               className="text-xl px-12 py-6 bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >

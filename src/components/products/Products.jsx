@@ -2,7 +2,7 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import ProductCard from "../shared/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo } from "react";
-import { fetchCategories } from "../../store/actions";
+import { fetchCategories, fetchBrands } from "../../store/actions";
 import Filter from "./Filter";
 import useProductFilter from "../../hooks/useProductFilter";
 import Loader from "../shared/Loader";
@@ -13,7 +13,7 @@ const Products = memo(() => {
     const { isLoading, errorMessage } = useSelector(
         (state) => state.errors
     );
-    const {products, categories, pagination} = useSelector(
+    const {products, categories, brands, pagination} = useSelector(
         (state) => state.products
     )
     const dispatch = useDispatch();
@@ -21,6 +21,7 @@ const Products = memo(() => {
 
     useEffect(() => {
         dispatch(fetchCategories());
+        dispatch(fetchBrands());
     }, [dispatch]);
 
     const renderContent = useMemo(() => {
@@ -93,7 +94,7 @@ const Products = memo(() => {
                     className="lg:w-1/5 max-w-sm w-full mb-8 lg:mb-0 bg-white rounded-xl shadow-md p-0 lg:p-0 lg:sticky top-8 h-fit"
                     aria-label="Product filters"
                 >
-                    <Filter categories={categories || []} />
+                    <Filter categories={categories || []} brands={brands || []} />
                 </aside>
                 {/* Main Product List */}
                 <main 

@@ -5,25 +5,28 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 
-const Filter = memo(({ categories = [] }) => {
+const Filter = memo(({ categories = [], brands = [] }) => {
     const [searchParams] = useSearchParams();
     const params = new URLSearchParams(searchParams);
     const pathname = useLocation().pathname;
     const navigate = useNavigate();
     
     const [category, setCategory] = useState("all");
+    const [brand, setBrand] = useState("all");
     const [sortOrder, setSortOrder] = useState("asc");
     const [searchTerm, setSearchTerm] = useState("");
     const [priceRange, setPriceRange] = useState([0, 10000]);
 
     useEffect(() => {
         const currentCategory = searchParams.get("category") || "all";
+        const currentBrand = searchParams.get("brand") || "all";
         const currentSortOrder = searchParams.get("sortby") || "asc";
         const currentSearchTerm = searchParams.get("keyword") || "";
         const minPrice = searchParams.get("minPrice");
         const maxPrice = searchParams.get("maxPrice");
 
         setCategory(currentCategory);
+        setBrand(currentBrand);
         setSortOrder(currentSortOrder);
         setSearchTerm(currentSearchTerm);
         if (minPrice && maxPrice) {
@@ -58,6 +61,18 @@ const Filter = memo(({ categories = [] }) => {
         }
         navigate(`${pathname}?${params}`);
         setCategory(event.target.value);
+    };
+
+    const handleBrandChange = (event) => {
+        const selectedBrand = event.target.value;
+
+        if (selectedBrand === "all") {
+            params.delete("brand");
+        } else {
+            params.set("brand", selectedBrand);
+        }
+        navigate(`${pathname}?${params}`);
+        setBrand(event.target.value);
     };
 
     const toggleSortOrder = () => {
@@ -179,6 +194,31 @@ const Filter = memo(({ categories = [] }) => {
                 </FormControl>
             </div>
 
+            {/* BRAND SELECTION */}
+            <div className="w-full bg-white rounded-lg shadow p-3">
+                <FormControl
+                    className="text-slate-800 border-orange-200 w-full mt-2"
+                    variant="outlined"
+                    size="small">
+                        <InputLabel id="brand-select-label">Brand</InputLabel>
+                        <Select
+                            labelId="brand-select-label"
+                            value={brand}
+                            onChange={handleBrandChange}
+                            label="Brand"
+                            className="w-full text-slate-800 border-orange-200 bg-white rounded-lg"
+                            aria-label="Select brand"
+                         >
+                            <MenuItem value="all">All</MenuItem>
+                            {brands?.map((item) => (
+                                <MenuItem key={item.brandId} value={item.brandName}>
+                                    {item.brandName}
+                                </MenuItem>
+                            ))}
+                         </Select>
+                </FormControl>
+            </div>
+
             {/* SORT BUTTON & CLEAR FILTER */}
             <div className="flex flex-col gap-3 mt-2 bg-white rounded-lg shadow p-3">
                 <Tooltip title={`Sort by price: ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}> 
@@ -219,6 +259,12 @@ Filter.propTypes = {
         PropTypes.shape({
             categoryId: PropTypes.string.isRequired,
             categoryName: PropTypes.string.isRequired,
+        })
+    ),
+    brands: PropTypes.arrayOf(
+        PropTypes.shape({
+            brandId: PropTypes.string.isRequired,
+            brandName: PropTypes.string.isRequired,
         })
     ),
 };

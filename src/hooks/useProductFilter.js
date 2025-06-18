@@ -30,6 +30,12 @@ const useProductFilter = () => {
             params.set("category", categoryParams);
         }
 
+        // Handle brand filter
+        const brandParams = searchParams.get("brand") || null;
+        if (brandParams) {
+            params.set("brand", brandParams);
+        }
+
         // Handle search keyword
         const keyword = searchParams.get("keyword") || null;
         if (keyword) {
