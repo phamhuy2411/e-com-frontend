@@ -70,7 +70,7 @@ export const fetchBrands = () => async (dispatch) => {
 export const fetchBrandsByCategory = (categoryName) => async (dispatch) => {
     try {
         dispatch({ type: "CATEGORY_LOADER" });
-        const { data } = await api.get(`/public/category/${categoryName}/brands`);
+        const { data } = await api.get(`/public/categories/${categoryName}/brands`);
         if (data) {
             dispatch({
                 type: "FETCH_BRANDS",

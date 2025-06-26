@@ -2,12 +2,13 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import ProductCard from "../shared/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo } from "react";
-import { fetchCategories, fetchBrands } from "../../store/actions";
+import { fetchCategories, fetchBrands, fetchBrandsByCategory } from "../../store/actions";
 import Filter from "./Filter";
 import useProductFilter from "../../hooks/useProductFilter";
 import Loader from "../shared/Loader";
 import Paginations from "../shared/Paginations";
 import { memo } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const Products = memo(() => {
     const { isLoading, errorMessage } = useSelector(
@@ -19,10 +20,22 @@ const Products = memo(() => {
     const dispatch = useDispatch();
     useProductFilter();
 
+    // Lấy category hiện tại từ URL
+    const [searchParams] = useSearchParams();
+    const currentCategory = searchParams.get("category") || "all";
+
     useEffect(() => {
         dispatch(fetchCategories());
-        dispatch(fetchBrands());
     }, [dispatch]);
+
+    // Theo dõi category, fetch brands phù hợp
+    useEffect(() => {
+        if (currentCategory && currentCategory !== "all") {
+            dispatch(fetchBrandsByCategory(currentCategory));
+        } else {
+            dispatch(fetchBrands());
+        }
+    }, [dispatch, currentCategory]);
 
     const renderContent = useMemo(() => {
         if (isLoading) {
