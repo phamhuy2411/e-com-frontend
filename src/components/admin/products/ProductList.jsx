@@ -10,13 +10,14 @@ import {
     fetchAdminProducts, 
     createAdminProduct, 
     updateAdminProduct, 
-    deleteAdminProduct 
+    deleteAdminProduct,
+    fetchAdminCategories,
+    fetchAdminBrands
 } from '../../../store/actions/adminActions';
-import { fetchAdminCategories } from '../../../store/actions/adminActions';
 
 const ProductList = memo(() => {
     const dispatch = useDispatch();
-    const { products, categories, isLoading, isButtonLoading } = useSelector((state) => state.admin);
+    const { products, categories, brands, isLoading, isButtonLoading } = useSelector((state) => state.admin);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -25,6 +26,7 @@ const ProductList = memo(() => {
     useEffect(() => {
         dispatch(fetchAdminProducts());
         dispatch(fetchAdminCategories());
+        dispatch(fetchAdminBrands());
     }, [dispatch]);
 
     const handleCreateProduct = () => {
@@ -48,11 +50,11 @@ const ProductList = memo(() => {
         if (isEditing && selectedProduct) {
             dispatch(updateAdminProduct(selectedProduct.productId, data, toast, null, () => setIsModalOpen(false)));
         } else {
-            // For creating, we need a categoryId
-            if (data.categoryId) {
-                dispatch(createAdminProduct(data.categoryId, data, toast, null, () => setIsModalOpen(false)));
+            // For creating, we need both categoryId and brandId
+            if (data.categoryId && data.brandId) {
+                dispatch(createAdminProduct(data.categoryId, data.brandId, data, toast, null, () => setIsModalOpen(false)));
             } else {
-                toast.error('Please select a category');
+                toast.error('Please select both category and brand');
             }
         }
     };
@@ -130,7 +132,7 @@ const ProductList = memo(() => {
                                 </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {product.brand || 'N/A'}
+                                {product.brand?.brandName || 'N/A'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div className="flex space-x-2">
@@ -164,6 +166,7 @@ const ProductList = memo(() => {
                     <ProductForm
                         product={selectedProduct}
                         categories={categories}
+                        brands={brands}
                         onSubmit={handleSubmitProduct}
                         onCancel={() => setIsModalOpen(false)}
                         isLoading={isButtonLoading}

@@ -1,10 +1,10 @@
-import { memo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { memo } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FiPackage, FiGrid, FiUsers, FiDollarSign } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout';
-import { fetchAdminCategories } from '../../../store/actions/adminActions';
-import { fetchAdminProducts } from '../../../store/actions/adminActions';
+// import { fetchAdminCategories } from '../../../store/actions/adminActions';
+// import { fetchAdminProducts } from '../../../store/actions/adminActions';
 
 const StatsCard = memo(({ title, value, icon: Icon, color, change }) => (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -36,13 +36,13 @@ StatsCard.propTypes = {
 StatsCard.displayName = 'StatsCard';
 
 const AdminDashboard = memo(() => {
-    const dispatch = useDispatch();
     const { categories, products } = useSelector((state) => state.admin);
 
-    useEffect(() => {
-        dispatch(fetchAdminCategories());
-        dispatch(fetchAdminProducts());
-    }, [dispatch]);
+    // Comment out data loading to prevent placeholder data
+    // useEffect(() => {
+    //     dispatch(fetchAdminCategories());
+    //     dispatch(fetchAdminProducts());
+    // }, [dispatch]);
 
     const stats = [
         {
@@ -61,17 +61,17 @@ const AdminDashboard = memo(() => {
         },
         {
             title: 'Total Users',
-            value: '1,234',
+            value: 'N/A',
             icon: FiUsers,
             color: 'bg-purple-500',
-            change: -2,
+            change: null,
         },
         {
             title: 'Total Revenue',
-            value: '$45,678',
+            value: 'N/A',
             icon: FiDollarSign,
             color: 'bg-orange-500',
-            change: 8,
+            change: null,
         },
     ];
 

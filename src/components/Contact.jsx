@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { FiMail, FiMapPin, FiPhone, FiUser, FiMessageSquare } from 'react-icons/fi';
+import { FiMail, FiMapPin, FiPhone, FiUser, FiMessageSquare, FiUsers } from 'react-icons/fi';
 import { FaFacebook, FaTwitter, FaInstagram, FaUsers } from 'react-icons/fa';
 
 const Contact = memo(() => {
@@ -33,7 +33,7 @@ const Contact = memo(() => {
                                         type="text"
                                         required
                                         autoComplete="name"
-                                        placeholder="John Doe"
+                                        placeholder="Huy dep zai :)"
                                         className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all duration-300" 
                                     />
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -93,7 +93,7 @@ const Contact = memo(() => {
                         <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-200 hover:border-orange-500/30 transition-all duration-300">
                             <div className="flex items-center space-x-3 mb-8">
                                 <div className="p-3 rounded-xl bg-gradient-to-br from-orange-50 to-orange-100">
-                                    <FiMapPin className="text-orange-500 w-6 h-6" />
+                                    <FiUsers className="text-orange-500 w-6 h-6" />
                                 </div>
                                 <h2 className="text-2xl font-semibold text-slate-800">Contact Information</h2>
                             </div>

@@ -148,12 +148,23 @@ export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoad
     try {
         if (setLoader) setLoader(true);
         const { data } = await api.post("/auth/signin", sendData);
-        dispatch({ type: "LOGIN_USER", payload: data });
+        
+        // Lưu thông tin user (không bao gồm token vì token đã được lưu trong cookie)
+        const userInfo = {
+            id: data.id,
+            username: data.username,
+            roles: data.roles,
+            // Không lưu token vì nó đã được lưu trong cookie tự động
+        };
+        
+        dispatch({ type: "LOGIN_USER", payload: userInfo });
+        
         try {
-            localStorage.setItem("auth", JSON.stringify(data));
+            localStorage.setItem("auth", JSON.stringify(userInfo));
         } catch {
             // ignore localStorage errors
         }
+        
         if (reset) reset();
         if (toast) toast.success("Login Success");
         if (navigate) navigate("/");
@@ -180,8 +191,8 @@ export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => 
 
 export const logOutUser = (navigate) => async (dispatch) => {
     try {
-        // Gọi API signout, nhớ withCredentials để gửi cookie
-        await api.post("/auth/signout", {}, { withCredentials: true });
+        // Gọi API signout để xóa cookie JWT
+        await api.post("/auth/signout");
 
         dispatch({ type: "LOG_OUT" });
         localStorage.removeItem("auth");
@@ -189,6 +200,36 @@ export const logOutUser = (navigate) => async (dispatch) => {
         if (navigate) navigate("/login");
     } catch (error) {
         console.error("Logout failed", error);
+        // Vẫn logout local ngay cả khi API call thất bại
+        dispatch({ type: "LOG_OUT" });
+        localStorage.removeItem("auth");
+        if (navigate) navigate("/login");
+    }
+};
+
+export const getCurrentUser = () => async (dispatch) => {
+    try {
+        const { data } = await api.get("/auth/user");
+        if (data) {
+            // Lưu thông tin user (không bao gồm token)
+            const userInfo = {
+                id: data.id,
+                username: data.username,
+                roles: data.roles,
+            };
+            
+            dispatch({ type: "LOGIN_USER", payload: userInfo });
+            try {
+                localStorage.setItem("auth", JSON.stringify(userInfo));
+            } catch {
+                // ignore localStorage errors
+            }
+        }
+    } catch (error) {
+        console.error("Failed to get current user:", error);
+        // Nếu không lấy được user info, có thể token đã hết hạn
+        localStorage.removeItem("auth");
+        dispatch({ type: "LOG_OUT" });
     }
 };
 

@@ -1,15 +1,33 @@
 import { memo } from 'react';
-import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { FiLogOut, FiUser, FiBell } from 'react-icons/fi';
 import { logOutUser } from '../../../store/actions';
+import { useAdminAuth } from '../../../hooks/useAdminAuth';
 
 const AdminHeader = memo(() => {
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.auth);
+    const { user } = useAdminAuth();
 
     const handleLogout = () => {
         dispatch(logOutUser());
+    };
+
+    const getUserDisplayName = () => {
+        if (!user) return 'Admin User';
+        return user.username || user.name || user.email || 'Admin User';
+    };
+
+    const getUserRole = () => {
+        if (!user) return 'Administrator';
+        if (user.roles?.includes('ROLE_ADMIN')) return 'Administrator';
+        if (user.roles?.includes('ROLE_SELLER')) return 'Seller';
+        if (user.roles?.includes('ROLE_USER')) return 'User';
+        if (user.role === 'ROLE_ADMIN') return 'Administrator';
+        if (user.role === 'ROLE_SELLER') return 'Seller';
+        if (user.role === 'ROLE_USER') return 'User';
+        if (user.authorities?.some(auth => auth.authority === 'ROLE_ADMIN')) return 'Administrator';
+        if (user.isAdmin) return 'Administrator';
+        return 'User';
     };
 
     return (
@@ -33,9 +51,9 @@ const AdminHeader = memo(() => {
                             </div>
                             <div className="hidden md:block">
                                 <p className="text-sm font-medium text-gray-800">
-                                    {user?.name || user?.email || 'Admin User'}
+                                    {getUserDisplayName()}
                                 </p>
-                                <p className="text-xs text-gray-500">Administrator</p>
+                                <p className="text-xs text-gray-500">{getUserRole()}</p>
                             </div>
                         </div>
                         

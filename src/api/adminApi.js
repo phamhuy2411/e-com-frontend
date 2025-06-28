@@ -20,6 +20,15 @@ export const adminApi = {
         return api.delete(`/admin/categories/${categoryId}`);
     },
 
+    // Brand Management
+    getAllBrands: () => {
+        return api.get("/public/brands");
+    },
+
+    getBrandsByCategory: (categoryName) => {
+        return api.get(`/public/categories/${categoryName}/brands`);
+    },
+
     // Product Management
     getAllProducts: (params = {}) => {
         const queryString = new URLSearchParams(params).toString();
@@ -30,8 +39,8 @@ export const adminApi = {
         return api.get(`/public/products/${productId}`);
     },
 
-    createProduct: (categoryId, productData) => {
-        return api.post(`/admin/categories/${categoryId}/product`, productData);
+    createProduct: (categoryId, brandId, productData) => {
+        return api.post(`/admin/categories/${categoryId}/brands/${brandId}/product`, productData);
     },
 
     updateProduct: (productId, productData) => {

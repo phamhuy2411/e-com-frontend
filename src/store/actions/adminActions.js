@@ -1,4 +1,55 @@
 import adminApi from "../../api/adminApi";
+import { getCurrentUser } from "./index";
+import api from "../../api/api";
+
+// Admin Authentication
+export const authenticateAdminUser = (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
+    try {
+        if (setLoader) setLoader(true);
+        const { data } = await api.post("/auth/signin", sendData);
+        
+        // Kiểm tra xem user có role admin không
+        const isAdmin = data.roles?.includes('ROLE_ADMIN') || 
+                       data.role === 'ROLE_ADMIN' ||
+                       data.authorities?.some(auth => auth.authority === 'ROLE_ADMIN') ||
+                       data.isAdmin === true ||
+                       (Array.isArray(data.roles) && data.roles.some(role => 
+                           role.includes('ADMIN') || role === 'ADMIN' || role === 'admin'
+                       )) ||
+                       (typeof data.roles === 'string' && (
+                           data.roles.includes('ADMIN') || data.roles === 'ADMIN' || data.roles === 'admin'
+                       ));
+        
+        if (!isAdmin) {
+            if (toast) toast.error("Access denied. Admin privileges required.");
+            return;
+        }
+        
+        // Lưu thông tin user (không bao gồm token vì token đã được lưu trong cookie)
+        const userInfo = {
+            id: data.id,
+            username: data.username,
+            roles: data.roles,
+            // Không lưu token vì nó đã được lưu trong cookie tự động
+        };
+        
+        dispatch({ type: "LOGIN_USER", payload: userInfo });
+        
+        try {
+            localStorage.setItem("auth", JSON.stringify(userInfo));
+        } catch {
+            // ignore localStorage errors
+        }
+        
+        if (reset) reset();
+        if (toast) toast.success("Admin login successful");
+        if (navigate) navigate("/admin");
+    } catch (error) {
+        if (toast) toast.error(error?.response?.data?.message || "Admin authentication failed");
+    } finally {
+        if (setLoader) setLoader(false);
+    }
+};
 
 // Category Actions
 export const fetchAdminCategories = (params = {}) => async (dispatch) => {
@@ -74,6 +125,45 @@ export const deleteAdminCategory = (categoryId, toast, setOpenDeleteModal) => as
     }
 };
 
+// Brand Actions
+export const fetchAdminBrands = () => async (dispatch) => {
+    try {
+        dispatch({ type: "ADMIN_CATEGORY_LOADER" });
+        const { data } = await adminApi.getAllBrands();
+        if (data) {
+            dispatch({
+                type: "FETCH_ADMIN_BRANDS",
+                payload: data,
+            });
+        }
+        dispatch({ type: "ADMIN_SUCCESS" });
+    } catch (error) {
+        dispatch({
+            type: "ADMIN_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch brands",
+        });
+    }
+};
+
+export const fetchAdminBrandsByCategory = (categoryName) => async (dispatch) => {
+    try {
+        dispatch({ type: "ADMIN_CATEGORY_LOADER" });
+        const { data } = await adminApi.getBrandsByCategory(categoryName);
+        if (data) {
+            dispatch({
+                type: "FETCH_ADMIN_BRANDS",
+                payload: data,
+            });
+        }
+        dispatch({ type: "ADMIN_SUCCESS" });
+    } catch (error) {
+        dispatch({
+            type: "ADMIN_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch brands",
+        });
+    }
+};
+
 // Product Actions
 export const fetchAdminProducts = (params = {}) => async (dispatch) => {
     try {
@@ -99,10 +189,10 @@ export const fetchAdminProducts = (params = {}) => async (dispatch) => {
     }
 };
 
-export const createAdminProduct = (categoryId, productData, toast, reset, setOpenModal) => async (dispatch) => {
+export const createAdminProduct = (categoryId, brandId, productData, toast, reset, setOpenModal) => async (dispatch) => {
     try {
         dispatch({ type: "ADMIN_BUTTON_LOADER" });
-        const { data } = await adminApi.createProduct(categoryId, productData);
+        const { data } = await adminApi.createProduct(categoryId, brandId, productData);
         if (data) {
             dispatch(fetchAdminProducts());
             if (toast) toast.success("Product created successfully");
@@ -111,7 +201,19 @@ export const createAdminProduct = (categoryId, productData, toast, reset, setOpe
         }
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
-        if (toast) toast.error(error?.response?.data?.message || "Failed to create product");
+        // Kiểm tra nếu lỗi 401, thử refresh user data trước khi hiển thị lỗi
+        if (error.response?.status === 401) {
+            try {
+                // Thử lấy lại user data
+                await dispatch(getCurrentUser());
+                // Nếu vẫn lỗi, hiển thị thông báo
+                if (toast) toast.error("Session expired. Please login again.");
+            } catch {
+                if (toast) toast.error("Authentication failed. Please login again.");
+            }
+        } else {
+            if (toast) toast.error(error?.response?.data?.message || "Failed to create product");
+        }
         dispatch({ type: "ADMIN_ERROR", payload: null });
     }
 };
@@ -128,7 +230,17 @@ export const updateAdminProduct = (productId, productData, toast, reset, setOpen
         }
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
-        if (toast) toast.error(error?.response?.data?.message || "Failed to update product");
+        // Kiểm tra nếu lỗi 401, thử refresh user data
+        if (error.response?.status === 401) {
+            try {
+                await dispatch(getCurrentUser());
+                if (toast) toast.error("Session expired. Please login again.");
+            } catch {
+                if (toast) toast.error("Authentication failed. Please login again.");
+            }
+        } else {
+            if (toast) toast.error(error?.response?.data?.message || "Failed to update product");
+        }
         dispatch({ type: "ADMIN_ERROR", payload: null });
     }
 };
@@ -141,7 +253,17 @@ export const deleteAdminProduct = (productId, toast, setOpenDeleteModal) => asyn
         if (toast) toast.success("Product deleted successfully");
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
-        if (toast) toast.error(error?.response?.data?.message || "Failed to delete product");
+        // Kiểm tra nếu lỗi 401, thử refresh user data
+        if (error.response?.status === 401) {
+            try {
+                await dispatch(getCurrentUser());
+                if (toast) toast.error("Session expired. Please login again.");
+            } catch {
+                if (toast) toast.error("Authentication failed. Please login again.");
+            }
+        } else {
+            if (toast) toast.error(error?.response?.data?.message || "Failed to delete product");
+        }
         dispatch({ type: "ADMIN_ERROR", payload: null });
     } finally {
         if (setOpenDeleteModal) setOpenDeleteModal(false);

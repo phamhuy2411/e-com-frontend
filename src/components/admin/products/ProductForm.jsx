@@ -1,14 +1,21 @@
 import { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { fetchAdminBrandsByCategory } from '../../../store/actions/adminActions';
 
-const ProductForm = memo(({ product, categories, onSubmit, onCancel, isLoading }) => {
+const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isLoading }) => {
+    const dispatch = useDispatch();
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset,
+        watch,
+        setValue,
     } = useForm();
+
+    const selectedCategoryId = watch('categoryId');
 
     useEffect(() => {
         if (product) {
@@ -18,10 +25,22 @@ const ProductForm = memo(({ product, categories, onSubmit, onCancel, isLoading }
                 productPrice: product.productPrice || '',
                 productQuantity: product.productQuantity || '',
                 categoryId: product.category?.categoryId || '',
-                brand: product.brand || '',
+                brandId: product.brand?.brandId || '',
             });
         }
     }, [product, reset]);
+
+    // Fetch brands when category changes
+    useEffect(() => {
+        if (selectedCategoryId) {
+            const selectedCategory = categories?.find(cat => cat.categoryId === selectedCategoryId);
+            if (selectedCategory) {
+                dispatch(fetchAdminBrandsByCategory(selectedCategory.categoryName));
+                // Reset brand selection when category changes
+                setValue('brandId', '');
+            }
+        }
+    }, [selectedCategoryId, categories, dispatch, setValue]);
 
     const handleFormSubmit = (data) => {
         onSubmit(data);
@@ -131,16 +150,32 @@ const ProductForm = memo(({ product, categories, onSubmit, onCancel, isLoading }
                 </div>
 
                 <div>
-                    <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-2">
-                        Brand
+                    <label htmlFor="brandId" className="block text-sm font-medium text-gray-700 mb-2">
+                        Brand *
                     </label>
-                    <input
-                        type="text"
-                        id="brand"
-                        {...register('brand')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                        placeholder="Enter brand name"
-                    />
+                    <select
+                        id="brandId"
+                        {...register('brandId', { 
+                            required: 'Brand is required'
+                        })}
+                        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                            errors.brandId ? 'border-red-300' : 'border-gray-300'
+                        }`}
+                        disabled={!selectedCategoryId}
+                    >
+                        <option value="">Select a brand</option>
+                        {brands?.map((brand) => (
+                            <option key={brand.brandId} value={brand.brandId}>
+                                {brand.brandName}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.brandId && (
+                        <p className="mt-1 text-sm text-red-600">{errors.brandId.message}</p>
+                    )}
+                    {!selectedCategoryId && (
+                        <p className="mt-1 text-sm text-gray-500">Please select a category first</p>
+                    )}
                 </div>
             </div>
 
@@ -181,6 +216,7 @@ const ProductForm = memo(({ product, categories, onSubmit, onCancel, isLoading }
 ProductForm.propTypes = {
     product: PropTypes.object,
     categories: PropTypes.array,
+    brands: PropTypes.array,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     isLoading: PropTypes.bool,

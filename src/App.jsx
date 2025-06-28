@@ -18,6 +18,7 @@ import ProductDetail from './components/products/ProductDetail'
 
 // Admin Components
 import AdminRoute from './components/admin/AdminRoute'
+import AdminLoginRoute from './components/admin/AdminLoginRoute'
 import AdminDashboard from './components/admin/dashboard/AdminDashboard'
 import CategoryList from './components/admin/categories/CategoryList'
 import ProductList from './components/admin/products/ProductList'
@@ -49,6 +50,7 @@ const AppContent = () => {
         </Route>
 
         {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLoginRoute />} />
         <Route path="/admin" element={<AdminRoute />}>
           <Route index element={<AdminDashboard />} />
           <Route path="categories" element={<CategoryList />} />

@@ -1,21 +1,45 @@
-import { memo } from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate, Outlet } from 'react-router-dom';
+import { memo, useEffect } from 'react';
+import { Outlet, Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import AdminLoading from './AdminLoading';
+import { useAdminAuth } from '../../hooks/useAdminAuth';
+import { getCurrentUser } from '../../store/actions';
 
 const AdminRoute = memo(() => {
-    const { user } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const { isAuthenticated, hasAdminAccess, user } = useAdminAuth();
     
-    // Check if user is logged in and has admin role
-    // For now, we'll just check if user exists
-    // You can add role-based check later when backend provides role information
-    if (!user) {
-        return <Navigate to="/login" replace />;
+    // Fetch current user data if we have a user but no roles (incomplete data)
+    useEffect(() => {
+        if (isAuthenticated && user && !user.roles) {
+            dispatch(getCurrentUser());
+        }
+    }, [isAuthenticated, user, dispatch]);
+    
+    // Kiểm tra thêm: nếu không có user data nhưng có token trong localStorage
+    useEffect(() => {
+        const authData = localStorage.getItem("auth");
+        if (!user && authData) {
+            try {
+                const parsedAuth = JSON.parse(authData);
+                if (parsedAuth && !parsedAuth.roles) {
+                    dispatch(getCurrentUser());
+                }
+            } catch (error) {
+                console.error("Error parsing auth data:", error);
+            }
+        }
+    }, [user, dispatch]);
+    
+    // Show loading while fetching user data
+    if (isAuthenticated && user && !user.roles) {
+        return <AdminLoading />;
     }
-
-    // TODO: Add role-based check when backend provides role information
-    // if (user.role !== 'ADMIN') {
-    //     return <Navigate to="/" replace />;
-    // }
+    
+    // Always redirect to admin login if not an admin, regardless of client user login state
+    if (!hasAdminAccess) {
+        return <Navigate to="/admin/login" replace />;
+    }
 
     return <Outlet />;
 });

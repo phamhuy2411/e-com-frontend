@@ -1,5 +1,6 @@
 const initialState = {
     categories: null,
+    brands: null,
     products: null,
     pagination: {},
     isLoading: false,
@@ -57,6 +58,15 @@ export const adminReducer = (state = initialState, action) => {
                 ...state,
                 categories: action.payload,
                 pagination: updatePagination(state, action),
+            };
+
+        case "FETCH_ADMIN_BRANDS":
+            if (!action.payload) {
+                return state;
+            }
+            return {
+                ...state,
+                brands: action.payload,
             };
 
         case "FETCH_ADMIN_PRODUCTS":
