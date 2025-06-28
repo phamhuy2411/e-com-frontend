@@ -11,8 +11,7 @@ import {
     createAdminProduct, 
     updateAdminProduct, 
     deleteAdminProduct,
-    fetchAdminCategories,
-    fetchAdminBrands
+    fetchAdminCategories
 } from '../../../store/actions/adminActions';
 
 const ProductList = memo(() => {
@@ -26,7 +25,6 @@ const ProductList = memo(() => {
     useEffect(() => {
         dispatch(fetchAdminProducts());
         dispatch(fetchAdminCategories());
-        dispatch(fetchAdminBrands());
     }, [dispatch]);
 
     const handleCreateProduct = () => {
@@ -48,11 +46,17 @@ const ProductList = memo(() => {
 
     const handleSubmitProduct = (data) => {
         if (isEditing && selectedProduct) {
-            dispatch(updateAdminProduct(selectedProduct.productId, data, toast, null, () => setIsModalOpen(false)));
+            // Map lại productDescription thành description khi update
+            const { productDescription, ...rest } = data;
+            const fixedData = { ...rest, description: productDescription };
+            dispatch(updateAdminProduct(selectedProduct.productId, fixedData, toast, null, () => setIsModalOpen(false)));
         } else {
             // For creating, we need both categoryId and brandId
             if (data.categoryId && data.brandId) {
-                dispatch(createAdminProduct(data.categoryId, data.brandId, data, toast, null, () => setIsModalOpen(false)));
+                // Remove categoryId and brandId from productData to avoid duplication
+                const { categoryId, brandId, productDescription, ...productData } = data;
+                const fixedProductData = { ...productData, description: productDescription };
+                dispatch(createAdminProduct(categoryId, brandId, fixedProductData, toast, null, () => setIsModalOpen(false)));
             } else {
                 toast.error('Please select both category and brand');
             }

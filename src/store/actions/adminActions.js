@@ -148,7 +148,9 @@ export const fetchAdminBrands = () => async (dispatch) => {
 export const fetchAdminBrandsByCategory = (categoryName) => async (dispatch) => {
     try {
         dispatch({ type: "ADMIN_CATEGORY_LOADER" });
+        console.log('fetchAdminBrandsByCategory called with:', categoryName);
         const { data } = await adminApi.getBrandsByCategory(categoryName);
+        console.log('API response for brands:', data);
         if (data) {
             dispatch({
                 type: "FETCH_ADMIN_BRANDS",
@@ -157,6 +159,7 @@ export const fetchAdminBrandsByCategory = (categoryName) => async (dispatch) => 
         }
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
+        console.error('Error fetching brands by category:', error);
         dispatch({
             type: "ADMIN_ERROR",
             payload: error?.response?.data?.message || "Failed to fetch brands",
@@ -192,6 +195,7 @@ export const fetchAdminProducts = (params = {}) => async (dispatch) => {
 export const createAdminProduct = (categoryId, brandId, productData, toast, reset, setOpenModal) => async (dispatch) => {
     try {
         dispatch({ type: "ADMIN_BUTTON_LOADER" });
+        console.log('API call - createAdminProduct:', { categoryId, brandId, productData });
         const { data } = await adminApi.createProduct(categoryId, brandId, productData);
         if (data) {
             dispatch(fetchAdminProducts());
@@ -201,6 +205,7 @@ export const createAdminProduct = (categoryId, brandId, productData, toast, rese
         }
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
+        console.error('Error creating product:', error);
         // Kiểm tra nếu lỗi 401, thử refresh user data trước khi hiển thị lỗi
         if (error.response?.status === 401) {
             try {

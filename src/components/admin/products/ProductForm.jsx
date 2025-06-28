@@ -2,7 +2,7 @@ import { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { fetchAdminBrandsByCategory } from '../../../store/actions/adminActions';
+import { fetchAdminBrandsByCategory, fetchAdminBrands } from '../../../store/actions/adminActions';
 
 const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isLoading }) => {
     const dispatch = useDispatch();
@@ -27,20 +27,43 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                 categoryId: product.category?.categoryId || '',
                 brandId: product.brand?.brandId || '',
             });
+            
+            // If editing a product, fetch brands for the selected category
+            if (product.category?.categoryName) {
+                dispatch(fetchAdminBrandsByCategory(product.category.categoryName));
+            }
         }
-    }, [product, reset]);
+    }, [product, reset, dispatch]);
 
     // Fetch brands when category changes
     useEffect(() => {
+        console.log('Category changed to:', selectedCategoryId);
         if (selectedCategoryId) {
             const selectedCategory = categories?.find(cat => cat.categoryId === selectedCategoryId);
+            console.log('Selected category:', selectedCategory);
             if (selectedCategory) {
+                console.log('Fetching brands for category:', selectedCategory.categoryName);
                 dispatch(fetchAdminBrandsByCategory(selectedCategory.categoryName));
                 // Reset brand selection when category changes
                 setValue('brandId', '');
             }
+        } else {
+            // If no category selected, fetch all brands as fallback
+            console.log('No category selected, fetching all brands');
+            dispatch(fetchAdminBrands());
         }
     }, [selectedCategoryId, categories, dispatch, setValue]);
+
+    // Debug brands
+    useEffect(() => {
+        console.log('Brands updated:', brands);
+    }, [brands]);
+
+    // Load all brands when component mounts
+    useEffect(() => {
+        console.log('ProductForm mounted, loading all brands');
+        dispatch(fetchAdminBrands());
+    }, [dispatch]);
 
     const handleFormSubmit = (data) => {
         onSubmit(data);
@@ -151,7 +174,7 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
 
                 <div>
                     <label htmlFor="brandId" className="block text-sm font-medium text-gray-700 mb-2">
-                        Brand *
+                        Brand * {brands && `(${brands.length} brands available)`}
                     </label>
                     <select
                         id="brandId"
@@ -161,7 +184,6 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                         className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                             errors.brandId ? 'border-red-300' : 'border-gray-300'
                         }`}
-                        disabled={!selectedCategoryId}
                     >
                         <option value="">Select a brand</option>
                         {brands?.map((brand) => (
@@ -174,7 +196,10 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                         <p className="mt-1 text-sm text-red-600">{errors.brandId.message}</p>
                     )}
                     {!selectedCategoryId && (
-                        <p className="mt-1 text-sm text-gray-500">Please select a category first</p>
+                        <p className="mt-1 text-sm text-gray-500">All brands are shown. You can select a category to filter brands.</p>
+                    )}
+                    {selectedCategoryId && (!brands || brands.length === 0) && (
+                        <p className="mt-1 text-sm text-yellow-600">No brands available for this category</p>
                     )}
                 </div>
             </div>

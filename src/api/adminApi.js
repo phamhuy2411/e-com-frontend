@@ -26,7 +26,10 @@ export const adminApi = {
     },
 
     getBrandsByCategory: (categoryName) => {
-        return api.get(`/public/categories/${categoryName}/brands`);
+        console.log('Fetching brands for category:', categoryName);
+        const url = `/public/categories/${categoryName}/brands`;
+        console.log('API URL:', url);
+        return api.get(url);
     },
 
     // Product Management
@@ -40,6 +43,7 @@ export const adminApi = {
     },
 
     createProduct: (categoryId, brandId, productData) => {
+        console.log('adminApi.createProduct called with:', { categoryId, brandId, productData });
         return api.post(`/admin/categories/${categoryId}/brands/${brandId}/product`, productData);
     },
 
