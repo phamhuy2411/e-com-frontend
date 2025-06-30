@@ -91,7 +91,9 @@ const BrandList = memo(() => {
                                 {brand.brandName}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {brand.category?.categoryName || 'N/A'}
+                                {brand.categories && brand.categories.length > 0
+                                    ? brand.categories.map(cat => cat.categoryName).join(', ')
+                                    : 'N/A'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div className="flex space-x-2">

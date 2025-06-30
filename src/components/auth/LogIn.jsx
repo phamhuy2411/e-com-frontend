@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiLogIn, FiUser, FiLock } from "react-icons/fi";
+import { FiLogIn, FiUser, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authenticateSignInUser } from "../../store/actions";
@@ -11,6 +11,7 @@ const LogIn = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loader, setLoader] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const {
         register,
@@ -36,7 +37,7 @@ const LogIn = () => {
                     <FiLogIn className="text-white text-4xl group-hover:scale-110 transition-transform duration-300"/>
                 </div>
                 <h1 className="mt-10 text-center font-montserrat text-3xl font-extrabold bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent tracking-tight drop-shadow-lg">
-                    Đăng nhập
+                    Sign In
                 </h1>
                 <div className="flex flex-col gap-5 mt-8">
                     <div className="relative">
@@ -44,9 +45,9 @@ const LogIn = () => {
                             <FiUser />
                         </span>
                         <input
-                            {...register("username", { required: "*Tên đăng nhập là bắt buộc" })}
+                            {...register("username", { required: "*Username is required" })}
                             className="pl-10 pr-4 py-3 w-full rounded-xl border border-orange-500/20 bg-slate-600/50 text-gray-100 placeholder:text-orange-400/70 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all duration-200 shadow-inner font-medium"
-                            placeholder="Tên đăng nhập"
+                            placeholder="Username"
                             autoComplete="username"
                         />
                         {errors.username && <span className="text-red-400 text-xs mt-1 block">{errors.username.message}</span>}
@@ -56,12 +57,20 @@ const LogIn = () => {
                             <FiLock />
                         </span>
                         <input
-                            {...register("password", { required: "*Mật khẩu là bắt buộc" })}
-                            className="pl-10 pr-4 py-3 w-full rounded-xl border border-orange-500/20 bg-slate-600/50 text-gray-100 placeholder:text-orange-400/70 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all duration-200 shadow-inner font-medium"
-                            placeholder="Mật khẩu"
-                            type="password"
+                            {...register("password", { required: "*Password is required" })}
+                            className="pl-10 pr-12 py-3 w-full rounded-xl border border-orange-500/20 bg-slate-600/50 text-gray-100 placeholder:text-orange-400/70 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all duration-200 shadow-inner font-medium"
+                            placeholder="Password"
+                            type={showPassword ? "text" : "password"}
                             autoComplete="current-password"
                         />
+                        <span
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-400 text-xl cursor-pointer select-none"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            tabIndex={0}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                            {showPassword ? <FiEyeOff /> : <FiEye />}
+                        </span>
                         {errors.password && <span className="text-red-400 text-xs mt-1 block">{errors.password.message}</span>}
                     </div>
                 </div>
@@ -72,19 +81,19 @@ const LogIn = () => {
                 >
                     {loader ? (
                         <>
-                        <Spinners /> Đang đăng nhập...
+                        <Spinners /> Signing in...
                         </>
                     ) : (
-                        <>Đăng nhập</>
+                        <>Sign In</>
                     )}
                 </button>
                 <p className="text-center text-sm text-orange-400 mt-8">
-                    Chưa có tài khoản?
+                    Don&apos;t have an account?
                     <Link
                         className="font-semibold underline hover:text-orange-500 ml-1 transition-colors duration-200"
                         to="/register"
                     >
-                        Đăng ký ngay
+                        Register now
                     </Link>  
                 </p>
             </form>

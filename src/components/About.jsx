@@ -116,6 +116,8 @@ const About = memo(() => {
     navigate("/products");
   };
 
+  console.log('Brands data:', products);
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
       {/* Hero Section with Parallax */}
@@ -175,7 +177,7 @@ const About = memo(() => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-20 animate-fade-in">
             <h2 className="text-5xl md:text-6xl font-bold mb-8 text-slate-800 drop-shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
-              Why Choose Tech Haven
+              Why Choose Gearvana
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto hover-float font-medium">
               Experience the perfect blend of cutting-edge technology and
