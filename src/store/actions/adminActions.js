@@ -247,12 +247,19 @@ export const fetchAdminProducts = (params = {}) => async (dispatch) => {
     }
 };
 
-export const createAdminProduct = (categoryId, brandId, productData, toast, reset, setOpenModal) => async (dispatch) => {
+export const createAdminProduct = (categoryId, brandId, productData, toast, reset, setOpenModal, imageFile) => async (dispatch) => {
     try {
         dispatch({ type: "ADMIN_BUTTON_LOADER" });
-        console.log('API call - createAdminProduct:', { categoryId, brandId, productData });
-        const { data } = await adminApi.createProduct(categoryId, brandId, productData);
+        // Loại bỏ imageFile khỏi productData nếu có
+        const restProductData = { ...productData };
+        delete restProductData.imageFile;
+        // 1. Tạo sản phẩm mới (KHÔNG gửi ảnh)
+        const { data } = await adminApi.createProduct(categoryId, brandId, restProductData);
         if (data) {
+            // 2. Nếu có ảnh, upload ảnh
+            if (imageFile) {
+                await dispatch(updateAdminProductImage(data.productId, imageFile, toast));
+            }
             dispatch(fetchAdminProducts());
             if (toast) toast.success("Product created successfully");
             if (reset) reset();
@@ -260,20 +267,7 @@ export const createAdminProduct = (categoryId, brandId, productData, toast, rese
         }
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
-        console.error('Error creating product:', error);
-        // Kiểm tra nếu lỗi 401, thử refresh user data trước khi hiển thị lỗi
-        if (error.response?.status === 401) {
-            try {
-                // Thử lấy lại user data
-                await dispatch(getCurrentUser());
-                // Nếu vẫn lỗi, hiển thị thông báo
-                if (toast) toast.error("Session expired. Please login again.");
-            } catch {
-                if (toast) toast.error("Authentication failed. Please login again.");
-            }
-        } else {
-            if (toast) toast.error(error?.response?.data?.message || "Failed to create product");
-        }
+        if (toast) toast.error(error?.response?.data?.message || "Failed to create product");
         dispatch({ type: "ADMIN_ERROR", payload: null });
     }
 };

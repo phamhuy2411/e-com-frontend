@@ -93,9 +93,10 @@ const ProductList = memo(() => {
             // For creating, we need both categoryId and brandId
             if (data.categoryId && data.brandId) {
                 // Remove categoryId and brandId from productData to avoid duplication
-                const { categoryId, brandId, productDescription, ...productData } = data;
+                const { categoryId, brandId, productDescription, imageFile, ...productData } = data;
                 const fixedProductData = { ...productData, description: productDescription };
-                dispatch(createAdminProduct(categoryId, brandId, fixedProductData, toast, null, () => setIsModalOpen(false)));
+                // Truyền imageFile vào action
+                dispatch(createAdminProduct(categoryId, brandId, fixedProductData, toast, null, () => setIsModalOpen(false), imageFile));
             } else {
                 toast.error('Please select both category and brand');
             }
