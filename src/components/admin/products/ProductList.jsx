@@ -50,7 +50,7 @@ const ProductList = memo(() => {
     // Reset page về 1 khi filter thay đổi
     useEffect(() => {
         setPage(1);
-    }, [filter]);
+    }, [filter.keyword, filter.category, filter.brand]);
 
     const handleCreateProduct = () => {
         setSelectedProduct(null);
@@ -74,20 +74,19 @@ const ProductList = memo(() => {
             // Map lại productDescription thành description khi update
             const { productDescription, imageFile, ...rest } = data;
             const fixedData = { ...rest, description: productDescription };
-            
             // Nếu có ảnh mới được chọn, upload ảnh trước
             if (imageFile) {
                 dispatch(updateAdminProduct(selectedProduct.productId, fixedData, toast, null, () => {
                     // Sau khi update product thành công, upload ảnh
                     dispatch(updateAdminProductImage(selectedProduct.productId, imageFile, toast, () => {
                         setIsModalOpen(false);
-                        // Sau khi upload ảnh thành công, reload lại danh sách sản phẩm để cập nhật UI
-                        dispatch(fetchAdminProducts({ size: 1000 }));
                     }));
                 }));
             } else {
                 // Nếu không có ảnh mới, chỉ update product
-                dispatch(updateAdminProduct(selectedProduct.productId, fixedData, toast, null, () => setIsModalOpen(false)));
+                dispatch(updateAdminProduct(selectedProduct.productId, fixedData, toast, null, () => {
+                    setIsModalOpen(false);
+                }));
             }
         } else {
             // For creating, we need both categoryId and brandId
@@ -96,7 +95,9 @@ const ProductList = memo(() => {
                 const { categoryId, brandId, productDescription, imageFile, ...productData } = data;
                 const fixedProductData = { ...productData, description: productDescription };
                 // Truyền imageFile vào action
-                dispatch(createAdminProduct(categoryId, brandId, fixedProductData, toast, null, () => setIsModalOpen(false), imageFile));
+                dispatch(createAdminProduct(categoryId, brandId, fixedProductData, toast, null, () => {
+                    setIsModalOpen(false);
+                }, imageFile));
             } else {
                 toast.error('Please select both category and brand');
             }
@@ -105,9 +106,18 @@ const ProductList = memo(() => {
 
     const handleConfirmDelete = () => {
         if (selectedProduct) {
-            dispatch(deleteAdminProduct(selectedProduct.productId, toast, () => setIsDeleteModalOpen(false)));
+            dispatch(deleteAdminProduct(selectedProduct.productId, toast, () => {
+                setIsDeleteModalOpen(false);
+            }));
         }
     };
+
+    // Tự động lùi về trang trước nếu trang hiện tại không còn sản phẩm nào
+    useEffect(() => {
+        if (products && products.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [products, page]);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('en-US', {

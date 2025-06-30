@@ -138,11 +138,7 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
     };
 
     const handleFormSubmit = (data) => {
-        // Nếu tạo mới và chưa chọn ảnh, báo lỗi (nếu ảnh là bắt buộc)
-        if (!product && !selectedImage) {
-            alert('Vui lòng chọn ảnh sản phẩm!');
-            return;
-        }
+        // Không còn bắt buộc phải chọn ảnh khi tạo mới
         // Add selected image to form data
         const formData = {
             ...data,
@@ -188,6 +184,10 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                                     minLength: {
                                         value: 2,
                                         message: 'Product name must be at least 2 characters'
+                                    },
+                                    maxLength: {
+                                        value: 100,
+                                        message: 'Product name must be at most 100 characters'
                                     }
                                 })}
                                 className={`w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
@@ -241,12 +241,17 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                                     type="number"
                                     id="productPrice"
                                     step="0.01"
-                                    min="0"
+                                    min="0.01"
+                                    max="1000000"
                                     {...register('productPrice', { 
                                         required: 'Price is required',
                                         min: {
-                                            value: 0,
+                                            value: 0.01,
                                             message: 'Price must be greater than 0'
+                                        },
+                                        max: {
+                                            value: 1000000,
+                                            message: 'Price must be less than or equal to 1,000,000'
                                         }
                                     })}
                                     className={`w-full pl-8 pr-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
@@ -271,11 +276,16 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                                 type="number"
                                 id="productQuantity"
                                 min="0"
+                                max="10000"
                                 {...register('productQuantity', { 
                                     required: 'Quantity is required',
                                     min: {
                                         value: 0,
                                         message: 'Quantity must be greater than or equal to 0'
+                                    },
+                                    max: {
+                                        value: 10000,
+                                        message: 'Quantity must be less than or equal to 10,000'
                                     }
                                 })}
                                 className={`w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
@@ -422,11 +432,27 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                         </label>
                         <textarea
                             id="productDescription"
-                            {...register('productDescription')}
+                            {...register('productDescription', {
+                                required: 'Description is required',
+                                minLength: {
+                                    value: 10,
+                                    message: 'Description must be at least 10 characters'
+                                },
+                                maxLength: {
+                                    value: 2000,
+                                    message: 'Description must be at most 2000 characters'
+                                }
+                            })}
                             rows={6}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors hover:border-gray-400 resize-none"
                             placeholder="Enter detailed product description (optional)"
                         />
+                        {errors.productDescription && (
+                            <p className="mt-2 text-sm text-red-600 flex items-center">
+                                <FiX className="w-4 h-4 mr-1" />
+                                {errors.productDescription.message}
+                            </p>
+                        )}
                         <p className="mt-2 text-sm text-gray-500">
                             Provide detailed information about the product features, specifications, and benefits.
                         </p>
