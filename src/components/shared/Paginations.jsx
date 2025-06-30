@@ -3,20 +3,22 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { memo, useCallback } from 'react';
 
-const Paginations = memo(({ numberOfPage = 1 }) => {
+const Paginations = memo(({ numberOfPage = 1, page, onChange }) => {
     const [searchParams] = useSearchParams();
     const pathname = useLocation().pathname;
     const navigate = useNavigate();
     
-    const paramValue = searchParams.get("page")
-        ? Number(searchParams.get("page"))
-        : 1;
+    const paramValue = typeof page === 'number' ? page : (searchParams.get("page") ? Number(searchParams.get("page")) : 1);
 
     const onChangeHandler = useCallback((event, value) => {
-        const params = new URLSearchParams(searchParams);
-        params.set("page", value.toString());
-        navigate(`${pathname}?${params}`);
-    }, [searchParams, pathname, navigate]);
+        if (onChange) {
+            onChange(event, value);
+        } else {
+            const params = new URLSearchParams(searchParams);
+            params.set("page", value.toString());
+            navigate(`${pathname}?${params}`);
+        }
+    }, [onChange, searchParams, pathname, navigate]);
 
     return (
         <Pagination 
@@ -50,6 +52,8 @@ const Paginations = memo(({ numberOfPage = 1 }) => {
 
 Paginations.propTypes = {
     numberOfPage: PropTypes.number.isRequired,
+    page: PropTypes.number,
+    onChange: PropTypes.func,
 };
 
 Paginations.displayName = 'Paginations';

@@ -14,19 +14,57 @@ import {
     fetchAdminCategories,
     updateAdminProductImage
 } from '../../../store/actions/adminActions';
+import AdminProductFilter from './AdminProductFilter';
+import Paginations from '../../shared/Paginations';
 
 const ProductList = memo(() => {
     const dispatch = useDispatch();
-    const { products, categories, brands, isLoading, isButtonLoading } = useSelector((state) => state.admin);
+    const { products, categories, brands, isLoading, isButtonLoading, pagination } = useSelector((state) => state.admin);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    // State filter
+    const [filter, setFilter] = useState({
+        category: 'all',
+        brand: 'all',
+        sortOrder: 'asc',
+        keyword: '',
+        priceRange: [0, 10000],
+    });
+    const [page, setPage] = useState(1);
 
+    // Fetch products & categories on mount
     useEffect(() => {
-        dispatch(fetchAdminProducts({ size: 1000 }));
+        dispatch(fetchAdminProducts({ size: 10, pageNumber: 0 }));
         dispatch(fetchAdminCategories());
     }, [dispatch]);
+
+    // Fetch products when filter or page changes
+    useEffect(() => {
+        // Build params from filter
+        const params = { size: 10, pageNumber: page - 1 };
+        if (filter.category && filter.category !== 'all') {
+            params.category = categories?.find(c => String(c.categoryId) === String(filter.category))?.categoryName || filter.category;
+        }
+        if (filter.brand && filter.brand !== 'all') {
+            params.brand = brands?.find(b => String(b.brandId) === String(filter.brand))?.brandName || filter.brand;
+        }
+        if (filter.keyword) params.keyword = filter.keyword;
+        if (filter.priceRange) {
+            params.minPrice = filter.priceRange[0];
+            params.maxPrice = filter.priceRange[1];
+        }
+        if (filter.sortOrder) {
+            params.sortby = filter.sortOrder;
+        }
+        dispatch(fetchAdminProducts(params));
+    }, [filter, page, dispatch, categories, brands]);
+
+    // Khi filter thay đổi thì reset về trang 1
+    useEffect(() => {
+        setPage(1);
+    }, [filter]);
 
     const handleCreateProduct = () => {
         setSelectedProduct(null);
@@ -138,6 +176,13 @@ const ProductList = memo(() => {
     return (
         <AdminLayout>
             <div className="space-y-6">
+                {/* Filter UI */}
+                <AdminProductFilter
+                    categories={categories || []}
+                    brands={brands || []}
+                    onFilterChange={setFilter}
+                    initialFilter={filter}
+                />
                 {/* Header */}
                 <div className="flex justify-between items-center">
                     <div>
@@ -221,6 +266,17 @@ const ProductList = memo(() => {
                         );
                     })}
                 </AdminTable>
+
+                {/* Pagination */}
+                {pagination?.totalPages > 1 && (
+                    <div className="flex justify-center pt-4">
+                        <Paginations
+                            numberOfPage={pagination.totalPages}
+                            page={page}
+                            onChange={(_, value) => setPage(value)}
+                        />
+                    </div>
+                )}
 
                 {/* Create/Edit Modal */}
                 <AdminModal

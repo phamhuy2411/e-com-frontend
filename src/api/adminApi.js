@@ -71,11 +71,7 @@ export const adminApi = {
     updateProductImage: (productId, imageFile) => {
         const formData = new FormData();
         formData.append("image", imageFile);
-        return api.put(`/products/${productId}/image`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
+        return api.put(`/products/${productId}/image`, formData);
     },
 
     // Get products by category
