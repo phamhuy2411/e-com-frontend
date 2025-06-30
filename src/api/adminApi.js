@@ -27,9 +27,22 @@ export const adminApi = {
 
     getBrandsByCategory: (categoryName) => {
         console.log('Fetching brands for category:', categoryName);
-        const url = `/public/categories/${categoryName}/brands`;
+        const encodedCategoryName = encodeURIComponent(categoryName);
+        const url = `/public/categories/${encodedCategoryName}/brands`;
         console.log('API URL:', url);
         return api.get(url);
+    },
+
+    createBrand: (categoryId, brandData) => {
+        return api.post(`/categories/${categoryId}/brand`, brandData);
+    },
+
+    updateBrand: (brandId, brandData) => {
+        return api.put(`/admin/brands/${brandId}`, brandData);
+    },
+
+    deleteBrand: (brandId) => {
+        return api.delete(`/admin/brands/${brandId}`);
     },
 
     // Product Management

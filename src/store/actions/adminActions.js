@@ -151,19 +151,73 @@ export const fetchAdminBrandsByCategory = (categoryName) => async (dispatch) => 
         console.log('fetchAdminBrandsByCategory called with:', categoryName);
         const { data } = await adminApi.getBrandsByCategory(categoryName);
         console.log('API response for brands:', data);
+        console.log('API response type:', typeof data);
+        console.log('API response length:', Array.isArray(data) ? data.length : 'not an array');
         if (data) {
             dispatch({
-                type: "FETCH_ADMIN_BRANDS",
+                type: "FETCH_ADMIN_BRANDS_BY_CATEGORY",
                 payload: data,
             });
         }
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
         console.error('Error fetching brands by category:', error);
+        console.error('Error response:', error.response);
         dispatch({
             type: "ADMIN_ERROR",
             payload: error?.response?.data?.message || "Failed to fetch brands",
         });
+    }
+};
+
+export const createAdminBrand = (brandData, toast, reset, setOpenModal) => async (dispatch) => {
+    try {
+        dispatch({ type: "ADMIN_BUTTON_LOADER" });
+        // Lấy categoryId từ brandData
+        const { categoryId, ...rest } = brandData;
+        const { data } = await adminApi.createBrand(categoryId, rest);
+        if (data) {
+            dispatch(fetchAdminBrands());
+            if (toast) toast.success("Brand created successfully");
+            if (reset) reset();
+            if (setOpenModal) setOpenModal(false);
+        }
+        dispatch({ type: "ADMIN_SUCCESS" });
+    } catch (error) {
+        if (toast) toast.error(error?.response?.data?.message || "Failed to create brand");
+        dispatch({ type: "ADMIN_ERROR", payload: null });
+    }
+};
+
+export const updateAdminBrand = (brandId, brandData, toast, reset, setOpenModal) => async (dispatch) => {
+    try {
+        dispatch({ type: "ADMIN_BUTTON_LOADER" });
+        const { data } = await adminApi.updateBrand(brandId, brandData);
+        if (data) {
+            dispatch(fetchAdminBrands());
+            if (toast) toast.success("Brand updated successfully");
+            if (reset) reset();
+            if (setOpenModal) setOpenModal(false);
+        }
+        dispatch({ type: "ADMIN_SUCCESS" });
+    } catch (error) {
+        if (toast) toast.error(error?.response?.data?.message || "Failed to update brand");
+        dispatch({ type: "ADMIN_ERROR", payload: null });
+    }
+};
+
+export const deleteAdminBrand = (brandId, toast, setOpenDeleteModal) => async (dispatch) => {
+    try {
+        dispatch({ type: "ADMIN_BUTTON_LOADER" });
+        await adminApi.deleteBrand(brandId);
+        dispatch(fetchAdminBrands());
+        if (toast) toast.success("Brand deleted successfully");
+        dispatch({ type: "ADMIN_SUCCESS" });
+    } catch (error) {
+        if (toast) toast.error(error?.response?.data?.message || "Failed to delete brand");
+        dispatch({ type: "ADMIN_ERROR", payload: null });
+    } finally {
+        if (setOpenDeleteModal) setOpenDeleteModal(false);
     }
 };
 
@@ -172,6 +226,7 @@ export const fetchAdminProducts = (params = {}) => async (dispatch) => {
     try {
         dispatch({ type: "ADMIN_PRODUCT_LOADER" });
         const { data } = await adminApi.getAllProducts(params);
+        console.log("FETCH PRODUCTS DATA", data);
         if (data) {
             dispatch({
                 type: "FETCH_ADMIN_PRODUCTS",
@@ -275,17 +330,28 @@ export const deleteAdminProduct = (productId, toast, setOpenDeleteModal) => asyn
     }
 };
 
-export const updateAdminProductImage = (productId, imageFile, toast) => async (dispatch) => {
+export const updateAdminProductImage = (productId, imageFile, toast, callback) => async (dispatch) => {
     try {
         dispatch({ type: "ADMIN_BUTTON_LOADER" });
         const { data } = await adminApi.updateProductImage(productId, imageFile);
         if (data) {
             dispatch(fetchAdminProducts());
             if (toast) toast.success("Product image updated successfully");
+            if (callback) callback();
         }
         dispatch({ type: "ADMIN_SUCCESS" });
     } catch (error) {
-        if (toast) toast.error(error?.response?.data?.message || "Failed to update product image");
+        // Kiểm tra nếu lỗi 401, thử refresh user data
+        if (error.response?.status === 401) {
+            try {
+                await dispatch(getCurrentUser());
+                if (toast) toast.error("Session expired. Please login again.");
+            } catch {
+                if (toast) toast.error("Authentication failed. Please login again.");
+            }
+        } else {
+            if (toast) toast.error(error?.response?.data?.message || "Failed to update product image");
+        }
         dispatch({ type: "ADMIN_ERROR", payload: null });
     }
 };
@@ -293,4 +359,9 @@ export const updateAdminProductImage = (productId, imageFile, toast) => async (d
 // Clear admin state
 export const clearAdminState = () => ({
     type: "CLEAR_ADMIN_STATE",
+});
+
+// Clear brands
+export const clearBrands = () => ({
+    type: "CLEAR_BRANDS",
 }); 

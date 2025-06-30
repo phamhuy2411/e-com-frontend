@@ -69,6 +69,15 @@ export const adminReducer = (state = initialState, action) => {
                 brands: action.payload,
             };
 
+        case "FETCH_ADMIN_BRANDS_BY_CATEGORY":
+            if (!action.payload) {
+                return state;
+            }
+            return {
+                ...state,
+                brands: action.payload,
+            };
+
         case "FETCH_ADMIN_PRODUCTS":
             if (!action.payload) {
                 return state;
@@ -82,6 +91,12 @@ export const adminReducer = (state = initialState, action) => {
         case "CLEAR_ADMIN_STATE":
             return {
                 ...initialState,
+            };
+
+        case "CLEAR_BRANDS":
+            return {
+                ...state,
+                brands: null,
             };
 
         default:

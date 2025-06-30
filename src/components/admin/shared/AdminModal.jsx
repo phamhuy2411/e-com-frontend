@@ -28,6 +28,8 @@ const AdminModal = memo(({ isOpen, onClose, title, children, size = 'md' }) => {
         md: 'max-w-lg',
         lg: 'max-w-2xl',
         xl: 'max-w-4xl',
+        '2xl': 'max-w-6xl',
+        '3xl': 'max-w-7xl',
     };
 
     return (
@@ -69,7 +71,7 @@ AdminModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
-    size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
+    size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl', '2xl', '3xl']),
 };
 
 AdminModal.displayName = 'AdminModal';

@@ -11,7 +11,8 @@ import {
     createAdminProduct, 
     updateAdminProduct, 
     deleteAdminProduct,
-    fetchAdminCategories
+    fetchAdminCategories,
+    updateAdminProductImage
 } from '../../../store/actions/adminActions';
 
 const ProductList = memo(() => {
@@ -23,7 +24,7 @@ const ProductList = memo(() => {
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchAdminProducts());
+        dispatch(fetchAdminProducts({ size: 1000 }));
         dispatch(fetchAdminCategories());
     }, [dispatch]);
 
@@ -47,9 +48,23 @@ const ProductList = memo(() => {
     const handleSubmitProduct = (data) => {
         if (isEditing && selectedProduct) {
             // Map lại productDescription thành description khi update
-            const { productDescription, ...rest } = data;
+            const { productDescription, imageFile, ...rest } = data;
             const fixedData = { ...rest, description: productDescription };
-            dispatch(updateAdminProduct(selectedProduct.productId, fixedData, toast, null, () => setIsModalOpen(false)));
+            
+            // Nếu có ảnh mới được chọn, upload ảnh trước
+            if (imageFile) {
+                dispatch(updateAdminProduct(selectedProduct.productId, fixedData, toast, null, () => {
+                    // Sau khi update product thành công, upload ảnh
+                    dispatch(updateAdminProductImage(selectedProduct.productId, imageFile, toast, () => {
+                        setIsModalOpen(false);
+                        // Sau khi upload ảnh thành công, reload lại danh sách sản phẩm để cập nhật UI
+                        dispatch(fetchAdminProducts({ size: 1000 }));
+                    }));
+                }));
+            } else {
+                // Nếu không có ảnh mới, chỉ update product
+                dispatch(updateAdminProduct(selectedProduct.productId, fixedData, toast, null, () => setIsModalOpen(false)));
+            }
         } else {
             // For creating, we need both categoryId and brandId
             if (data.categoryId && data.brandId) {
@@ -74,6 +89,48 @@ const ProductList = memo(() => {
             style: 'currency',
             currency: 'USD',
         }).format(price);
+    };
+
+    const getImageUrl = (img) => {
+        if (!img) return '/placeholder-image.png';
+        // Nếu là đường dẫn tuyệt đối (http/https)
+        if (img.startsWith('http://') || img.startsWith('https://')) return img;
+        // Nếu là đường dẫn bắt đầu bằng /images/ (backend trả về đúng static path)
+        if (img.startsWith('/images/')) return img;
+        // Nếu là đường dẫn images/ (không có dấu / đầu)
+        if (img.startsWith('images/')) return `/${img}`;
+        // Nếu là tên file (ví dụ: 1-Photoroom.png)
+        return `/images/${img}`;
+    };
+
+    const safeNumber = (value) => {
+        const num = Number(value);
+        return isNaN(num) ? 0 : num;
+    };
+
+    // Hàm lấy tên category từ product.category (object, id, hoặc string)
+    // Ưu tiên lấy categoryName trực tiếp nếu có, nếu không thì dò theo object/id
+    const getCategoryName = (category) => {
+        if (!category) return 'N/A';
+        if (typeof category === 'object') {
+            // Nếu object có categoryName hoặc name thì trả về luôn
+            return category.categoryName || category.name || 'N/A';
+        }
+        // Nếu là id thì dò theo list
+        if (!categories) return 'N/A';
+        const cat = categories.find(c => String(c.categoryId) === String(category));
+        return cat ? cat.categoryName : 'N/A';
+    };
+    // Hàm lấy tên brand từ product.brand (object, id, hoặc string)
+    // Ưu tiên lấy brandName trực tiếp nếu có, nếu không thì dò theo object/id
+    const getBrandName = (brand) => {
+        if (!brand) return 'N/A';
+        if (typeof brand === 'object') {
+            return brand.brandName || brand.name || 'N/A';
+        }
+        if (!brands) return 'N/A';
+        const br = brands.find(b => String(b.brandId) === String(brand));
+        return br ? br.brandName : 'N/A';
     };
 
     const tableHeaders = ['ID', 'Image', 'Name', 'Category', 'Price', 'Quantity', 'Brand', 'Actions'];
@@ -102,14 +159,16 @@ const ProductList = memo(() => {
                     isLoading={isLoading}
                     emptyMessage="No products found"
                 >
-                    {products?.map((product) => (
+                    {products?.map((product) => {
+                        // Đã xóa các console.log trong render để tránh spam log
+                        return (
                         <tr key={product.productId} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {product.productId}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <img
-                                    src={product.productImage || '/placeholder-image.png'}
+                                    src={getImageUrl(product.image || product.productImage) || '/placeholder-image.png'}
                                     alt={product.productName}
                                     className="h-12 w-12 rounded-lg object-cover"
                                     onError={(e) => {
@@ -121,22 +180,24 @@ const ProductList = memo(() => {
                                 {product.productName}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {product.category?.categoryName || 'N/A'}
+                                {/* Ưu tiên lấy categoryName trực tiếp, nếu không có thì gọi hàm */}
+                                {product.categoryName || getCategoryName(product.category) || 'N/A'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {formatPrice(product.productPrice)}
+                                {formatPrice(safeNumber(product.price || product.productPrice))}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                    product.productQuantity > 0 
+                                    safeNumber(product.quantity || product.productQuantity) > 0 
                                         ? 'bg-green-100 text-green-800' 
                                         : 'bg-red-100 text-red-800'
                                 }`}>
-                                    {product.productQuantity}
+                                    {safeNumber(product.quantity || product.productQuantity)}
                                 </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {product.brand?.brandName || 'N/A'}
+                                {/* Ưu tiên lấy brandName trực tiếp, nếu không có thì gọi hàm */}
+                                {product.brandName || getBrandName(product.brand) || 'N/A'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div className="flex space-x-2">
@@ -157,7 +218,8 @@ const ProductList = memo(() => {
                                 </div>
                             </td>
                         </tr>
-                    ))}
+                        );
+                    })}
                 </AdminTable>
 
                 {/* Create/Edit Modal */}
@@ -167,14 +229,16 @@ const ProductList = memo(() => {
                     title={isEditing ? 'Edit Product' : 'Create New Product'}
                     size="xl"
                 >
-                    <ProductForm
-                        product={selectedProduct}
-                        categories={categories}
-                        brands={brands}
-                        onSubmit={handleSubmitProduct}
-                        onCancel={() => setIsModalOpen(false)}
-                        isLoading={isButtonLoading}
-                    />
+                    <div className="p-6 bg-gray-50">
+                        <ProductForm
+                            product={selectedProduct}
+                            categories={categories}
+                            brands={brands}
+                            onSubmit={handleSubmitProduct}
+                            onCancel={() => setIsModalOpen(false)}
+                            isLoading={isButtonLoading}
+                        />
+                    </div>
                 </AdminModal>
 
                 {/* Delete Confirmation Modal */}

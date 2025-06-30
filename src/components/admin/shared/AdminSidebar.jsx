@@ -8,7 +8,8 @@ import {
     FiUsers, 
     FiSettings,
     FiBarChart2,
-    FiShoppingCart
+    FiShoppingCart,
+    FiTag
 } from 'react-icons/fi';
 
 const SidebarItem = memo(({ to, icon: Icon, children, isActive }) => (
@@ -40,6 +41,7 @@ const AdminSidebar = memo(() => {
     const menuItems = [
         { to: '/admin', icon: FiHome, label: 'Dashboard' },
         { to: '/admin/categories', icon: FiGrid, label: 'Categories' },
+        { to: '/admin/brands', icon: FiTag, label: 'Brands' },
         { to: '/admin/products', icon: FiPackage, label: 'Products' },
         { to: '/admin/orders', icon: FiShoppingCart, label: 'Orders' },
         { to: '/admin/users', icon: FiUsers, label: 'Users' },
