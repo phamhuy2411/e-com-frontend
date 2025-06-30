@@ -278,10 +278,26 @@ export const createAdminProduct = (categoryId, brandId, productData, toast, rese
     }
 };
 
-export const updateAdminProduct = (productId, productData, toast, reset, setOpenModal) => async (dispatch) => {
+export const updateAdminProduct = (productId, productData, toast, reset, setOpenModal) => async (dispatch, getState) => {
     try {
         dispatch({ type: "ADMIN_BUTTON_LOADER" });
-        const { data } = await adminApi.updateProduct(productId, productData);
+        // Lấy categoryId và brandId từ productData hoặc từ state nếu cần
+        let categoryId = productData.categoryId;
+        let brandId = productData.brandId;
+        // Nếu không có trong productData, lấy từ state.admin.products
+        if (!categoryId || !brandId) {
+            const { products } = getState().admin;
+            const product = products.find(p => String(p.productId) === String(productId));
+            if (product) {
+                categoryId = product.category?.categoryId || product.categoryId;
+                brandId = product.brand?.brandId || product.brandId;
+            }
+        }
+        // Xóa categoryId, brandId khỏi productData để tránh gửi thừa
+        const restData = { ...productData };
+        delete restData.categoryId;
+        delete restData.brandId;
+        const { data } = await adminApi.updateProduct(categoryId, brandId, productId, restData);
         if (data) {
             dispatch(fetchAdminProducts());
             if (toast) toast.success("Product updated successfully");

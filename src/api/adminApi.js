@@ -60,8 +60,8 @@ export const adminApi = {
         return api.post(`/admin/categories/${categoryId}/brands/${brandId}/product`, productData);
     },
 
-    updateProduct: (productId, productData) => {
-        return api.put(`/admin/products/${productId}`, productData);
+    updateProduct: (categoryId, brandId, productId, productData) => {
+        return api.put(`/admin/categories/${categoryId}/brands/${brandId}/products/${productId}`, productData);
     },
 
     deleteProduct: (productId) => {

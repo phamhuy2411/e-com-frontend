@@ -1,146 +1,86 @@
-import { FormControl, MenuItem, Select } from "@mui/material";
-import { useEffect, useState } from "react";
-import { FiSearch } from "react-icons/fi";
+import { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { memo } from 'react';
 
-const AdminProductFilter = memo(({ categories = [], brands = [], onFilterChange, initialFilter = {} }) => {
-    const [category, setCategory] = useState(initialFilter.category || "all");
-    const [brand, setBrand] = useState(initialFilter.brand || "all");
-    const [searchTerm, setSearchTerm] = useState(initialFilter.keyword || "");
+const AdminProductFilter = memo(({ categories = [], brands = [], onFilterChange }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [category, setCategory] = useState('all');
+    const [brand, setBrand] = useState('all');
 
-    // Gửi filter lên parent mỗi khi thay đổi
+    // Gọi callback khi filter thay đổi
     useEffect(() => {
         onFilterChange({
+            keyword: searchTerm,
             category,
             brand,
-            keyword: searchTerm,
         });
         // eslint-disable-next-line
-    }, [category, brand, searchTerm]);
+    }, [searchTerm, category, brand]);
 
-    const handleCategoryChange = (event) => {
-        setCategory(event.target.value);
-        setBrand("all"); // Reset brand khi đổi category
+    // Hàm clear filter
+    const handleClear = () => {
+        setSearchTerm('');
+        setCategory('all');
+        setBrand('all');
     };
-
-    const handleBrandChange = (event) => {
-        setBrand(event.target.value);
-    };
-
-    // Lọc brands theo category nếu cần
-    const filteredBrands = category === "all"
-        ? brands
-        : brands.filter(b => b.categoryName === (categories.find(c => c.categoryId === category)?.categoryName));
 
     return (
-        <div className="flex flex-col md:flex-row gap-4 w-full items-center bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-2">
+        <div className="flex flex-col md:flex-row md:items-end gap-4 bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4 relative">
             {/* SEARCH BAR */}
-            <div className="relative flex items-center w-full md:w-1/3">
-                <FiSearch className="absolute left-4 text-gray-400" size={20} aria-hidden="true" />
-                <input 
+            <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                <input
                     type="text"
                     placeholder="Search products..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 bg-transparent border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm font-medium"
-                    aria-label="Search products"
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
             </div>
-            {/* CATEGORY SELECTION */}
-            <FormControl
-                className="w-full md:w-1/4"
-                variant="outlined"
-                size="small">
-                <Select
+            {/* CATEGORY SELECT */}
+            <div className="w-full md:w-56">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select
                     value={category}
-                    onChange={handleCategoryChange}
-                    className="w-full text-gray-700 bg-gray-50 border-gray-200 rounded-lg"
-                    sx={{
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                                borderColor: '#e5e7eb',
-                            },
-                            '&:hover fieldset': {
-                                borderColor: '#f97316',
-                            },
-                            '&.Mui-focused fieldset': {
-                                borderColor: '#f97316',
-                            },
-                        },
-                        '& .MuiSelect-select': {
-                            padding: '10px 14px',
-                            fontSize: '0.875rem',
-                            fontWeight: 500,
-                        },
-                    }}
-                    aria-label="Select category"
+                    onChange={e => setCategory(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
-                    <MenuItem value="all" className="text-gray-600 font-medium">All Categories</MenuItem>
-                    {categories?.map((item) => (
-                        <MenuItem key={item.categoryId} value={item.categoryId} className="text-gray-700 font-medium">
-                            {item.categoryName}
-                        </MenuItem>
+                    <option value="all">All Categories</option>
+                    {categories?.map(cat => (
+                        <option key={cat.categoryId} value={cat.categoryName}>{cat.categoryName}</option>
                     ))}
-                </Select>
-            </FormControl>
-            {/* BRAND SELECTION */}
-            <FormControl
-                className="w-full md:w-1/4"
-                variant="outlined"
-                size="small">
-                <Select
+                </select>
+            </div>
+            {/* BRAND SELECT */}
+            <div className="w-full md:w-56">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                <select
                     value={brand}
-                    onChange={handleBrandChange}
-                    className="w-full text-gray-700 bg-gray-50 border-gray-200 rounded-lg"
-                    sx={{
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                                borderColor: '#e5e7eb',
-                            },
-                            '&:hover fieldset': {
-                                borderColor: '#f97316',
-                            },
-                            '&.Mui-focused fieldset': {
-                                borderColor: '#f97316',
-                            },
-                        },
-                        '& .MuiSelect-select': {
-                            padding: '10px 14px',
-                            fontSize: '0.875rem',
-                            fontWeight: 500,
-                        },
-                    }}
-                    aria-label="Select brand"
+                    onChange={e => setBrand(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
-                    <MenuItem value="all" className="text-gray-600 font-medium">All Brands</MenuItem>
-                    {filteredBrands?.map((item) => (
-                        <MenuItem key={item.brandId} value={item.brandId} className="text-gray-700 font-medium">
-                            {item.brandName}
-                        </MenuItem>
+                    <option value="all">All Brands</option>
+                    {brands?.map(br => (
+                        <option key={br.brandId} value={br.brandName}>{br.brandName}</option>
                     ))}
-                </Select>
-            </FormControl>
+                </select>
+            </div>
+            {/* CLEAR FILTER BUTTON */}
+            <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-4 top-4 md:static md:ml-4 px-4 py-2 bg-gray-100 hover:bg-orange-100 text-orange-600 font-semibold rounded-lg border border-orange-200 transition-colors duration-150 shadow-sm"
+                style={{ minWidth: 120 }}
+            >
+                Clear Filter
+            </button>
         </div>
     );
 });
 
 AdminProductFilter.propTypes = {
-    categories: PropTypes.arrayOf(
-        PropTypes.shape({
-            categoryId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-            categoryName: PropTypes.string.isRequired,
-        })
-    ),
-    brands: PropTypes.arrayOf(
-        PropTypes.shape({
-            brandId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-            brandName: PropTypes.string.isRequired,
-            categoryName: PropTypes.string,
-        })
-    ),
+    categories: PropTypes.array,
+    brands: PropTypes.array,
     onFilterChange: PropTypes.func.isRequired,
-    initialFilter: PropTypes.object,
 };
 
 AdminProductFilter.displayName = 'AdminProductFilter';
