@@ -14,7 +14,7 @@ const BrandForm = memo(({ brand, categories, onSubmit, onCancel, isLoading }) =>
         if (brand) {
             reset({
                 brandName: brand.brandName || '',
-                categoryId: brand.category?.categoryId || '',
+                categoryId: brand.categories?.[0]?.categoryId || '',
             });
         }
     }, [brand, reset]);

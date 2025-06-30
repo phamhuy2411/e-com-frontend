@@ -49,6 +49,16 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
         }
     }, [product, reset, dispatch]);
 
+    // Sau khi brands thay đổi, nếu đang edit thì set lại brandId đúng với product
+    useEffect(() => {
+        if (product && brands && brands.length > 0) {
+            const brandId = product.brand?.brandId || product.brandId || '';
+            if (brandId) {
+                setValue('brandId', String(brandId));
+            }
+        }
+    }, [brands, product, setValue]);
+
     // Fetch brands when category changes
     useEffect(() => {
         console.log('Category changed to:', selectedCategoryId);
