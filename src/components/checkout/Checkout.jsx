@@ -2,7 +2,7 @@ import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import { useEffect, useState, memo, useCallback } from 'react';
 import AddressInfo from './AddressInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserAddresses, orderProductsAction } from '../../store/actions';
+import { getUserAddresses } from '../../store/actions';
 import toast from 'react-hot-toast';
 import Skeleton from '../shared/Skeleton';
 import ErrorPage from '../shared/ErrorPage';
@@ -10,7 +10,7 @@ import PaymentMethod from './PaymentMethod';
 import OrderSummary from './OrderSummary';
 import StripePayment from './StripePayment';
 import PaypalPayment from './PaypalPayment';
-import { useNavigate } from 'react-router-dom';
+import SuccessMessage from './SuccessMessage';
 
 const Checkout = () => {
     const [activeStep, setActiveStep] = useState(0);
@@ -21,7 +21,7 @@ const Checkout = () => {
         (state) => state.auth
     );
     const { paymentMethod } = useSelector((state) => state.payment);
-    const navigate = useNavigate();
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const handleBack = useCallback(() => {
         setActiveStep((prevStep) => prevStep - 1);
@@ -78,22 +78,16 @@ const Checkout = () => {
                 if (paymentMethod === "Stripe") return <StripePayment />;
                 if (paymentMethod === "Paypal") return <PaypalPayment />;
                 if (paymentMethod === "COD") {
+                    if (showSuccess) {
+                        return <SuccessMessage />;
+                    }
                     return (
                         <div className="flex flex-col items-center justify-center min-h-[300px]">
                             <h2 className="text-2xl font-bold mb-4">Cash on Delivery (COD)</h2>
                             <p className="mb-6 text-gray-600">You will pay when you receive the goods.</p>
                             <button
                                 className="px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold text-lg shadow transition-all duration-200"
-                                onClick={() => {
-                                    const orderRequestDTO = {
-                                        addressId: selectedUserCheckoutAddress?.addressId,
-                                        pgName: 'COD',
-                                        pgPaymentId: null,
-                                        pgStatus: 'pending',
-                                        pgResponseMessgage: 'Cash on Delivery',
-                                    };
-                                    dispatch(orderProductsAction('COD', orderRequestDTO, null, navigate));
-                                }}
+                                onClick={() => setShowSuccess(true)}
                             >
                                 Confirm Order (COD)
                             </button>
@@ -104,7 +98,7 @@ const Checkout = () => {
             default:
                 return null;
         }
-    }, [activeStep, address, cart, paymentMethod, selectedUserCheckoutAddress, totalPrice, dispatch, navigate]);
+    }, [activeStep, address, cart, paymentMethod, selectedUserCheckoutAddress, totalPrice, showSuccess]);
 
     return (
         <div className='py-14 min-h-[calc(100vh-100px)]'>

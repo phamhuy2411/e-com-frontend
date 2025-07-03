@@ -511,11 +511,13 @@ export const orderProductsAction = (paymentMethod, orderRequestDTO, toast, navig
         if (data) {
             dispatch({ type: "CLEAR_CART" });
             localStorage.removeItem("cartItems");
+            dispatch({ type: "ORDER_SUCCESS" });
             if (toast) toast.success("Order placed successfully");
             if (navigate) navigate("/order-confirm");
         }
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
+        dispatch({ type: "ORDER_ERROR", payload: error?.response?.data?.message || "Failed to place order" });
         if (toast) toast.error(error?.response?.data?.message || "Failed to place order");
         dispatch({
             type: "IS_ERROR",

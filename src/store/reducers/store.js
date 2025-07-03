@@ -5,6 +5,7 @@ import { cartReducer } from "./cartReducer";
 import { authReducer } from "./authReducer";
 import { paymentMethodReducer } from "./paymentMethodReducer";
 import { adminReducer } from "./adminReducer";
+import { orderReducer } from "./orderReducer";
 
 const getLocalStorageItem = (key, defaultValue) => {
     try {
@@ -42,6 +43,7 @@ export const store = configureStore({
         auth: authReducer,
         payment: paymentMethodReducer,
         admin: adminReducer,
+        order: orderReducer,
     },
     preloadedState: initialState,
 });

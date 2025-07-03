@@ -1,5 +1,5 @@
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addPaymentMethod, createUserCart } from '../../store/actions';
 import { memo } from 'react';
@@ -9,15 +9,17 @@ const PaymentMethod = memo(() => {
     const { paymentMethod } = useSelector((state) => state.payment);
     const { cart, cartId } = useSelector((state) => state.carts);
     const { errorMessage } = useSelector((state) => state.errors);
+    const cartCreated = useRef(false);
 
     useEffect(() => {
-        if (cart.length > 0 && !cartId && !errorMessage) {
+        if (cart.length > 0 && !cartId && !errorMessage && !cartCreated.current) {
             const sendCartItems = cart.map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
             }));
             
             dispatch(createUserCart(sendCartItems));
+            cartCreated.current = true;
         }
     }, [dispatch, cartId, cart, errorMessage]);
 
