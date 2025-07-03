@@ -164,6 +164,18 @@ export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoad
             localStorage.setItem("auth", JSON.stringify(userInfo));
         } catch { /* ignore */ }
         
+        // ĐỒNG BỘ GIỎ HÀNG LOCAL LÊN BACKEND NẾU CÓ
+        const localCart = localStorage.getItem("cartItems");
+        if (localCart) {
+            const cartItems = JSON.parse(localCart);
+            if (Array.isArray(cartItems) && cartItems.length > 0) {
+                await dispatch(createUserCart(cartItems));
+                localStorage.removeItem("cartItems");
+            }
+        }
+        // LẤY GIỎ HÀNG TỪ BACKEND NGAY SAU KHI ĐĂNG NHẬP
+        await dispatch(getUserCart());
+        
         if (reset) reset();
         if (toast) toast.success("Login Success");
         if (navigate) navigate("/");
@@ -195,6 +207,7 @@ export const logOutUser = (navigate) => async (dispatch) => {
 
         dispatch({ type: "LOG_OUT" });
         localStorage.removeItem("auth");
+        localStorage.removeItem("cartItems"); // XÓA GIỎ HÀNG LOCAL KHI ĐĂNG XUẤT
 
         if (navigate) navigate("/login");
     } catch (error) {
@@ -202,6 +215,7 @@ export const logOutUser = (navigate) => async (dispatch) => {
         // Vẫn logout local ngay cả khi API call thất bại
         dispatch({ type: "LOG_OUT" });
         localStorage.removeItem("auth");
+        localStorage.removeItem("cartItems"); // XÓA GIỎ HÀNG LOCAL KHI ĐĂNG XUẤT
         if (navigate) navigate("/login");
     }
 };
@@ -470,9 +484,14 @@ export const deleteCartProductFromCartAction = (cartId, productId, toast) => asy
                 totalPrice: data.totalPrice,
                 cartId: data.cartId,
             });
-            try {
-                localStorage.setItem("cartItems", JSON.stringify(data.products));
-            } catch { /* ignore */ }
+            // Nếu có cartId (user đăng nhập), xóa luôn localStorage để đồng bộ với backend
+            if (cartId) {
+                localStorage.removeItem("cartItems");
+            } else {
+                try {
+                    localStorage.setItem("cartItems", JSON.stringify(data.products));
+                } catch { /* ignore */ }
+            }
             if (toast) toast.success("Removed from cart");
         }
         dispatch({ type: "IS_SUCCESS" });
@@ -516,9 +535,14 @@ export const clearUserCartAction = (cartId, toast) => async (dispatch) => {
                 totalPrice: data.totalPrice,
                 cartId: data.cartId,
             });
-            try {
-                localStorage.setItem("cartItems", JSON.stringify(data.products));
-            } catch { /* ignore */ }
+            // Nếu có cartId (user đăng nhập), xóa luôn localStorage để đồng bộ với backend
+            if (cartId) {
+                localStorage.removeItem("cartItems");
+            } else {
+                try {
+                    localStorage.setItem("cartItems", JSON.stringify(data.products));
+                } catch { /* ignore */ }
+            }
             if (toast) toast.success("All items removed from cart");
         }
         dispatch({ type: "IS_SUCCESS" });

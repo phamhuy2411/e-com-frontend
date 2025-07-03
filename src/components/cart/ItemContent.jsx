@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateCartProductAction,
   deleteCartProductFromCartAction,
+  increaseCartQuantity,
+  decreaseCartQuantity,
 } from "../../store/actions";
 import toast from "react-hot-toast";
 import { formatPrice } from "../../utils/formatPrice";
@@ -22,14 +24,13 @@ const ItemContent = ({
   price,
   specialPrice,
 }) => {
-  const [currentQuantity, setCurrentQuantity] = useState(quantity);
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
   const { cartId } = useSelector((state) => state.carts);
 
   const totalPrice = useMemo(
-    () => Number(currentQuantity) * Number(specialPrice),
-    [currentQuantity, specialPrice]
+    () => Number(quantity) * Number(specialPrice),
+    [quantity, specialPrice]
   );
 
   const discount = useMemo(() => {
@@ -40,14 +41,34 @@ const ItemContent = ({
   }, [price, specialPrice]);
 
   const handleQtyIncrease = () => {
-    dispatch(updateCartProductAction(productId, "increase", toast));
-    setCurrentQuantity(currentQuantity + 1);
+    if (cartId) {
+      dispatch(updateCartProductAction(productId, "increase", toast));
+    } else {
+      dispatch(increaseCartQuantity({
+        productId,
+        productName,
+        image,
+        description,
+        price,
+        specialPrice,
+      }, toast, quantity));
+    }
   };
 
   const handleQtyDecrease = () => {
-    if (currentQuantity > 1) {
-      dispatch(updateCartProductAction(productId, "decrease", toast));
-      setCurrentQuantity(currentQuantity - 1);
+    if (quantity > 1) {
+      if (cartId) {
+        dispatch(updateCartProductAction(productId, "decrease", toast));
+      } else {
+        dispatch(decreaseCartQuantity({
+          productId,
+          productName,
+          image,
+          description,
+          price,
+          specialPrice,
+        }, quantity - 1));
+      }
     }
   };
 
@@ -175,9 +196,9 @@ const ItemContent = ({
               {formatPrice(Number(specialPrice))}
             </span>
           </div>
-          {currentQuantity > 1 && (
+          {quantity > 1 && (
             <span className="text-xs text-slate-500 mt-1">
-              {currentQuantity} × {formatPrice(Number(specialPrice))}
+              {quantity} × {formatPrice(Number(specialPrice))}
             </span>
           )}
         </div>
@@ -185,7 +206,7 @@ const ItemContent = ({
         {/* Quantity */}
         <div className="md:col-span-2 flex items-center justify-center">
           <SetQuantity
-            quantity={currentQuantity}
+            quantity={quantity}
             cardCounter={true}
             handleQtyIncrease={handleQtyIncrease}
             handleQtyDecrease={handleQtyDecrease}
