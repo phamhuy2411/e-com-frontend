@@ -164,7 +164,7 @@ const ProductList = memo(() => {
         return br ? br.brandName : 'N/A';
     };
 
-    const tableHeaders = ['ID', 'Image', 'Name', 'Category', 'Price', 'Quantity', 'Brand', 'Actions'];
+    const tableHeaders = ['ID', 'Image', 'Name', 'Category', 'Price', 'Quantity', 'Discount', 'Brand', 'Actions'];
 
     return (
         <AdminLayout>
@@ -231,6 +231,9 @@ const ProductList = memo(() => {
                                 }`}>
                                     {safeNumber(product.quantity || product.productQuantity)}
                                 </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-semibold text-center">
+                                {typeof product.discount !== 'undefined' && product.discount !== null ? `${product.discount}%` : '0%'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {/* Ưu tiên lấy brandName trực tiếp, nếu không có thì gọi hàm */}

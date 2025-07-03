@@ -31,6 +31,7 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                 productQuantity: product.quantity || product.productQuantity || '',
                 categoryId: product.category?.categoryId || product.categoryId || '',
                 brandId: product.brand?.brandId || product.brandId || '',
+                discount: typeof product.discount !== 'undefined' ? product.discount : '',
             });
             
             // Set image preview for existing product
@@ -138,16 +139,15 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
     };
 
     const handleFormSubmit = (data) => {
-        // Không còn bắt buộc phải chọn ảnh khi tạo mới
-        // Add selected image to form data
         const formData = {
             ...data,
             imageFile: selectedImage
         };
-        // Đảm bảo mapping đúng trường cho backend
         formData.description = data.productDescription;
         formData.price = data.productPrice;
         formData.quantity = data.productQuantity;
+        if (formData.discount === '') formData.discount = 0;
+        else formData.discount = Number(formData.discount);
         onSubmit(formData);
     };
 
@@ -350,6 +350,32 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                                 <p className="mt-2 text-sm text-gray-500 flex items-center">
                                     <FiImage className="w-4 h-4 mr-1" />
                                     Please select a category to see available brands
+                                </p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label htmlFor="discount" className="block text-sm font-medium text-gray-700 mb-2">
+                                Discount (%)
+                            </label>
+                            <input
+                                type="number"
+                                id="discount"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                {...register('discount', {
+                                    min: { value: 0, message: 'Discount must be at least 0%' },
+                                    max: { value: 100, message: 'Discount must be at most 100%' },
+                                    validate: value => value === '' || !isNaN(Number(value)) || 'Discount must be a number'
+                                })}
+                                className={`w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${errors.discount ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-gray-400'}`}
+                                placeholder="0"
+                            />
+                            {errors.discount && (
+                                <p className="mt-2 text-sm text-red-600 flex items-center">
+                                    <FiX className="w-4 h-4 mr-1" />
+                                    {errors.discount.message}
                                 </p>
                             )}
                         </div>
