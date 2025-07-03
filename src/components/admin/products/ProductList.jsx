@@ -126,16 +126,12 @@ const ProductList = memo(() => {
         }).format(price);
     };
 
+    // Helper to get image URL from backend
     const getImageUrl = (img) => {
-        if (!img) return '/placeholder-image.png';
-        // Nếu là đường dẫn tuyệt đối (http/https)
-        if (img.startsWith('http://') || img.startsWith('https://')) return img;
-        // Nếu là đường dẫn bắt đầu bằng /images/ (backend trả về đúng static path)
-        if (img.startsWith('/images/')) return img;
-        // Nếu là đường dẫn images/ (không có dấu / đầu)
-        if (img.startsWith('images/')) return `/${img}`;
-        // Nếu là tên file (ví dụ: 1-Photoroom.png)
-        return `/images/${img}`;
+      if (!img) return '/placeholder-image.png';
+      if (img.startsWith('http://') || img.startsWith('https://')) return img;
+      if (img.startsWith('/images/')) return `http://localhost:8080${img}`;
+      return `http://localhost:8080/images/${img}`;
     };
 
     const safeNumber = (value) => {
@@ -209,7 +205,7 @@ const ProductList = memo(() => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <img
-                                    src={getImageUrl(product.image || product.productImage) || '/placeholder-image.png'}
+                                    src={getImageUrl(product.image || product.productImage)}
                                     alt={product.productName}
                                     className="h-12 w-12 rounded-lg object-cover"
                                     onError={(e) => {

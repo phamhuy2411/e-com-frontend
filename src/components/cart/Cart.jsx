@@ -6,7 +6,7 @@ import ItemContent from "./ItemContent";
 import CartEmpty from "./CartEmpty";
 import { formatPrice } from "../../utils/formatPrice";
 import { useMemo } from "react";
-import { clearCartWithToast } from "../../store/actions";
+import { clearCartWithToast, clearUserCartAction } from "../../store/actions";
 import toast from "react-hot-toast";
 import { HiOutlineTrash } from "react-icons/hi";
 import { Tooltip } from "@mui/material";
@@ -14,7 +14,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 import { useState } from "react";
 
 const Cart = () => {
-    const { cart } = useSelector((state) => state.carts);
+    const { cart, cartId } = useSelector((state) => state.carts);
     const dispatch = useDispatch();
     
     const newCart = useMemo(() => {
@@ -30,8 +30,12 @@ const Cart = () => {
 
     const [openConfirm, setOpenConfirm] = useState(false);
     const handleRemoveAll = () => setOpenConfirm(true);
-    const handleConfirmRemoveAll = () => {
-        dispatch(clearCartWithToast(toast));
+    const handleConfirmRemoveAll = async () => {
+        if (cartId) {
+            await dispatch(clearUserCartAction(cartId, toast));
+        } else {
+            await dispatch(clearCartWithToast(toast));
+        }
         setOpenConfirm(false);
     };
     const handleCancelRemoveAll = () => setOpenConfirm(false);
@@ -95,7 +99,7 @@ const Cart = () => {
 
             <div>
                 {cart && cart.length > 0 &&
-                    cart.map((item) => <ItemContent key={item.id || item._id} {...item}/>)}
+                    cart.map((item) => <ItemContent key={item.productId} {...item}/>)}
             </div>
 
             <div className="border-t-[1.5px] border-slate-200 py-4 flex sm:flex-row sm:px-0 px-2 flex-col sm:justify-between gap-4">

@@ -21,16 +21,16 @@ import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 
 
-const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
+const ProductViewModal = memo(({ open, setOpen, product = {}, isAvailable }) => {
   const {
     productName,
     image,
     description,
     price,
-    specialPrice,
-    quantity,
-    discount,
-  } = product;
+    specialPrice = 0,
+    quantity = 0,
+    discount = 0,
+  } = product || {};
   const closeButtonRef = useRef(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -189,6 +189,14 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
     );
   };
 
+  // Helper to get image URL from backend
+  const getImageUrl = (img) => {
+    if (!img) return '/placeholder-image.png';
+    if (img.startsWith('http://') || img.startsWith('https://')) return img;
+    if (img.startsWith('/images/')) return `http://localhost:8080${img}`;
+    return `http://localhost:8080/images/${img}`;
+  };
+
   return (
     <Transition show={open} as={Fragment}>
       <Dialog
@@ -249,7 +257,7 @@ const ProductViewModal = memo(({ open, setOpen, product, isAvailable }) => {
                     <div className="relative w-full h-full flex items-center justify-center p-4">
                       <div className="relative w-full h-full overflow-hidden rounded-lg">
                         <img
-                          src={image}
+                          src={getImageUrl(image)}
                           alt={productName}
                           className={`w-full h-full object-contain transition-all duration-500 ease-in-out transform group-hover:scale-110 ${
                             imageLoaded ? "opacity-100 blur-0" : "opacity-0 blur-sm"
@@ -403,14 +411,6 @@ ProductViewModal.propTypes = {
     discount: PropTypes.number,
     specialPrice: PropTypes.number,
   }).isRequired,
-};
-
-ProductViewModal.defaultProps = {
-  product: {
-    quantity: 0,
-    discount: 0,
-    specialPrice: 0,
-  },
 };
 
 ProductViewModal.displayName = "ProductViewModal";

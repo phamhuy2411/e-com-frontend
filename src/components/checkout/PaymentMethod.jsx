@@ -46,6 +46,12 @@ const PaymentMethod = memo(() => {
                         control={<Radio color='primary' />} 
                         label="Paypal" 
                         className='text-gray-700'/>
+
+                    <FormControlLabel 
+                        value="COD" 
+                        control={<Radio color='primary' />} 
+                        label="Cash on Delivery (COD)" 
+                        className='text-gray-700'/>
                 </RadioGroup>
             </FormControl>
         </div>

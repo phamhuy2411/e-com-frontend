@@ -47,6 +47,14 @@ const ProductCard = memo(({
         dispatch(addToCart(cartItems, 1, toast));
     }, [dispatch]);
 
+    // Helper to get image URL from backend
+    const getImageUrl = (img) => {
+        if (!img) return '/placeholder-image.png';
+        if (img.startsWith('http://') || img.startsWith('https://')) return img;
+        if (img.startsWith('/images/')) return `http://localhost:8080${img}`;
+        return `http://localhost:8080/images/${img}`;
+    };
+
     const renderPrice = () => {
         if (!price || Number(price) === 0) {
             return (
@@ -133,7 +141,7 @@ const ProductCard = memo(({
             >
                 <img 
                     className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105 object-contain"
-                    src={image}
+                    src={getImageUrl(image)}
                     alt={productName}
                     loading="lazy"
                 />

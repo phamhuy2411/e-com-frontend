@@ -3,12 +3,19 @@ import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { orderProductsAction } from '../../store/actions';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentForm = memo(({ clientSecret, totalPrice }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { selectedUserCheckoutAddress } = useSelector((state) => state.auth);
+  const { paymentMethod } = useSelector((state) => state.payment);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +27,7 @@ const PaymentForm = memo(({ clientSecret, totalPrice }) => {
     try {
       await elements.submit();
 
-      const { error } = await stripe.confirmPayment({
+      const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         clientSecret,
         confirmParams: {
@@ -31,6 +38,17 @@ const PaymentForm = memo(({ clientSecret, totalPrice }) => {
       if (error) {
         setErrorMessage(error.message);
         return false;
+      }
+      // Nếu thanh toán thành công, gọi orderProductsAction
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        const orderRequestDTO = {
+          addressId: selectedUserCheckoutAddress?.addressId,
+          pgName: 'Stripe',
+          pgPaymentId: paymentIntent.id,
+          pgStatus: paymentIntent.status,
+          pgResponseMessgage: paymentIntent.status,
+        };
+        await dispatch(orderProductsAction(paymentMethod, orderRequestDTO, null, navigate));
       }
     } catch (error) {
       setErrorMessage(error.message || 'An error occurred during payment processing');

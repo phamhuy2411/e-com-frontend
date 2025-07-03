@@ -33,9 +33,17 @@ const ProductDetail = memo(() => {
         (item) => String(item.id || item.productId) === String(id)
     );
 
+    // Helper to get image URL from backend
+    const getImageUrl = (img) => {
+      if (!img) return '/placeholder-image.png';
+      if (img.startsWith('http://') || img.startsWith('https://')) return img;
+      if (img.startsWith('/images/')) return `http://localhost:8080${img}`;
+      return `http://localhost:8080/images/${img}`;
+    };
+
     useEffect(() => {
         if (product?.image) {
-            setSelectedImage(product.image);
+            setSelectedImage(getImageUrl(product.image));
         }
     }, [product]);
 
@@ -146,7 +154,7 @@ const ProductDetail = memo(() => {
                         <div className="space-y-4">
                             <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
                                 <img
-                                    src={selectedImage || product?.image}
+                                    src={selectedImage || getImageUrl(product?.image)}
                                     alt={product?.productName}
                                     className="w-full h-full object-contain"
                                 />
@@ -166,15 +174,15 @@ const ProductDetail = memo(() => {
                                     {product.images.map((image, index) => (
                                         <button
                                             key={index}
-                                            onClick={() => setSelectedImage(image)}
+                                            onClick={() => setSelectedImage(getImageUrl(image))}
                                             className={`aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
-                                                selectedImage === image
+                                                selectedImage === getImageUrl(image)
                                                     ? "border-blue-500"
                                                     : "border-transparent hover:border-slate-200"
                                             }`}
                                         >
                                             <img
-                                                src={image}
+                                                src={getImageUrl(image)}
                                                 alt={`${product.productName} - ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />

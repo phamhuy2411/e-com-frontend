@@ -7,7 +7,8 @@ import PaymentForm from './PaymentForm';
 import { createStripePaymentSecret } from '../../store/actions';
 import { memo } from 'react';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripeApiKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = stripeApiKey ? loadStripe(stripeApiKey) : null;
 
 const StripePayment = memo(() => {
   const dispatch = useDispatch();
@@ -33,6 +34,14 @@ const StripePayment = memo(() => {
     return (
       <div className="max-w-lg mx-auto">
         <Skeleton variant="rectangular" height={400} />
+      </div>
+    );
+  }
+
+  if (!stripeApiKey) {
+    return (
+      <div className="max-w-lg mx-auto text-center text-red-600 font-semibold py-10">
+        Stripe API key is missing. Please set VITE_STRIPE_PUBLISHABLE_KEY in your environment variables.
       </div>
     );
   }

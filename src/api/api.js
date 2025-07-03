@@ -36,4 +36,27 @@ api.interceptors.response.use(
     }
 );
 
+// Cart APIs
+export const createOrUpdateCart = (cartItems) =>
+    api.post("/cart/create", cartItems);
+
+export const addProductToCart = (productId, quantity) =>
+    api.post(`/cart/products/${productId}/quantity/${quantity}`);
+
+export const getUserCart = () =>
+    api.get("/carts/users/cart");
+
+export const updateCartProduct = (productId, operation) =>
+    api.put(`/cart/products/${productId}/quantity/${operation}`);
+
+export const deleteCartProductFromCart = (cartId, productId) =>
+    api.delete(`/carts/${cartId}/product/${productId}`);
+
+export const clearUserCart = (cartId) =>
+    api.delete(`/carts/${cartId}/clear`);
+
+// Order APIs
+export const orderProducts = (paymentMethod, orderRequestDTO) =>
+    api.post(`/order/users/payments/${paymentMethod}`, orderRequestDTO);
+
 export default api;
