@@ -22,6 +22,14 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
 
     const selectedCategoryId = watch('categoryId');
 
+    // Helper to get image URL from backend
+    const getImageUrl = (img) => {
+        if (!img) return '/placeholder-image.png';
+        if (img.startsWith('http://') || img.startsWith('https://')) return img;
+        if (img.startsWith('/images/')) return `http://localhost:8080${img}`;
+        return `http://localhost:8080/images/${img}`;
+    };
+
     useEffect(() => {
         if (product) {
             reset({
@@ -34,9 +42,9 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                 discount: typeof product.discount !== 'undefined' ? product.discount : '',
             });
             
-            // Set image preview for existing product
+            // Set image preview for existing product with proper URL handling
             if (product.image || product.productImage) {
-                setImagePreview(product.image || product.productImage);
+                setImagePreview(getImageUrl(product.image || product.productImage));
             }
             
             // If editing a product, fetch brands for its category

@@ -6,6 +6,7 @@ import AdminLayout from '../AdminLayout';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchAdminCategories, fetchAdminProducts } from '../../../store/actions/adminActions';
+import { formatPrice } from '../../../utils/formatPrice';
 // import { fetchAdminCategories } from '../../../store/actions/adminActions';
 // import { fetchAdminProducts } from '../../../store/actions/adminActions';
 
@@ -46,7 +47,7 @@ StatsCard.propTypes = {
 StatsCard.displayName = 'StatsCard';
 
 const AdminDashboard = memo(() => {
-    const { categories, products } = useSelector((state) => state.admin);
+    const { categories, products, pagination } = useSelector((state) => state.admin);
     const dispatch = useDispatch(); // ✅ BỔ SUNG DÒNG NÀY
 
     useEffect(() => {
@@ -57,7 +58,7 @@ const AdminDashboard = memo(() => {
     const stats = [
         {
             title: 'Total Products',
-            value: products?.length || 0,
+            value: pagination?.totalElements || products?.length || 0,
             icon: FiPackage,
             color: 'bg-blue-500',
             change: 12,
@@ -123,7 +124,7 @@ const AdminDashboard = memo(() => {
 
                                     <div className="flex-1">
                                         <p className="text-sm font-medium text-gray-900">{product.productName}</p>
-                                        <p className="text-sm text-gray-500">${product.productPrice}</p>
+                                        <p className="text-sm text-gray-500">{formatPrice(product.price || product.productPrice)}</p>
                                     </div>
                                 </div>
                             ))}

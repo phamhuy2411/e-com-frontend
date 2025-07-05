@@ -5,7 +5,7 @@ import {
   DialogTitle,
   Transition,
 } from "@headlessui/react";
-import { Fragment, memo, useRef, useEffect, useState } from "react";
+import { Fragment, memo, useRef, useEffect, useState, useCallback } from "react";
 import { Divider, Skeleton, Tooltip } from "@mui/material";
 import Status from "./Status";
 import {
@@ -15,10 +15,11 @@ import {
   MdInventory2,
   MdLocalOffer,
   MdInfo,
-  MdCheckCircle,
 } from "react-icons/md";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, addProductToCartAction } from "../../store/actions";
 
 
 const ProductViewModal = memo(({ open, setOpen, product = {}, isAvailable }) => {
@@ -30,10 +31,13 @@ const ProductViewModal = memo(({ open, setOpen, product = {}, isAvailable }) => 
     specialPrice = 0,
     quantity = 0,
     discount = 0,
+    id: productId,
   } = product || {};
   const closeButtonRef = useRef(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   // Focus nút Close khi mở modal
   useEffect(() => {
@@ -76,56 +80,25 @@ const ProductViewModal = memo(({ open, setOpen, product = {}, isAvailable }) => 
 
   const discountPercentage = calculateDiscount();
 
-  const handleAddToCart = () => {
-    toast.custom(
-      (t) => (
-        <div
-          className={`${
-            t.visible ? "animate-enter" : "animate-leave"
-          } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
-        >
-          <div className="flex-1 w-0 p-4">
-            <div className="flex items-start">
-              <div className="flex-shrink-0 pt-0.5">
-                <MdCheckCircle className="h-10 w-10 text-orange-500" />
-              </div>
-              <div className="ml-3 flex-1">
-                <p className="text-sm font-medium text-gray-900">
-                  Added to cart!
-                </p>
-                <p className="mt-1 text-sm text-gray-500">{productName}</p>
-                <div className="mt-2 flex items-center text-sm text-slate-600">
-                  <MdShoppingCart className="mr-1.5 h-4 w-4" />
-                  <span>
-                    {specialPrice
-                      ? `Giá: ${formatPrice(specialPrice)}`
-                      : `Giá: ${formatPrice(price)}`}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex border-l border-gray-200">
-            <button
-              onClick={() => toast.dismiss(t.id)}
-              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-orange-600 hover:text-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        duration: 4000,
-        position: "top-right",
-        style: {
-          background: "transparent",
-          boxShadow: "none",
-          padding: 0,
-        },
-      }
-    );
-  };
+  const addToCartHandler = useCallback(() => {
+    if (user) {
+      dispatch(addProductToCartAction(
+        productId,
+        1,
+        toast
+      ));
+    } else {
+      dispatch(addToCart({
+        image,
+        productName,
+        description,
+        specialPrice,
+        price,
+        productId,
+        quantity,
+      }, 1, toast));
+    }
+  }, [dispatch, productId, user, image, productName, description, specialPrice, price, quantity]);
 
   const renderPrice = () => {
     if (!price || Number(price) === 0) {
@@ -175,7 +148,7 @@ const ProductViewModal = memo(({ open, setOpen, product = {}, isAvailable }) => 
 
     return (
       <button
-        onClick={handleAddToCart}
+        onClick={addToCartHandler}
         disabled={!isAvailable || isLoading}
         className={`flex-1 px-6 py-3 text-sm font-medium text-white ${
           isAvailable
