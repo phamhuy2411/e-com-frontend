@@ -1,27 +1,23 @@
-import { Button } from '@mui/material';
+import { FaCheckCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const SuccessMessage = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col items-center justify-center min-h-[300px] p-8 bg-white rounded-xl shadow-lg mx-auto max-w-md mt-10 animate-fade-in">
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="40" fill="#22c55e"/>
-        <path d="M24 42L36 54L56 34" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-      <h2 className="text-3xl font-bold mt-4 mb-2 text-green-600">Order Successful!</h2>
-      <p className="text-gray-600 mb-6 text-center">
-        Thank you for your purchase.<br />Your order will be delivered as soon as possible.
-      </p>
-      <Button
-        variant="contained"
-        color="success"
-        size="large"
-        className="rounded-xl px-8 py-2 text-lg shadow"
-        onClick={() => navigate('/')}
-      >
-        Back to Home
-      </Button>
+    <div className="min-h-[60vh] flex flex-col items-center justify-center bg-white py-10">
+      <div className="flex flex-col items-center">
+        <FaCheckCircle size={80} className="text-orange-500 mb-4" aria-hidden="true" />
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Order Placed Successfully!</h2>
+        <p className="text-gray-600 mb-6 text-center max-w-md">
+          Thank you for your purchase! Your order has been placed and is being processed. You will receive an email confirmation shortly.
+        </p>
+        <button
+          className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-white rounded-xl font-semibold text-lg shadow transition-all duration-200"
+          onClick={() => navigate("/")}
+        >
+          Back to Home
+        </button>
+      </div>
     </div>
   );
 };

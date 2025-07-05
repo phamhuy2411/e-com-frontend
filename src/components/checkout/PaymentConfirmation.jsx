@@ -43,7 +43,7 @@ const PaymentConfirmation = memo(() => {
         pgName: 'Stripe',
         pgPaymentId: paymentIntent,
         pgStatus: 'succeeded',
-        pgResponseMessage: 'Payment successful',
+        pgResponseMessgage: 'Payment successful',
       };
 
       dispatch(stripePaymentConfirmation(sendData, setErrorMessage, setLoading, toast));

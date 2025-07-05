@@ -2,7 +2,7 @@ import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import { useEffect, useState, memo, useCallback } from 'react';
 import AddressInfo from './AddressInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserAddresses } from '../../store/actions';
+import { getUserAddresses, orderProductsAction } from '../../store/actions';
 import toast from 'react-hot-toast';
 import Skeleton from '../shared/Skeleton';
 import ErrorPage from '../shared/ErrorPage';
@@ -40,6 +40,26 @@ const Checkout = () => {
         
         setActiveStep((prevStep) => prevStep + 1);
     }, [activeStep, selectedUserCheckoutAddress, paymentMethod]);
+
+    const handleCODOrder = async () => {
+        if (!selectedUserCheckoutAddress) {
+            toast.error("Please select checkout address before proceeding.");
+            return;
+        }
+        const orderRequestDTO = {
+            addressId: selectedUserCheckoutAddress.addressId,
+            pgName: "COD",
+            pgPaymentId: "",
+            pgStatus: "PENDING",
+            pgResponseMessgage: "Cash on Delivery"
+        };
+        try {
+            await dispatch(orderProductsAction("COD", orderRequestDTO, toast, null));
+            setShowSuccess(true);
+        } catch {
+            // Error đã được xử lý trong orderProductsAction
+        }
+    };
 
     const steps = [
         "Address",
@@ -87,7 +107,7 @@ const Checkout = () => {
                             <p className="mb-6 text-gray-600">You will pay when you receive the goods.</p>
                             <button
                                 className="px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold text-lg shadow transition-all duration-200"
-                                onClick={() => setShowSuccess(true)}
+                                onClick={handleCODOrder}
                             >
                                 Confirm Order (COD)
                             </button>
