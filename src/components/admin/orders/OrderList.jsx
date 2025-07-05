@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FiEye, FiPackage, FiCalendar, FiDollarSign, FiMapPin, FiCreditCard, FiUser, FiShoppingCart } from 'react-icons/fi';
+import { FiEye, FiPackage, FiDollarSign, FiUser, FiShoppingCart, FiCalendar } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout';
 import AdminModal from '../shared/AdminModal';
 import adminApi from '../../../api/adminApi';
@@ -8,10 +8,8 @@ export default function OrderList() {
   const [orders, setOrders] = useState([]);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [orderItems, setOrderItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [itemsLoading, setItemsLoading] = useState(false);
 
   // Fetch all orders on mount
   useEffect(() => {
@@ -23,24 +21,11 @@ export default function OrderList() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Fetch order items when selectedOrderId changes
+  // Set selected order when selectedOrderId changes
   useEffect(() => {
     if (selectedOrderId) {
-      const foundOrder = orders.find(o => o.orderId === selectedOrderId);
-      setSelectedOrder(foundOrder);
-      // Ưu tiên lấy orderItems từ order.orderItems nếu có
-      if (foundOrder && Array.isArray(foundOrder.orderItems)) {
-        setOrderItems(foundOrder.orderItems);
-        setItemsLoading(false);
-      } else {
-        setItemsLoading(true);
-        adminApi.getOrderItems(selectedOrderId)
-          .then(res => setOrderItems(res.data))
-          .catch(() => setOrderItems([]))
-          .finally(() => setItemsLoading(false));
-      }
+      setSelectedOrder(orders.find(o => o.orderId === selectedOrderId));
     } else {
-      setOrderItems([]);
       setSelectedOrder(null);
     }
   }, [selectedOrderId, orders]);
@@ -62,16 +47,27 @@ export default function OrderList() {
     }
   };
 
+  const calculateOrderTotal = (orderItems) => {
+    if (!orderItems || orderItems.length === 0) return 0;
+    return orderItems.reduce((total, item) => {
+      return total + (item.orderedProductPrice * item.quantity);
+    }, 0);
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      return dateString;
+    }
   };
 
   return (
@@ -116,6 +112,9 @@ export default function OrderList() {
                         Date
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Items
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -129,7 +128,7 @@ export default function OrderList() {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {orders.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="px-6 py-12 text-center">
+                        <td colSpan={7} className="px-6 py-12 text-center">
                           <div className="flex flex-col items-center">
                             <FiPackage className="text-gray-400 mb-2" size={48} />
                             <p className="text-gray-500 text-lg font-medium">No orders found</p>
@@ -160,18 +159,30 @@ export default function OrderList() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <FiCalendar className="text-gray-400 mr-2" size={16} />
-                            <div className="text-sm text-gray-900">{formatDate(order.orderDate)}</div>
+                            <div className="text-sm text-gray-900">
+                              {formatDate(order.orderdate)}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <FiShoppingCart className="text-gray-400 mr-2" size={16} />
+                            <div className="text-sm text-gray-900">
+                              {order.orderItems?.length || 0} items
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(order.orderStatus)}`}>
-                            {order.orderStatus}
+                            {order.orderStatus || 'Pending'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <FiDollarSign className="text-green-600 mr-1" size={16} />
-                            <div className="text-sm font-medium text-gray-900">${order.totalAmount}</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {calculateOrderTotal(order.orderItems).toFixed(2)}
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -218,13 +229,20 @@ export default function OrderList() {
                     <FiCalendar className="text-gray-400 mr-3" size={16} />
                     <div>
                       <p className="text-sm text-gray-500">Order Date</p>
-                      <p className="text-sm font-medium text-gray-900">{formatDate(selectedOrder.orderDate)}</p>
+                      <p className="text-sm font-medium text-gray-900">{formatDate(selectedOrder.orderdate)}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <FiShoppingCart className="text-gray-400 mr-3" size={16} />
+                    <div>
+                      <p className="text-sm text-gray-500">Total Items</p>
+                      <p className="text-sm font-medium text-gray-900">{selectedOrder.orderItems?.length || 0}</p>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <div className="mr-3">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(selectedOrder.orderStatus)}`}>
-                        {selectedOrder.orderStatus}
+                        {selectedOrder.orderStatus || 'Pending'}
                       </span>
                     </div>
                     <div>
@@ -235,29 +253,21 @@ export default function OrderList() {
                     <FiDollarSign className="text-green-600 mr-3" size={16} />
                     <div>
                       <p className="text-sm text-gray-500">Total Amount</p>
-                      <p className="text-sm font-medium text-gray-900">${selectedOrder.totalAmount}</p>
+                      <p className="text-sm font-medium text-gray-900">{calculateOrderTotal(selectedOrder.orderItems).toFixed(2)}</p>
                     </div>
                   </div>
-                  <div className="flex items-center">
-                    <FiMapPin className="text-gray-400 mr-3" size={16} />
-                    <div>
-                      <p className="text-sm text-gray-500">Address</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        {selectedOrder.address?.fullName} <br />
-                        {selectedOrder.address?.addressLine}, {selectedOrder.address?.city}, {selectedOrder.address?.state} {selectedOrder.address?.zipCode}
-                      </p>
+                  {selectedOrder.payment && (
+                    <div className="flex items-center">
+                      <div className="mr-3">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
+                          {selectedOrder.payment.paymentMethod}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Payment Method</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center">
-                    <FiCreditCard className="text-gray-400 mr-3" size={16} />
-                    <div>
-                      <p className="text-sm text-gray-500">Payment</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        {selectedOrder.payment?.paymentMethod} <br />
-                        ID: {selectedOrder.payment?.paymentId}
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
 
@@ -267,69 +277,67 @@ export default function OrderList() {
                   <FiShoppingCart className="mr-2" size={20} />
                   Order Items
                 </h4>
-                {itemsLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                    <span className="ml-3 text-gray-600">Loading items...</span>
+                {!selectedOrder.orderItems || selectedOrder.orderItems.length === 0 ? (
+                  <div className="bg-gray-50 rounded-lg p-8 text-center">
+                    <FiShoppingCart className="text-gray-400 mb-2 mx-auto" size={32} />
+                    <p className="text-gray-500">No items found</p>
                   </div>
                 ) : (
-                  <div className="overflow-hidden rounded-lg border border-gray-200">
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Item ID
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Product
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Quantity
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Price
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Discount
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {orderItems.length === 0 ? (
-                            <tr>
-                              <td colSpan={5} className="px-4 py-8 text-center">
-                                <div className="flex flex-col items-center">
-                                  <FiShoppingCart className="text-gray-400 mb-2" size={32} />
-                                  <p className="text-gray-500">No items found</p>
+                  <div className="space-y-4">
+                    {selectedOrder.orderItems.map(item => (
+                      <div key={item.orderItemid} className="bg-white border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-start space-x-4">
+                          {/* Product Image */}
+                          <div className="flex-shrink-0">
+                            <img 
+                              src={`/images/${item.product?.image || 'default-product.png'}`}
+                              alt={item.product?.productName || 'Product'}
+                              className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                              onError={(e) => {
+                                e.target.src = '/images/default-product.png';
+                              }}
+                            />
+                          </div>
+                          
+                          {/* Product Details */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <h5 className="text-sm font-medium text-gray-900 truncate">
+                                  {item.product?.productName || 'Unknown Product'}
+                                </h5>
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {item.product?.brand?.brandName || 'Unknown Brand'} • {item.product?.category?.categoryName || 'Unknown Category'}
+                                </p>
+                                <div className="flex items-center space-x-4 mt-2">
+                                  <span className="text-xs text-gray-500">
+                                    Quantity: {item.quantity}
+                                  </span>
+                                  <span className="text-xs text-gray-500">
+                                    Price: {item.orderedProductPrice?.toFixed(2) || '0.00'}
+                                  </span>
+                                  {item.discount > 0 && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                      {item.discount.toFixed(0)}% off
+                                    </span>
+                                  )}
                                 </div>
-                              </td>
-                            </tr>
-                          ) : orderItems.map(item => (
-                            <tr key={item.orderItemid} className="hover:bg-gray-50 transition-colors duration-150">
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                #{item.orderItemid}
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                #{item.product?.productId} <br />
-                                {item.product?.name}
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                {item.quantity}
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                                ${item.orderedProductPrice}
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap">
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                  {(item.discount * 100).toFixed(0)}%
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                              </div>
+                              
+                              {/* Item Total */}
+                              <div className="text-right">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {((item.orderedProductPrice || 0) * item.quantity).toFixed(2)}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {item.orderedProductPrice?.toFixed(2) || '0.00'} each
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

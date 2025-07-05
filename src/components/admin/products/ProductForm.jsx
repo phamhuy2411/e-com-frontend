@@ -249,13 +249,13 @@ const ProductForm = memo(({ product, categories, brands, onSubmit, onCancel, isL
                                     type="number"
                                     id="productPrice"
                                     step="0.01"
-                                    min="0.01"
+                                    min="0"
                                     max="1000000"
                                     {...register('productPrice', { 
                                         required: 'Price is required',
                                         min: {
-                                            value: 0.01,
-                                            message: 'Price must be greater than 0'
+                                            value: 0,
+                                            message: 'Price must be greater than or equal to 0'
                                         },
                                         max: {
                                             value: 1000000,

@@ -90,9 +90,6 @@ export const adminApi = {
     getAllOrders: () => {
         return api.get("/orders");
     },
-    getOrderItems: (orderId) => {
-        return api.get(`/orders/orderItems/${orderId}`);
-    },
 };
 
 export default adminApi; 
