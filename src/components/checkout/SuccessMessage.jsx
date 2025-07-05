@@ -9,9 +9,9 @@ const SuccessMessage = () => {
         <circle cx="40" cy="40" r="40" fill="#22c55e"/>
         <path d="M24 42L36 54L56 34" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
-      <h2 className="text-3xl font-bold mt-4 mb-2 text-green-600">Đặt hàng thành công!</h2>
+      <h2 className="text-3xl font-bold mt-4 mb-2 text-green-600">Order Successful!</h2>
       <p className="text-gray-600 mb-6 text-center">
-        Cảm ơn bạn đã mua hàng.<br />Đơn hàng của bạn sẽ được giao sớm nhất.
+        Thank you for your purchase.<br />Your order will be delivered as soon as possible.
       </p>
       <Button
         variant="contained"
@@ -20,10 +20,10 @@ const SuccessMessage = () => {
         className="rounded-xl px-8 py-2 text-lg shadow"
         onClick={() => navigate('/')}
       >
-        Về trang chủ
+        Back to Home
       </Button>
     </div>
   );
 };
 
-export default SuccessMessage; 
+export default SuccessMessage;

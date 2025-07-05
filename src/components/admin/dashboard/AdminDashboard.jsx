@@ -3,9 +3,19 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FiPackage, FiGrid, FiUsers, FiDollarSign } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchAdminCategories, fetchAdminProducts } from '../../../store/actions/adminActions';
 // import { fetchAdminCategories } from '../../../store/actions/adminActions';
 // import { fetchAdminProducts } from '../../../store/actions/adminActions';
 
+const BACKEND_URL = import.meta.env.VITE_BACK_END_URL;
+const getImageUrl = (img) => {
+  if (!img) return '/placeholder-image.png';
+  if (img.startsWith('http://') || img.startsWith('https://')) return img;
+  if (img.startsWith('/images/')) return `${BACKEND_URL}${img}`;
+  return `${BACKEND_URL}/images/${img}`;
+};
 const StatsCard = memo(({ title, value, icon: Icon, color, change }) => (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center">
@@ -37,12 +47,12 @@ StatsCard.displayName = 'StatsCard';
 
 const AdminDashboard = memo(() => {
     const { categories, products } = useSelector((state) => state.admin);
+    const dispatch = useDispatch(); // ✅ BỔ SUNG DÒNG NÀY
 
-    // Comment out data loading to prevent placeholder data
-    // useEffect(() => {
-    //     dispatch(fetchAdminCategories());
-    //     dispatch(fetchAdminProducts());
-    // }, [dispatch]);
+    useEffect(() => {
+        dispatch(fetchAdminCategories());
+        dispatch(fetchAdminProducts());
+    }, [dispatch]);
 
     const stats = [
         {
@@ -101,14 +111,16 @@ const AdminDashboard = memo(() => {
                         <div className="p-6">
                             {products?.slice(0, 5).map((product) => (
                                 <div key={product.productId} className="flex items-center space-x-3 py-2">
+                                    {console.log("Image:", product.productImage)}
                                     <img
-                                        src={product.productImage || '/placeholder-image.png'}
-                                        alt={product.productName}
-                                        className="h-10 w-10 rounded-lg object-cover"
-                                        onError={(e) => {
-                                            e.target.src = '/placeholder-image.png';
-                                        }}
-                                    />
+  src={getImageUrl(product.image)}
+  alt={product.productName}
+  className="h-10 w-10 rounded-lg object-cover"
+  onError={(e) => {
+    e.target.src = '/placeholder-image.png';
+  }}
+/>
+
                                     <div className="flex-1">
                                         <p className="text-sm font-medium text-gray-900">{product.productName}</p>
                                         <p className="text-sm text-gray-500">${product.productPrice}</p>
