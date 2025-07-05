@@ -3,8 +3,8 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ProductViewModal from "./ProductViewModal";
 import truncateText from "../../utils/truncateText";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, addProductToCartAction } from "../../store/actions";
 import toast from "react-hot-toast";
 import PropTypes from 'prop-types';
 import { MdInfo } from "react-icons/md";
@@ -24,6 +24,7 @@ const ProductCard = memo(({
     const [selectedViewProduct, setSelectedViewProduct] = useState("");
     const isAvailable = quantity && Number(quantity) > 0;
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
 
     const productData = {
         id: productId,
@@ -43,9 +44,25 @@ const ProductCard = memo(({
         }
     }, [about]);
 
-    const addToCartHandler = useCallback((cartItems) => {
-        dispatch(addToCart(cartItems, 1, toast));
-    }, [dispatch]);
+    const addToCartHandler = useCallback(() => {
+        if (user) {
+            dispatch(addProductToCartAction(
+                productId,
+                1,
+                toast
+            ));
+        } else {
+            dispatch(addToCart({
+                image,
+                productName,
+                description,
+                specialPrice,
+                price,
+                productId,
+                quantity,
+            }, 1, toast));
+        }
+    }, [dispatch, productId, user, image, productName, description, specialPrice, price, quantity]);
 
     // Helper to get image URL from backend
     const getImageUrl = (img) => {
@@ -103,15 +120,7 @@ const ProductCard = memo(({
         return (
             <button
                 disabled={!isAvailable}
-                onClick={() => addToCartHandler({
-                    image,
-                    productName,
-                    description,
-                    specialPrice,
-                    price,
-                    productId,
-                    quantity,
-                })}
+                onClick={addToCartHandler}
                 className={`bg-gradient-to-r from-orange-500 to-orange-400 ${
                     isAvailable ? "opacity-100 hover:from-orange-400 hover:to-orange-300" : "opacity-70"
                 } text-white py-1.5 px-2 rounded-lg items-center transition-colors duration-300 w-28 flex justify-center h-[42px] text-sm`}

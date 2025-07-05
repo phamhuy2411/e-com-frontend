@@ -42,7 +42,7 @@ const Products = memo(() => {
             return <Loader />;
         }
 
-        if (errorMessage) {
+        if (errorMessage && (!products || products.length === 0)) {
             return (
                 <div 
                     className="flex justify-center items-center h-[200px]"

@@ -15,12 +15,13 @@ import { Tooltip, Divider, Badge } from "@mui/material";
 import { toast } from "react-hot-toast";
 import Status from "../shared/Status";
 import { formatPrice } from "../../utils/formatPrice";
-import { addToCart } from "../../store/actions";
+import { addToCart, addProductToCartAction } from "../../store/actions";
 
 const ProductDetail = memo(() => {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
     const [isFavorite, setIsFavorite] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [quantity, setQuantity] = useState(1);
@@ -74,15 +75,23 @@ const ProductDetail = memo(() => {
     }
 
     const handleAddToCart = () => {
-        dispatch(addToCart({
-            image: product.image,
-            productName: product.productName,
-            description: product.description,
-            specialPrice: product.specialPrice,
-            price: product.price,
-            productId: product.id || product.productId,
-            quantity: product.quantity,
-        }, quantity, toast));
+        if (user) {
+            dispatch(addProductToCartAction(
+                product.id || product.productId,
+                quantity,
+                toast
+            ));
+        } else {
+            dispatch(addToCart({
+                image: product.image,
+                productName: product.productName,
+                description: product.description,
+                specialPrice: product.specialPrice,
+                price: product.price,
+                productId: product.id || product.productId,
+                quantity: product.quantity,
+            }, quantity, toast));
+        }
     };
 
     const toggleFavorite = () => {

@@ -97,6 +97,11 @@ export const fetchBrandsByCategory = (categoryName) => async (dispatch) => {
 
 export const addToCart = (data, qty = 1, toast) => (dispatch, getState) => {
     const { products } = getState().products;
+    const { user } = getState().auth;
+    if (!user) {
+        if (toast) toast.error("Bạn cần đăng nhập để sử dụng giỏ hàng");
+        return;
+    }
     const getProduct = products.find(item => item.productId === data.productId);
 
     const isQuantityExist = getProduct?.quantity >= qty;
@@ -112,15 +117,21 @@ export const addToCart = (data, qty = 1, toast) => (dispatch, getState) => {
     }
 };
 
-export const increaseCartQuantity = (data, toast, currentQuantity, setCurrentQuantity) => (dispatch, getState) => {
+export const increaseCartQuantity = (data, toast) => (dispatch, getState) => {
     const { products } = getState().products;
+    const { user } = getState().auth;
+    if (!user) {
+        if (toast) toast.error("Bạn cần đăng nhập để sử dụng giỏ hàng");
+        return;
+    }
     const getProduct = products.find(item => item.productId === data.productId);
-
+    // Lấy quantity hiện tại trong cart
+    const { cart } = getState().carts;
+    const cartItem = cart.find(item => item.productId === data.productId);
+    const currentQuantity = cartItem ? cartItem.quantity : 0;
     const isQuantityExist = getProduct?.quantity >= currentQuantity + 1;
-
     if (isQuantityExist) {
         const newQuantity = currentQuantity + 1;
-        if (setCurrentQuantity) setCurrentQuantity(newQuantity);
         dispatch({ type: "ADD_CART", payload: { ...data, quantity: newQuantity } });
         try {
             localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
@@ -130,19 +141,50 @@ export const increaseCartQuantity = (data, toast, currentQuantity, setCurrentQua
     }
 };
 
-export const decreaseCartQuantity = (data, newQuantity) => (dispatch, getState) => {
-    dispatch({ type: "ADD_CART", payload: { ...data, quantity: newQuantity } });
-    try {
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
-    } catch { /* ignore */ }
+export const decreaseCartQuantity = (data) => (dispatch, getState) => {
+    const { user } = getState().auth;
+    if (!user) {
+        return;
+    }
+    // Lấy quantity hiện tại trong cart
+    const { cart } = getState().carts;
+    const cartItem = cart.find(item => item.productId === data.productId);
+    const currentQuantity = cartItem ? cartItem.quantity : 0;
+    if (currentQuantity > 1) {
+        const newQuantity = currentQuantity - 1;
+        dispatch({ type: "ADD_CART", payload: { ...data, quantity: newQuantity } });
+        try {
+            localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+        } catch { /* ignore */ }
+    }
 };
 
-export const removeFromCart = (data, toast) => (dispatch, getState) => {
-    dispatch({ type: "REMOVE_CART", payload: data });
-    if (toast) toast.success(`${data.productName} removed from cart`);
-    try {
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
-    } catch { /* ignore */ }
+export const removeFromCart = (data, toast) => async (dispatch, getState) => {
+    const { user } = getState().auth;
+    if (!user) {
+        if (toast) toast.error("Bạn cần đăng nhập để sử dụng giỏ hàng");
+        return;
+    }
+    // Lấy cartId từ localStorage nếu có
+    let cartId = getState().carts.cartId;
+    if (!cartId) {
+        try {
+            cartId = localStorage.getItem("cartId");
+        } catch { cartId = null; }
+    }
+    if (cartId) {
+        try {
+            await dispatch(deleteCartProductFromCartAction(cartId, data.productId, toast));
+        } catch {
+            if (toast) toast.error("Failed to remove item from cart");
+        }
+    } else {
+        dispatch({ type: "REMOVE_CART", payload: data });
+        if (toast) toast.success(`${data.productName} removed from cart`);
+        try {
+            localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+        } catch { /* ignore */ }
+    }
 };
 
 export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
@@ -175,6 +217,13 @@ export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoad
         }
         // LẤY GIỎ HÀNG TỪ BACKEND NGAY SAU KHI ĐĂNG NHẬP
         await dispatch(getUserCart());
+        // Lưu cartId vào localStorage nếu có
+        const { cartId } = (dispatch.getState ? dispatch.getState().carts : {});
+        if (cartId) {
+            try {
+                localStorage.setItem("cartId", cartId);
+            } catch { /* ignore */ }
+        }
         
         if (reset) reset();
         if (toast) toast.success("Login Success");
@@ -342,6 +391,9 @@ export const getUserCart = () => async (dispatch, getState) => {
             });
             try {
                 localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+                if (data.cartId) {
+                    localStorage.setItem("cartId", data.cartId);
+                }
             } catch { /* ignore */ }
         }
         dispatch({ type: "IS_SUCCESS" });
@@ -413,12 +465,70 @@ export const fetchProductById = (productId) => async (dispatch) => {
     }
 };
 
-export const clearCartWithToast = (toast) => (dispatch, getState) => {
-    dispatch({ type: "CLEAR_CART" });
-    if (toast) toast.success("All items removed from cart");
+export const clearUserCartAction = (cartId, toast) => async (dispatch) => {
+    // Đảm bảo luôn lấy cartId từ localStorage nếu Redux không có
+    let _cartId = cartId;
+    if (!_cartId) {
+        try {
+            _cartId = localStorage.getItem("cartId");
+        } catch { _cartId = null; }
+    }
+    if (!_cartId) {
+        if (toast) toast.error("No cartId found");
+        return;
+    }
     try {
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
-    } catch { /* ignore */ }
+        dispatch({ type: "IS_FETCHING" });
+        await clearUserCart(_cartId);
+        // Sau khi xóa, luôn gọi lại getUserCart để đồng bộ Redux và localStorage
+        await dispatch(getUserCart());
+        // Kiểm tra nếu cart rỗng thì xóa cartId khỏi localStorage
+        const { cart } = (dispatch.getState ? dispatch.getState().carts : {});
+        if (!cart || cart.length === 0) {
+            try {
+                localStorage.removeItem("cartId");
+                localStorage.removeItem("cartItems");
+            } catch { /* ignore */ }
+        }
+        if (toast) toast.success("All items removed from cart");
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        if (toast) toast.error(error?.response?.data?.message || "Failed to clear cart");
+        dispatch({
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to clear cart",
+        });
+    }
+};
+
+export const clearCartWithToast = (toast) => async (dispatch, getState) => {
+    const { user } = getState().auth;
+    let cartId = getState().carts.cartId;
+    if (!cartId) {
+        try {
+            cartId = localStorage.getItem("cartId");
+        } catch { cartId = null; }
+    }
+    if (!user) {
+        if (toast) toast.error("Bạn cần đăng nhập để sử dụng giỏ hàng");
+        return;
+    }
+    if (cartId) {
+        // Đã đăng nhập, gọi API backend để xóa toàn bộ cart
+        try {
+            await dispatch(clearUserCartAction(cartId, toast));
+        } catch {
+            if (toast) toast.error("Failed to clear cart");
+        }
+    } else {
+        // Chưa đăng nhập, xóa local
+        dispatch({ type: "CLEAR_CART" });
+        if (toast) toast.success("All items removed from cart");
+        try {
+            localStorage.removeItem("cartItems");
+            localStorage.removeItem("cartId");
+        } catch { /* ignore */ }
+    }
 };
 
 export const addProductToCartAction = (productId, quantity, toast) => async (dispatch) => {
@@ -476,24 +586,10 @@ export const updateCartProductAction = (productId, operation, toast) => async (d
 export const deleteCartProductFromCartAction = (cartId, productId, toast) => async (dispatch) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await apiDeleteCartProductFromCart(cartId, productId);
-        if (data) {
-            dispatch({
-                type: "GET_USER_CART_PRODUCTS",
-                payload: data.products,
-                totalPrice: data.totalPrice,
-                cartId: data.cartId,
-            });
-            // Nếu có cartId (user đăng nhập), xóa luôn localStorage để đồng bộ với backend
-            if (cartId) {
-                localStorage.removeItem("cartItems");
-            } else {
-                try {
-                    localStorage.setItem("cartItems", JSON.stringify(data.products));
-                } catch { /* ignore */ }
-            }
-            if (toast) toast.success("Removed from cart");
-        }
+        await apiDeleteCartProductFromCart(cartId, productId);
+        // Sau khi xóa, gọi lại API lấy cart mới nhất
+        await dispatch(getUserCart());
+        if (toast) toast.success("Removed from cart");
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
         if (toast) toast.error(error?.response?.data?.message || "Failed to remove from cart");
@@ -522,37 +618,6 @@ export const orderProductsAction = (paymentMethod, orderRequestDTO, toast, navig
         dispatch({
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Failed to place order",
-        });
-    }
-};
-
-export const clearUserCartAction = (cartId, toast) => async (dispatch) => {
-    try {
-        dispatch({ type: "IS_FETCHING" });
-        const { data } = await clearUserCart(cartId);
-        if (data) {
-            dispatch({
-                type: "GET_USER_CART_PRODUCTS",
-                payload: data.products,
-                totalPrice: data.totalPrice,
-                cartId: data.cartId,
-            });
-            // Nếu có cartId (user đăng nhập), xóa luôn localStorage để đồng bộ với backend
-            if (cartId) {
-                localStorage.removeItem("cartItems");
-            } else {
-                try {
-                    localStorage.setItem("cartItems", JSON.stringify(data.products));
-                } catch { /* ignore */ }
-            }
-            if (toast) toast.success("All items removed from cart");
-        }
-        dispatch({ type: "IS_SUCCESS" });
-    } catch (error) {
-        if (toast) toast.error(error?.response?.data?.message || "Failed to clear cart");
-        dispatch({
-            type: "IS_ERROR",
-            payload: error?.response?.data?.message || "Failed to clear cart",
         });
     }
 };

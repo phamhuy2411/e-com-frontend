@@ -40,13 +40,17 @@ export const cartReducer = (state = initialState, action) => {
                     (item) => item.productId !== action.payload.productId
                 ),
             };
-        case "GET_USER_CART_PRODUCTS":
-            return {
+        case "GET_USER_CART_PRODUCTS": {
+            const nextState = {
                 ...state,
                 cart: action.payload,
                 totalPrice: action.totalPrice,
-                cartId: action.cartId,
             };
+            if (action.cartId !== undefined && action.cartId !== null) {
+                nextState.cartId = action.cartId;
+            }
+            return nextState;
+        }
         case "CLEAR_CART":
             return {
                 ...initialState

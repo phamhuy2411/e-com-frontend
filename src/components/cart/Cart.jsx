@@ -1,7 +1,7 @@
 import {TfiShoppingCartFull} from "react-icons/tfi";
 import { FiArrowLeftCircle } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ItemContent from "./ItemContent";
 import CartEmpty from "./CartEmpty";
 import { formatPrice } from "../../utils/formatPrice";
@@ -15,7 +15,10 @@ import { useState } from "react";
 
 const Cart = () => {
     const { cart, cartId } = useSelector((state) => state.carts);
+    const { user } = useSelector((state) => state.auth);
+    const isAuthenticated = !!user;
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     
     const newCart = useMemo(() => {
         if (!cart) return { totalPrice: 0 };
@@ -39,6 +42,22 @@ const Cart = () => {
         setOpenConfirm(false);
     };
     const handleCancelRemoveAll = () => setOpenConfirm(false);
+
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-[600px] flex flex-col items-center justify-center">
+                <TfiShoppingCartFull size={80} className="mb-4 text-slate-500" aria-hidden="true"/>
+                <h1 className="text-3xl font-bold text-slate-700 mb-2">Please log in to use the cart</h1>
+                <p className="text-lg text-slate-500 mb-4">You need to be logged in to view and manage your cart.</p>
+                <button
+                    className="px-6 py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition"
+                    onClick={() => navigate("/login")}
+                >
+                    Go to Login
+                </button>
+            </div>
+        );
+    }
 
     if (!cart || cart.length === 0) return <CartEmpty />;
 

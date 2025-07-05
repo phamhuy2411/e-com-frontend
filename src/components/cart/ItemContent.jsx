@@ -6,9 +6,9 @@ import SetQuantity from "./SetQuantity";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateCartProductAction,
-  deleteCartProductFromCartAction,
   increaseCartQuantity,
   decreaseCartQuantity,
+  removeFromCart,
 } from "../../store/actions";
 import toast from "react-hot-toast";
 import { formatPrice } from "../../utils/formatPrice";
@@ -27,6 +27,8 @@ const ItemContent = ({
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
   const { cartId } = useSelector((state) => state.carts);
+  const { user } = useSelector((state) => state.auth);
+  const isAuthenticated = !!user;
 
   const totalPrice = useMemo(
     () => Number(quantity) * Number(specialPrice),
@@ -51,14 +53,14 @@ const ItemContent = ({
         description,
         price,
         specialPrice,
-      }, toast, quantity));
+      }, toast));
     }
   };
 
   const handleQtyDecrease = () => {
     if (quantity > 1) {
       if (cartId) {
-        dispatch(updateCartProductAction(productId, "decrease", toast));
+        dispatch(updateCartProductAction(Number(productId), "delete", toast));
       } else {
         dispatch(decreaseCartQuantity({
           productId,
@@ -67,21 +69,14 @@ const ItemContent = ({
           description,
           price,
           specialPrice,
-        }, quantity - 1));
+        }));
       }
     }
   };
 
   const removeItemFromCart = async () => {
-    if (!cartId) {
-      dispatch({ type: "REMOVE_CART", payload: { productId } });
-      toast.success("Removed from cart");
-      return;
-    }
     try {
-      await dispatch(
-        deleteCartProductFromCartAction(cartId, Number(productId), toast)
-      );
+      await dispatch(removeFromCart({ productId, productName }, toast));
     } catch {
       toast.error("Failed to remove item from cart.");
     }
@@ -210,6 +205,7 @@ const ItemContent = ({
             cardCounter={true}
             handleQtyIncrease={handleQtyIncrease}
             handleQtyDecrease={handleQtyDecrease}
+            isAuthenticated={isAuthenticated}
           />
         </div>
 
