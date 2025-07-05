@@ -2,6 +2,8 @@ const initialState = {
     categories: null,
     brands: null,
     products: null,
+    orders: null,
+    orderItems: null,
     pagination: {},
     isLoading: false,
     isButtonLoading: false,
@@ -97,6 +99,32 @@ export const adminReducer = (state = initialState, action) => {
             return {
                 ...state,
                 brands: null,
+            };
+
+        case "ADMIN_ORDER_LOADER":
+        case "ADMIN_ORDERITEM_LOADER":
+            return {
+                ...state,
+                isLoading: true,
+                errorMessage: null,
+            };
+
+        case "FETCH_ADMIN_ORDERS":
+            if (!action.payload) {
+                return state;
+            }
+            return {
+                ...state,
+                orders: action.payload,
+            };
+
+        case "FETCH_ADMIN_ORDER_ITEMS":
+            if (!action.payload) {
+                return state;
+            }
+            return {
+                ...state,
+                orderItems: action.payload,
             };
 
         default:

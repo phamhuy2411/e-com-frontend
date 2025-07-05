@@ -85,6 +85,14 @@ export const adminApi = {
         const queryString = new URLSearchParams(params).toString();
         return api.get(`/public/products/keyword/${keyword}?${queryString}`);
     },
+
+    // Order Management
+    getAllOrders: () => {
+        return api.get("/orders");
+    },
+    getOrderItems: (orderId) => {
+        return api.get(`/orders/orderItems/${orderId}`);
+    },
 };
 
 export default adminApi; 

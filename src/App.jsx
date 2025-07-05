@@ -23,6 +23,7 @@ import AdminDashboard from './components/admin/dashboard/AdminDashboard'
 import CategoryList from './components/admin/categories/CategoryList'
 import ProductList from './components/admin/products/ProductList'
 import BrandList from './components/admin/brands/BrandList'
+import OrderList from './components/admin/orders/OrderList'
 
 // Component to conditionally render Navbar and Footer
 const AppContent = () => {
@@ -57,6 +58,7 @@ const AppContent = () => {
           <Route path="categories" element={<CategoryList />} />
           <Route path="products" element={<ProductList />} />
           <Route path="brands" element={<BrandList />} />
+          <Route path="orders" element={<OrderList />} />
         </Route>
       </Routes>
       {!isAdminRoute && <Footer />}

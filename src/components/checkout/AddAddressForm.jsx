@@ -15,6 +15,7 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
             register,
             handleSubmit,
             setValue,
+            reset,
             formState: {errors},
         } = useForm({
             mode: "onTouched",
@@ -37,8 +38,17 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
                 setValue("state", address?.state);
                 setValue("pincode", address?.pincode);
                 setValue("country", address?.country);
+            } else {
+                reset({
+                    buildingName: '',
+                    city: '',
+                    street: '',
+                    state: '',
+                    pincode: '',
+                    country: '',
+                });
             }
-        }, [address, setValue]);
+        }, [address, setValue, reset]);
 
   return (
     <div className="bg-white rounded-2xl shadow-2xl p-6 border border-gray-100">

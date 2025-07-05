@@ -366,6 +366,45 @@ export const updateAdminProductImage = (productId, imageFile, toast, callback) =
     }
 };
 
+// Order Actions
+export const fetchAdminOrders = () => async (dispatch) => {
+    try {
+        dispatch({ type: "ADMIN_ORDER_LOADER" });
+        const { data } = await adminApi.getAllOrders();
+        if (data) {
+            dispatch({
+                type: "FETCH_ADMIN_ORDERS",
+                payload: data,
+            });
+        }
+        dispatch({ type: "ADMIN_SUCCESS" });
+    } catch (error) {
+        dispatch({
+            type: "ADMIN_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch orders",
+        });
+    }
+};
+
+export const fetchAdminOrderItems = (orderId) => async (dispatch) => {
+    try {
+        dispatch({ type: "ADMIN_ORDERITEM_LOADER" });
+        const { data } = await adminApi.getOrderItems(orderId);
+        if (data) {
+            dispatch({
+                type: "FETCH_ADMIN_ORDER_ITEMS",
+                payload: data,
+            });
+        }
+        dispatch({ type: "ADMIN_SUCCESS" });
+    } catch (error) {
+        dispatch({
+            type: "ADMIN_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch order items",
+        });
+    }
+};
+
 // Clear admin state
 export const clearAdminState = () => ({
     type: "CLEAR_ADMIN_STATE",
