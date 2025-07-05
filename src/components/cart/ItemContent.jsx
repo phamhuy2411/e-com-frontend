@@ -3,6 +3,7 @@ import { HiOutlineTrash } from "react-icons/hi";
 import { FiInfo, FiExternalLink } from "react-icons/fi";
 import { Tooltip, Badge } from "@mui/material";
 import SetQuantity from "./SetQuantity";
+import ProductViewModal from "../shared/ProductViewModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateCartProductAction,
@@ -25,6 +26,8 @@ const ItemContent = ({
   specialPrice,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [openProductViewModal, setOpenProductViewModal] = useState(false);
+  const [selectedViewProduct, setSelectedViewProduct] = useState({});
   const dispatch = useDispatch();
   const { cartId } = useSelector((state) => state.carts);
   const { user } = useSelector((state) => state.auth);
@@ -41,6 +44,24 @@ const ItemContent = ({
     }
     return 0;
   }, [price, specialPrice]);
+
+  const isAvailable = quantity > 0;
+
+  const productData = {
+    id: productId,
+    productName,
+    image,
+    description,
+    quantity,
+    price,
+    discount,
+    specialPrice,
+  };
+
+  const handleProductView = () => {
+    setSelectedViewProduct(productData);
+    setOpenProductViewModal(true);
+  };
 
   const handleQtyIncrease = () => {
     if (cartId) {
@@ -120,7 +141,8 @@ const ItemContent = ({
               <img
                 src={getImageUrl(image)}
                 alt={productName}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover cursor-pointer"
+                onClick={handleProductView}
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = "/placeholder-image.png";
@@ -131,7 +153,7 @@ const ItemContent = ({
               <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg">
                 <Tooltip title="View product details" placement="top" arrow>
                   <button
-                    onClick={handleViewProduct}
+                    onClick={handleProductView}
                     className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200 flex items-center gap-1"
                   >
                     <FiExternalLink size={14} />
@@ -217,6 +239,14 @@ const ItemContent = ({
           </div>
         </div>
       </div>
+
+      {/* ProductViewModal */}
+      <ProductViewModal 
+        open={openProductViewModal}
+        setOpen={setOpenProductViewModal}
+        product={selectedViewProduct}
+        isAvailable={isAvailable}
+      />
     </div>
   );
 };
